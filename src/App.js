@@ -1,22 +1,27 @@
-import Footer from "./layout/Footer";
-import Header from "./layout/Header";
-import MainPage from "./layout/MainPage";
-import Dashboard from "./pages/Dashboard";
-import { Route, Switch } from 'react-router-dom'
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
+import React, {useEffect} from "react";
+import AuthContainer from "./layout/AuthContainer";
+import AuthMainPage from "./layout/AuthMainPage";
+import {useDispatch} from "react-redux";
+import {loadUsersList} from "./store/users";
+import {loadAccountsList} from "./store/accounts";
+import {loadIncomesList} from "./store/incomes";
+import {loadExpensesList} from "./store/expenses";
 
 function App() {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(loadUsersList())
+        dispatch(loadAccountsList())
+        dispatch(loadIncomesList())
+        dispatch(loadExpensesList())
+    }, [dispatch])
+
     return (
         <div className='flex flex-col justify-between h-screen'>
-            <Header/>
-            <Switch>
-                <Route path="/" exact component={MainPage} />
-                <Route path="/login" component={LoginPage} />
-                <Route path='/signup' component={SignupPage} />
-                <Route path="/dashboard" component={Dashboard}/>
-            </Switch>
-            <Footer/>
+            <AuthContainer>
+                <AuthMainPage/>
+            </AuthContainer>
         </div>
     );
 }

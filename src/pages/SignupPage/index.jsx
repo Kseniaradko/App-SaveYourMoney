@@ -1,9 +1,12 @@
-import React, {useState} from "react";
+import React from "react";
 import TextField from "../../components/common/form/textField";
 import {Link, useHistory} from "react-router-dom";
-import Button from "../../components/Button";
+import Button from "../../components/common/Button";
 import * as Yup from "yup";
 import {useFormik, FormikProvider} from "formik";
+import RadioField from "../../components/common/form/radioField";
+import {useDispatch} from "react-redux";
+import {signUp} from "../../store/users";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -23,16 +26,15 @@ const validationSchema = Yup.object().shape({
 
 const initialValues = {
     name: '',
+    sex: '',
     email: '',
     password: ''
 }
 
 const SignupPage = () => {
-
-    const history = useHistory()
+    const dispatch = useDispatch()
     const handleSubmit = (formValue) => {
-        console.log(formValue)
-        history.push('/dashboard')
+        dispatch(signUp(formValue))
     }
 
     const formik = useFormik({
@@ -41,10 +43,13 @@ const SignupPage = () => {
         onSubmit: handleSubmit
     })
 
+    const isValid = formik.isValid
+
     return (
         <div className='max-w-screen-xl m-auto w-full flex justify-center'>
-            <div className='rounded-lg overflow-hidden ring-1 ring-slate-900/5 shadow-xl p-6 w-2/5 h-full flex flex-col bg-slate-50'>
-                <span className='text-4xl font-serif text-center py-3'>Register</span>
+            <div
+                className='rounded-lg overflow-hidden ring-1 ring-slate-900/5 shadow-xl px-8 py-4 w-2/5 h-full flex flex-col bg-slate-50'>
+                <span className='text-4xl font-serif text-center pb-0.5'>Register</span>
                 <FormikProvider value={formik}>
                     <form onSubmit={formik.handleSubmit} autoComplete="new-password">
                         <TextField
@@ -52,21 +57,34 @@ const SignupPage = () => {
                             name='name'
                             autoFocus={true}
                         />
+                        <RadioField
+                            options={[
+                                {name: "Male", value: "male"},
+                                {name: "Female", value: "female"},
+                                {name: "Other", value: "other"}
+                            ]}
+                            name='sex'
+                            label='Выберите ваш пол:'
+                        />
                         <TextField
                             label='Электронная почта'
-                            name='email' type='email'
+                            name='email'
                         />
                         <TextField
                             label='Пароль'
                             name='password'
                             type='password'
                         />
-                        <Button>Войти</Button>
+                        <Button
+                            disabled={!isValid}
+                        >
+                            Войти
+                        </Button>
                     </form>
                 </FormikProvider>
                 <p className='py-4'>
-                    Already have account?{" "}
-                    <Link to='/login'>Sign In</Link>
+                    Уже есть аккаунт?{" "}
+                    <Link to='/login' className='hover:underline'>Войти</Link>
                 </p>
             </div>
         </div>

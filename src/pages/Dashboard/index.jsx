@@ -1,18 +1,18 @@
 import React from "react"
-import IncomePlugin from "../../components/IncomePlugin";
-import AccountsPlugin from "../../components/AccountsPlugin";
-import ExpensesPlugin from "../../components/ExpensesPlugin";
+import IncomePlugin from "../../components/Plugins/IncomePlugin";
+import AccountsPlugin from "../../components/Plugins/AccountsPlugin";
+import ExpensesPlugin from "../../components/Plugins/ExpensesPlugin";
 import AnalyticsInfo from "./AnalyticsInfo";
 
 const Dashboard = () => {
     return (
-        <div className='flex-1 max-w-screen-xl m-auto w-full'>
-            <div className="py-4 px-6 flex justify-between">
+        <div className='max-w-screen-xl m-auto w-full'>
+            <div className="flex justify-between gap-4">
                 <IncomePlugin/>
                 <AccountsPlugin/>
                 <ExpensesPlugin/>
             </div>
-            <div className='py-4 px-6'>
+            <div className='py-4'>
                 <AnalyticsInfo/>
             </div>
         </div>
