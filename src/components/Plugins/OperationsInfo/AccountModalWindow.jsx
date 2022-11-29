@@ -50,7 +50,7 @@ const AccountModalWindow = ({onCLick}) => {
                                             </span>
                             </button>
                         </div>
-                        <div className="relative p-6 flex-auto">
+                        <div className="relative px-6 py-1 flex-auto">
                             <FormikProvider value={formik}>
                                 <form onSubmit={formik.handleSubmit}>
                                     <TextField
@@ -69,14 +69,14 @@ const AccountModalWindow = ({onCLick}) => {
                                             type="button"
                                             onClick={() => onCLick()}
                                         >
-                                            Close
+                                            Закрыть
                                         </button>
                                         <button
                                             className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                             type="submit"
                                             disabled={!formik.isValid}
                                         >
-                                            Save Changes
+                                            Сохранить
                                         </button>
                                     </div>
                                 </form>

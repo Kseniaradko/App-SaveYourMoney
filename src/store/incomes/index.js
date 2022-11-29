@@ -121,11 +121,12 @@ export const getCurrentUserIncomes = () => (state) => {
 
 export const getIncomesForPlugin = () => (state) => {
     const currentUserId = Number(localStorage.getItem('id'))
-    console.log(currentUserId)
-    console.log(state.incomes)
     const newState = state.incomes.entities?.filter((income) => income.userId === currentUserId)
-    console.log(newState)
     return newState.splice((newState.length - 4), 3)
+}
+
+export const getIncomeById = (id) => (state) => {
+    return state.incomes.entities?.find((income) => income.id === Number(id))
 }
 
 export default incomesReducer

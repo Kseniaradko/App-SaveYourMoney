@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Table from "../../components/common/Table";
-import EditColumn from "../../components/common/Table/editColumn";
-import DeleteColumn from "../../components/common/Table/deleteColumn";
-import history from "../../utils/history";
-import Button from "../../components/common/Button";
-import {data} from "autoprefixer";
+import EditIcon from "../../components/common/Table/editIcon";
+import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useSelector} from "react-redux";
 import {getCurrentUserAccounts} from "../../store/accounts";
+import {Link} from "react-router-dom";
 
 const AccountsPage = () => {
     const userAccounts = useSelector(getCurrentUserAccounts())
@@ -14,11 +12,14 @@ const AccountsPage = () => {
     const columns = {
         accountId: {
             name: '№',
-            path: 'accountId'
+            path: 'accountId',
+            component: (data) => userAccounts.indexOf(data) + 1
         },
         account: {
             name: 'Счет',
-            path: 'account'
+            path: 'account',
+            component: (data) => <Link to={`/accountsPage/${data.id}`}
+                                       className='hover:text-sky-500'>{data.account}</Link>
         },
         sum: {
             name: 'Сумма на счету',
@@ -30,11 +31,11 @@ const AccountsPage = () => {
         },
         edit: {
             name: 'Редактировать',
-            component: (data) => <EditColumn onClick={() => handleEdit(data.id)}/>
+            component: (data) => <EditIcon onClick={() => handleEdit(data.id)}/>
         },
         delete: {
             name: 'Удалить',
-            component: (data) => <DeleteColumn onDelete={() => handleDelete(data.id)}/>
+            component: (data) => <DeleteIcon onDelete={() => handleDelete(data.id)}/>
         }
     }
 
@@ -53,7 +54,7 @@ const AccountsPage = () => {
             >
                 Мои счета
             </div>
-            <Table columns={columns} data={userAccounts}/>
+            <Table columns={columns} data={userAccounts.reverse()}/>
         </div>
     )
 }

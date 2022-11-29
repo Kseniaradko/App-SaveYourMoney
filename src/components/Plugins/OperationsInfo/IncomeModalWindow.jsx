@@ -2,6 +2,9 @@ import React from "react";
 import TextField from "../../common/form/textField";
 import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
+import {useSelector} from "react-redux";
+import {getAccountsName} from "../../../store/accounts";
+import SelectField from "../../common/form/selectField";
 
 const validationSchema = Yup.object().shape({
     type: Yup.string()
@@ -20,6 +23,7 @@ const initialValues = {
 }
 
 const IncomeModalWindow = ({onCLick}) => {
+    const accounts = useSelector(getAccountsName())
     const handleSubmit = (formValue) => {
         console.log(formValue)
         onCLick()
@@ -54,7 +58,7 @@ const IncomeModalWindow = ({onCLick}) => {
                                             </span>
                             </button>
                         </div>
-                        <div className="relative p-6 flex-auto">
+                        <div className="relative px-6 py-3 flex-auto">
                             <FormikProvider value={formik}>
                                 <form onSubmit={formik.handleSubmit}>
                                     <TextField
@@ -62,31 +66,31 @@ const IncomeModalWindow = ({onCLick}) => {
                                         name='type'
                                         placeholder='Заработная плата'
                                     />
-                                    <TextField
+                                    <SelectField
                                         label='Выберите счет зачисления денежных средств:'
                                         name='account'
-                                        placeholder='Дебетовая карта 324567656938'
+                                        defaultOption='Choose...'
+                                        options={accounts}
                                     />
                                     <TextField
                                         label='Сумма зачисления:'
                                         name='sum'
                                         placeholder='30000'
                                     />
-                                    {/*footer*/}
                                     <div className='flex justify-end mt-4'>
                                         <button
                                             className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-sm outline-none hover:bg-red-50 rounded focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                             type="button"
                                             onClick={() => onCLick()}
                                         >
-                                            Close
+                                            Закрыть
                                         </button>
                                         <button
-                                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 cursor-pointer"
                                             type="submit"
                                             disabled={!formik.isValid}
                                         >
-                                            Save Changes
+                                            Сохранить
                                         </button>
                                     </div>
                                 </form>

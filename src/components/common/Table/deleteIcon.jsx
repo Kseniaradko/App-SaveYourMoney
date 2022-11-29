@@ -1,6 +1,6 @@
 import React from "react";
 
-const DeleteColumn = ({onDelete}) => {
+const DeleteIcon = ({onDelete}) => {
     return (
         <div onClick={onDelete}>
             <svg
@@ -21,4 +21,4 @@ const DeleteColumn = ({onDelete}) => {
     )
 }
 
-export default DeleteColumn
+export default DeleteIcon

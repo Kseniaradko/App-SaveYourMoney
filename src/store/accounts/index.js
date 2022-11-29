@@ -96,4 +96,20 @@ export const getAccountsForPlugin = () => (state) => {
     return newState.splice((newState.length - 4), 3)
 }
 
+export const getAccountNameById = (id) => (state) => {
+    return state.accounts.entities?.find((acc) => acc.accountId === id).account
+}
+
+export const getAccountsName = () => (state) => {
+    const currentUserId = Number(localStorage.getItem('id'))
+    const newState = state.accounts.entities?.filter((income) => income.userId === currentUserId)
+    const newArray = []
+    if (newState) {
+        for (const account of newState) {
+            newArray.push(account.account)
+        }
+        return newArray
+    }
+}
+
 export default accountsReducer

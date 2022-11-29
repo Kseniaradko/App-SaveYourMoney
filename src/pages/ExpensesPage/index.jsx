@@ -1,20 +1,30 @@
 import React from "react";
 import Table from "../../components/common/Table";
-import EditColumn from "../../components/common/Table/editColumn";
-import DeleteColumn from "../../components/common/Table/deleteColumn";
+import EditIcon from "../../components/common/Table/editIcon";
+import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useSelector} from "react-redux";
 import {getCurrentUserExpenses} from "../../store/expenses";
+import {Link} from "react-router-dom";
+import {getAccountsName, getCurrentUserAccounts} from "../../store/accounts";
 
 const ExpensesPage = () => {
     const userExpenses = useSelector(getCurrentUserExpenses())
+    const userAccounts = useSelector(getCurrentUserAccounts())
     const columns = {
+        id: {
+            name: '№',
+            path: 'id',
+            component: (data) => userExpenses.indexOf(data) + 1
+        },
         type: {
             name: 'Категория',
-            path: 'type'
+            path: 'type',
+            component: (data) => <Link to={`/expensesPage/${data.id}`} className='hover:text-sky-500'>{data.type}</Link>
         },
-        account: {
+        accountId: {
             name: 'Счет зачисления',
-            path: 'account'
+            path: 'accountId',
+            component: (data) => userAccounts.find((account) => account.accountId === data.accountId).account
         },
         sum: {
             name: 'Сумма зачисления',
@@ -26,11 +36,11 @@ const ExpensesPage = () => {
         },
         edit: {
             name: 'Редактировать',
-            component: (data) => <EditColumn onClick={() => handleEdit(data.id)}/>
+            component: (data) => <Link to={`/expensesPage/${data.id}`}><EditIcon/></Link>
         },
         delete: {
             name: 'Удалить',
-            component: (data) => <DeleteColumn onDelete={() => handleDelete(data.id)}/>
+            component: (data) => <DeleteIcon onDelete={() => handleDelete(data.id)}/>
         }
     }
 
@@ -50,7 +60,7 @@ const ExpensesPage = () => {
             >
                 Мои расходы
             </div>
-            <Table columns={columns} data={userExpenses}/>
+            <Table columns={columns} data={userExpenses.reverse()}/>
         </div>
     )
 }

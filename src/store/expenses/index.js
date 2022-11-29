@@ -99,8 +99,11 @@ export const getCurrentUserExpenses = () => (state) => {
 export const getExpensesForPlugin = () => (state) => {
     const currentUserId = Number(localStorage.getItem('id'))
     const newState = state.expenses.entities?.filter((income) => income.userId === currentUserId)
-    console.log(newState)
     return newState.splice((newState.length - 4), 3)
+}
+
+export const getExpenseById = (id) => (state) => {
+    return state.expenses.entities?.find((expense) => expense.id === Number(id))
 }
 
 

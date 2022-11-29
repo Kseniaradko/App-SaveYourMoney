@@ -30,7 +30,8 @@ const OperationsInfo = ({label, data, img}) => {
             </div>
             {data && data.map((item) => {
                 return (
-                    <div key={item.id} className='flex justify-between mb-2 border-b-2 border-slate-200 '>
+                    <div key={item.id || item.accountId}
+                         className='flex justify-between mb-2 border-b-2 border-slate-200 '>
                         <div className=''>{`${data.indexOf(item) + 1}. ${item.type || item.account}`}</div>
                         <div className=''>{item.sum}р.</div>
                     </div>

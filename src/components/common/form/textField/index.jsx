@@ -12,7 +12,7 @@ const TextField = (props) => {
 
     const getInputClasses = () => {
         return (
-            'w-full py-2 px-3 bg-white border focus:border-red-700 rounded' +
+            'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' +
             (showedError ? ' ring-1 ring-red-500 focus:border-red-700 focus:ring-red-700 focus:' : '')
         )
     }
@@ -22,8 +22,9 @@ const TextField = (props) => {
     };
 
     return (
-        <div className='py-2'>
-            <label className='text-m' htmlFor={props.name}>{props.label}</label>
+        <div className='py-5'>
+            <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+                   htmlFor={props.name}>{props.label}</label>
             <div className='relative'>
                 <input
                     {...field}

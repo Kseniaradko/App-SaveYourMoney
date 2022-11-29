@@ -7,12 +7,12 @@ import AnalyticsInfo from "./AnalyticsInfo";
 const Dashboard = () => {
     return (
         <div className='max-w-screen-xl m-auto w-full'>
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-between gap-4 py-2">
                 <IncomePlugin/>
                 <AccountsPlugin/>
                 <ExpensesPlugin/>
             </div>
-            <div className='py-4'>
+            <div className='py-2'>
                 <AnalyticsInfo/>
             </div>
         </div>
