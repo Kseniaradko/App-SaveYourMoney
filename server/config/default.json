@@ -1,0 +1,4 @@
+{
+  "port": 8081,
+  "mongoUri": "mongodb+srv://Ksenia:123456789012@cluster0.pptlku4.mongodb.net/SaveYourMoney?retryWrites=true&w=majority"
+}
