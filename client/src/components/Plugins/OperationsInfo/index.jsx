@@ -22,10 +22,13 @@ const OperationsInfo = ({label, data, img}) => {
             {showModal && label === 'Доходы' && <IncomeModalWindow onCLick={handleClick}/>}
             {showModal && label === 'Расходы' && <ExpensesModalWindow onCLick={handleClick}/>}
             {showModal && label === 'Счета' && <AccountModalWindow onCLick={handleClick}/>}
-            <div className="text-lg font-semibold pb-3 flex justify-center gap-1 hover:underline underline-offset-4">
-                {label === "Доходы" && <Link to='/incomesPage'>{label}</Link>}
-                {label === "Расходы" && <Link to='/expensesPage'>{label}</Link>}
-                {label === "Счета" && <Link to='/accountsPage'>{label}</Link>}
+            <div className="text-lg font-semibold pb-3 flex justify-center gap-1">
+                {label === "Доходы" &&
+                    <Link to='/incomesPage' className='hover:underline underline-offset-4'>{label}</Link>}
+                {label === "Расходы" &&
+                    <Link to='/expensesPage' className='hover:underline underline-offset-4'>{label}</Link>}
+                {label === "Счета" &&
+                    <Link to='/accountsPage' className='hover:underline underline-offset-4'>{label}</Link>}
                 {img && <img className='w-5' src={img} alt='Loading'/>}
             </div>
             {data && data.map((item) => {
