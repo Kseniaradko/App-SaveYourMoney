@@ -6,12 +6,12 @@ const expenseTypesMock = require('../mock/expenseTypes.json')
 
 module.exports = async () => {
     const incomeTypes = await IncomeType.find()
-    if (incomeTypes.length !== incomeTypesMock.length) {
+    if (incomeTypes.length < incomeTypesMock.length) {
         createInitialEntity(IncomeType, incomeTypesMock)
     }
 
     const expenseTypes = await ExpenseType.find()
-    if (expenseTypes.length !== expenseTypesMock.length) {
+    if (expenseTypes.length < expenseTypesMock.length) {
         createInitialEntity(ExpenseType, expenseTypesMock)
     }
 }
