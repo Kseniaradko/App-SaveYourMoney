@@ -4,6 +4,7 @@ import {ChevronDownIcon} from '@heroicons/react/20/solid'
 import {Link} from 'react-router-dom'
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUserData, logOut} from "../../../../store/users";
+import Loader from "../../../../components/common/Loader";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -15,7 +16,7 @@ function AuthNavProfile() {
     const handleClick = () => {
         dispatch(logOut())
     }
-    if (!user) return <>Loading...</>
+    if (!user) return <Loader/>
     return (
         <Menu as="div" className="relative inline-block text-left">
             <div>

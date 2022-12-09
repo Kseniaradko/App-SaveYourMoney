@@ -1,4 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
+import localStorageService from "../../services/localStorage.service";
+import accountService from "../../services/account.service";
 
 const initialState = {
     entities: null,
@@ -20,6 +22,31 @@ const accountsSlice = createSlice({
         accountsRequestedFailed: (state, action) => {
             state.isLoading = false
             state.error = action.payload
+        },
+        accountCreated: (state, action) => {
+            state.entities = [...state.entities, action.payload]
+        },
+        accountCreatedFailed: (state, action) => {
+            state.error = action.payload
+        },
+        accountDeleted: (state, action) => {
+            state.entities = state.entities.filter((acc) => acc._id !== action.payload)
+        },
+        accountDeleteFailed: (state, action) => {
+            state.error = action.payload
+        },
+        accountUpdated: (state, action) => {
+            state.isLoading = false
+            state.entities = state.entities.map((account) => {
+                if (account._id === action.payload._id) {
+                    return action.payload
+                }
+                return account
+            })
+        },
+        accountUpdateFailed: (state, action) => {
+            state.isLoading = false
+            state.error = action.payload
         }
     }
 })
@@ -29,84 +56,81 @@ const {reducer: accountsReducer, actions} = accountsSlice
 const {
     accountsRequested,
     accountsReceived,
-    accountsRequestedFailed
+    accountsRequestedFailed,
+    accountCreated,
+    accountCreatedFailed,
+    accountDeleted,
+    accountDeleteFailed,
+    accountUpdated,
+    accountUpdateFailed
 } = actions
 
 export const loadAccountsList = () => async (dispatch) => {
     dispatch(accountsRequested())
     try {
-        const content = [
-            {
-                userId: 1,
-                accountId: 1,
-                account: 'Счет 1234556',
-                sum: 300000,
-                date: new Date().toDateString()
-            },
-            {
-                userId: 2,
-                accountId: 1,
-                account: 'Наличные',
-                sum: 50000,
-                date: new Date().toDateString()
-            },
-            {
-                userId: 3,
-                accountId: 1,
-                account: 'Дебетовая карта МИР',
-                sum: 50000,
-                date: new Date().toDateString()
-            },
-            {
-                userId: 3,
-                accountId: 2,
-                account: 'Наличные',
-                sum: 100000,
-                date: new Date().toDateString()
-            },
-            {
-                userId: 2,
-                accountId: 2,
-                account: 'Дебетовая карта Альфа',
-                sum: 200000,
-                date: new Date().toDateString()
-            },
-            {
-                userId: 1,
-                accountId: 2,
-                account: 'Дебетовая карта Tinkoff',
-                sum: 123350,
-                date: new Date().toDateString()
-            },
-        ]
+        const {content} = await accountService.get()
         dispatch(accountsReceived(content))
     } catch (error) {
         dispatch(accountsRequestedFailed(error.message))
     }
 }
 
+export const createAccount = (account) => async (dispatch) => {
+    try {
+        const {content} = await accountService.create(account)
+        dispatch(accountCreated(content))
+    } catch (error) {
+        dispatch(accountCreatedFailed())
+    }
+}
+
+export const removeAccount = (accountId) => async (dispatch) => {
+    try {
+        await accountService.removeAccount(accountId)
+        dispatch(accountDeleted(accountId))
+    } catch (error) {
+        dispatch(accountDeleteFailed(error.message))
+    }
+}
+
+export const updateAccount = (accountId, data) => async (dispatch) => {
+    try {
+        const {content} = await accountService.updateAccount(accountId, data)
+        dispatch(accountUpdated(content))
+    } catch (error) {
+        dispatch(accountUpdateFailed(error.message))
+    }
+}
+
+export const getCurrentAccount = (accountId) => (state) => {
+    return state.accounts.entities?.find((acc) => acc._id === accountId)
+}
+
 export const getCurrentUserAccounts = () => (state) => {
-    const currentUserId = Number(localStorage.getItem('id'))
-    return state.accounts.entities?.filter((ac) => ac.userId === currentUserId)
+    const currentUserId = localStorageService.getUserId()
+    return state.accounts.entities?.filter((acc) => acc.userId === currentUserId)
 }
 
 export const getAccountsForPlugin = () => (state) => {
-    const currentUserId = Number(localStorage.getItem('id'))
-    const newState = state.accounts.entities?.filter((income) => income.userId === currentUserId)
-    return newState.splice((newState.length - 4), 3)
+    const currentUserId = localStorageService.getUserId()
+    if (state.accounts.entities) {
+        const newState = state.accounts.entities?.filter((account) => account.userId === currentUserId)
+        if (newState.length > 3) {
+            const showedElements = newState.splice((newState.length - 3), 3).reverse()
+            return showedElements
+        }
+        return newState.reverse()
+    }
+    return
 }
 
-export const getAccountNameById = (id) => (state) => {
-    return state.accounts.entities?.find((acc) => acc.accountId === id).account
-}
-
-export const getAccountsName = () => (state) => {
-    const currentUserId = Number(localStorage.getItem('id'))
-    const newState = state.accounts.entities?.filter((income) => income.userId === currentUserId)
+export const getAccounts = () => (state) => {
+    const currentUserId = localStorageService.getUserId()
+    const newState = state.accounts.entities?.filter((account) => account.userId === currentUserId)
     const newArray = []
     if (newState) {
         for (const account of newState) {
-            newArray.push(account.account)
+            newArray.push({accountName: account.accountName, accountId: account._id})
         }
         return newArray
     }

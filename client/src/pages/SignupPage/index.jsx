@@ -1,17 +1,19 @@
 import React from "react";
 import TextField from "../../components/common/form/textField";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Button from "../../components/common/Button";
 import * as Yup from "yup";
 import {useFormik, FormikProvider} from "formik";
 import RadioField from "../../components/common/form/radioField";
-import {useDispatch} from "react-redux";
-import {signUp} from "../../store/users";
+import {useDispatch, useSelector} from "react-redux";
+import {getCurrentUserData, getIsLoggedIn, signUp} from "../../store/users";
+import Loader from "../../components/common/Loader";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
         .min(4, 'Имя должно содержать не менее 4 символов')
         .required('Данное поле обязательно для заполнения'),
+    sex: Yup.string().required('Данное поле обязательно для заполнения'),
     email: Yup.string()
         .email('Некорректный адрес электронной почты')
         .required('Данное поле обязательно для заполнения'),
@@ -33,6 +35,7 @@ const initialValues = {
 
 const SignupPage = () => {
     const dispatch = useDispatch()
+    const isLoggedIn = useSelector(getIsLoggedIn())
     const handleSubmit = (formValue) => {
         dispatch(signUp(formValue))
     }
@@ -44,6 +47,8 @@ const SignupPage = () => {
     })
 
     const isValid = formik.isValid
+
+    if (isLoggedIn) return <Loader/>
 
     return (
         <div className='max-w-screen-xl m-auto w-full flex justify-center'>

@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 
 const schema = new Schema({
-    category: {type: Schema.Types.ObjectId, ref: 'ExpenseType', required: true},
+    category: {type: String, required: true},
     sum: Number,
     accountId: {type: Schema.Types.ObjectId, ref: 'Account', required: true},
     userId: {type: Schema.Types.ObjectId, ref: 'User', required: true}
@@ -10,3 +10,5 @@ const schema = new Schema({
 })
 
 module.exports = model('Expense', schema)
+
+// Schema.Types.ObjectId, ref: 'ExpenseType'

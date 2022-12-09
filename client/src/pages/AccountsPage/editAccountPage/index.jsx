@@ -1,40 +1,33 @@
 import React from "react";
-import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {useFormik, FormikProvider} from "formik";
+import {useParams} from "react-router-dom";
 import * as Yup from "yup";
-import TextField from "../../../components/common/form/textField";
-import {getAccounts} from "../../../store/accounts";
-import Loader from "../../../components/common/Loader";
-import {getExpenseById, updateExpense} from "../../../store/expenses";
 import history from "../../../utils/history";
-import SelectField from "../../../components/common/form/selectField";
+import {FormikProvider, useFormik} from "formik";
+import TextField from "../../../components/common/form/textField";
+import {getCurrentAccount, updateAccount} from "../../../store/accounts";
+import Loader from "../../../components/common/Loader";
 
 const validationSchema = Yup.object().shape({
-    category: Yup.string()
-        .required('Данное поле обязательно для заполнения'),
-    accountId: Yup.string()
-        .required('Данное поле обязательно для заполнения'),
+    accountName: Yup.string().required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
         .typeError('Сумма зачисления должна быть числом')
 })
 
-const EditExpensesPage = () => {
+const EditAccountPage = () => {
     const dispatch = useDispatch()
     const params = useParams()
-    const {expenseId} = params
-    const expense = useSelector(getExpenseById(expenseId))
-    const accounts = useSelector(getAccounts())
+    const {accountId} = params
+    const account = useSelector(getCurrentAccount(accountId))
 
     const initialValues = {
-        category: expense.category,
-        sum: expense.sum,
-        accountId: expense.accountId
+        accountName: account.accountName,
+        sum: account.sum
     }
 
     const handleSubmit = (formValue) => {
-        dispatch(updateExpense(expenseId, formValue))
+        dispatch(updateAccount(accountId, formValue))
         history.goBack()
     }
 
@@ -44,31 +37,21 @@ const EditExpensesPage = () => {
         validateOnChange: true,
         onSubmit: handleSubmit
     })
-
-    if (!expense) {
-        return <Loader/>
-    }
+    if (!account) return <Loader/>
 
     return (
         <div
             className='max-w-screen-xl m-auto w-full flex flex-col items-center rounded-lg overflow-hidden w-96 ring-1 ring-slate-900/5 shadow-xl p-6 '>
             <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
-                Редактирование операции
+                Редактирование счета
             </div>
             <FormikProvider value={formik}>
                 <form onSubmit={formik.handleSubmit}>
                     <TextField
-                        label='Категория:'
-                        name='category'
-                        value={formik.values.category}
+                        label='Название счета:'
+                        name='accountName'
+                        value={formik.values.accountName}
                         placeholder='Заработная плата'
-                    />
-                    <SelectField
-                        label='Выберите счет зачисления денежных средств:'
-                        name='accountId'
-                        value={formik.values.accountId}
-                        defaultOption='Choose...'
-                        options={accounts}
                     />
                     <TextField
                         label='Сумма зачисления:'
@@ -98,4 +81,4 @@ const EditExpensesPage = () => {
     )
 }
 
-export default EditExpensesPage
+export default EditAccountPage

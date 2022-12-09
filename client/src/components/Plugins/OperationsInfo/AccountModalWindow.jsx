@@ -2,9 +2,12 @@ import React from "react";
 import TextField from "../../common/form/textField";
 import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
+import {useDispatch} from 'react-redux'
+import {createAccount} from "../../../store/accounts";
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
-    account: Yup.string()
+    accountName: Yup.string()
         .required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
@@ -12,13 +15,18 @@ const validationSchema = Yup.object().shape({
 })
 
 const initialValues = {
-    account: '',
+    accountName: '',
     sum: null
 }
 
 const AccountModalWindow = ({onCLick}) => {
+    const dispatch = useDispatch()
     const handleSubmit = (formValue) => {
-        console.log(formValue)
+        dispatch(createAccount(formValue))
+        toast.success('Счет был добавлен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
+        onCLick()
     }
     const formik = useFormik({
         initialValues,
@@ -55,13 +63,15 @@ const AccountModalWindow = ({onCLick}) => {
                                 <form onSubmit={formik.handleSubmit}>
                                     <TextField
                                         label='Название счета:'
-                                        name='account'
+                                        name='accountName'
                                         placeholder='Кредитная карта АльфаБанк'
+                                        value={formik.values.accountName}
                                     />
                                     <TextField
                                         label='Начальная сумма на счету:'
                                         name='sum'
                                         placeholder='4000000'
+                                        value={formik.values.sum}
                                     />
                                     <div className='flex justify-end mt-4'>
                                         <button

@@ -1,8 +1,18 @@
-import {createSlice, createAction, nanoid} from "@reduxjs/toolkit";
-import {ACCESS_TOKEN} from "../../pages/LoginPage";
+import {createSlice} from "@reduxjs/toolkit";
 import history from "../../utils/history";
+import authService from "../../services/auth.service";
+import localStorageService from "../../services/localStorage.service";
+import {generateAuthError} from "../../utils/generateAuthError";
+import userService from "../../services/user.service";
 
-const initialState = {
+const initialState = localStorageService.getAccessToken() ? {
+    entities: null,
+    isLoading: true,
+    error: null,
+    auth: {userId: localStorageService.getUserId()},
+    isLoggedIn: true,
+    dataLoaded: false
+} : {
     entities: null,
     isLoading: false,
     error: null,
@@ -58,72 +68,55 @@ const {
 export const loadUsersList = () => async (dispatch) => {
     dispatch(usersRequested())
     try {
-        const content = [
-            {
-                id: 1,
-                name: 'Ksenia',
-                sex: 'female',
-                email: 'tester@example.ru',
-                password: 'Test1234'
-            },
-            {
-                id: 2,
-                name: 'Aleksei',
-                sex: 'male',
-                email: 'tester2@example.ru',
-                password: 'Test1234'
-            },
-            {
-                id: 3,
-                name: 'Larisa',
-                sex: 'female',
-                email: 'tester3@example.ru',
-                password: 'Test1234'
-            }
-        ]
+        const {content} = await userService.get()
         dispatch(usersReceived(content))
     } catch (error) {
         dispatch(usersRequestFailed(error.message))
     }
 }
 
-export const logIn = (payload) => (dispatch, getState) => {
+export const logIn = (payload) => async (dispatch) => {
     const {email, password} = payload
-    const state = getState()
-    const currentUser = state.users.entities.filter((user) => user.email === email && user.password === password)[0]
     dispatch(authRequested())
-    if (currentUser) {
-        const data = {userId: nanoid()}
-        dispatch(authRequestSuccess(data))
-        localStorage.setItem(ACCESS_TOKEN, data.userId)
-        localStorage.setItem('id', currentUser.id)
+    try {
+        const data = await authService.logIn({email, password})
+        localStorageService.setTokens(data)
+        dispatch(authRequestSuccess({userId: data.userId}))
         history.push('/dashboard')
-    } else {
-        history.push('/signUp')
+    } catch (error) {
+        const {code, message} = error.response.data.error;
+        if (code === 400) {
+            const errorMessage = generateAuthError(message);
+            dispatch(authRequestFailed(errorMessage));
+        } else {
+            dispatch(authRequestFailed(error.message));
+        }
     }
 }
 
-export const signUp = (payload) => (dispatch, getState) => {
-
+export const signUp = (payload) => async (dispatch) => {
     dispatch(authRequested())
-    const state = getState()
-    const currentUser = state.users.entities.filter((user) => user.email === payload.email)[0]
-    if (currentUser) return history.push('/login')
-
-    localStorage.setItem(ACCESS_TOKEN, nanoid())
-    localStorage.setItem('registerUsers', JSON.stringify(payload))
+    try {
+        const data = await authService.register(payload)
+        localStorageService.setTokens(data)
+        dispatch(authRequestSuccess({userId: data.userId}))
+        history.push('/dashboard')
+    } catch (error) {
+        dispatch(authRequestFailed(error.message));
+    }
 }
 
 export const logOut = () => (dispatch) => {
-    localStorage.removeItem(ACCESS_TOKEN)
-    localStorage.removeItem('id')
+    localStorageService.removeAuthData()
     dispatch(userLoggedOut())
     history.push('/login')
 }
 
 export const getCurrentUserData = () => (state) => {
-    const currentUserId = Number(localStorage.getItem('id'))
-    return state.users.entities?.find((u) => u.id === currentUserId)
+    return state.users.entities ?
+        state.users.entities.find(u => u._id === state.users.auth.userId) : null;
 }
+
+export const getIsLoggedIn = () => (state) => state.users.isLoggedIn
 
 export default usersReducer

@@ -13,7 +13,8 @@ const OperationsInfo = ({label, data, img}) => {
 
     return (
         <div
-            className='border-dotted border-4 border-sky-300 rounded-md px-6 py-4 bg-slate-50 shadow-xl relative flex-1'>
+            className='border-dotted border-4 border-sky-300 rounded-md px-6 py-4 bg-slate-50 shadow-xl relative flex-1'
+        >
             <img
                 src={plusIcon}
                 className='absolute top-3 right-4 w-6 cursor-pointer rounded-full bg-slate-300 shadow-2xl'
@@ -33,9 +34,9 @@ const OperationsInfo = ({label, data, img}) => {
             </div>
             {data && data.map((item) => {
                 return (
-                    <div key={item.id || item.accountId}
+                    <div key={item._id}
                          className='flex justify-between mb-2 border-b-2 border-slate-200 '>
-                        <div className=''>{`${data.indexOf(item) + 1}. ${item.type || item.account}`}</div>
+                        <div className=''>{`${data.indexOf(item) + 1}. ${item.category || item.accountName}`}</div>
                         <div className=''>{item.sum}р.</div>
                     </div>
                 )

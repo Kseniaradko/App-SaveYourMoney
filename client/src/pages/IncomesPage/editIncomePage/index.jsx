@@ -1,19 +1,19 @@
 import React from "react";
 import {useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {getIncomeById} from "../../../store/incomes";
+import {useDispatch, useSelector} from "react-redux";
+import {getIncomeById, updateIncome} from "../../../store/incomes";
 import {useFormik, FormikProvider} from "formik";
 import * as Yup from "yup";
 import TextField from "../../../components/common/form/textField";
-import {getAccountNameById, getAccountsName} from "../../../store/accounts";
+import {getAccounts} from "../../../store/accounts";
 import Loader from "../../../components/common/Loader";
 import history from "../../../utils/history";
 import SelectField from "../../../components/common/form/selectField";
 
 const validationSchema = Yup.object().shape({
-    type: Yup.string()
+    category: Yup.string()
         .required('Данное поле обязательно для заполнения'),
-    account: Yup.string()
+    accountId: Yup.string()
         .required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
@@ -21,17 +21,24 @@ const validationSchema = Yup.object().shape({
 })
 
 const EditIncomePage = () => {
+    const dispatch = useDispatch()
     const params = useParams()
     const {incomeId} = params
     const income = useSelector(getIncomeById(incomeId))
-    const accountName = useSelector(getAccountNameById(income?.accountId))
-    const accounts = useSelector(getAccountsName())
+    const accounts = useSelector(getAccounts())
+
+    const initialValues = {
+        category: income.category,
+        sum: income.sum,
+        accountId: income.accountId
+    }
 
     const handleSubmit = (formValue) => {
-        console.log(formValue)
+        dispatch(updateIncome(incomeId, formValue))
+        history.goBack()
     }
     const formik = useFormik({
-        initialValues: income,
+        initialValues,
         validationSchema,
         validateOnChange: true,
         onSubmit: handleSubmit
@@ -51,33 +58,33 @@ const EditIncomePage = () => {
                 <form onSubmit={formik.handleSubmit}>
                     <TextField
                         label='Категория:'
-                        name='type'
-                        value={income.type}
+                        name='category'
+                        value={formik.values.category}
                         placeholder='Заработная плата'
                     />
                     <SelectField
                         label='Выберите счет зачисления денежных средств:'
-                        name='account'
+                        name='accountId'
+                        value={formik.values.accountId}
                         defaultOption='Choose...'
-                        placeholder='Choose...'
                         options={accounts}
                     />
                     <TextField
                         label='Сумма зачисления:'
                         name='sum'
-                        value={income.sum}
+                        value={formik.values.sum}
                         placeholder='30000'
                     />
                     <div className='flex justify-end mt-4'>
                         <button
-                            className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-xs outline-none hover:bg-red-50 rounded focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-sm outline-none hover:bg-red-50 rounded focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                             onClick={() => history.goBack()}
                         >
                             Назад
                         </button>
                         <button
-                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-xs px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="submit"
                             disabled={!formik.isValid}
                         >

@@ -39,8 +39,6 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required('Данное поле обязательно для заполнения')
 })
 
-export const ACCESS_TOKEN = 'access-token'
-
 const LoginPage = () => {
     const dispatch = useDispatch()
 
