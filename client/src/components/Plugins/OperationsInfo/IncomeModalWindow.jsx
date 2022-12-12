@@ -27,6 +27,7 @@ const initialValues = {
 const IncomeModalWindow = ({onCLick}) => {
     const dispatch = useDispatch()
     const accounts = useSelector(getAccounts())
+
     const handleSubmit = (formValue) => {
         dispatch(createIncome(formValue))
         toast.success('Доход был добавлен!', {

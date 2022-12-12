@@ -63,7 +63,7 @@ const ExpensesPage = () => {
 
     const handleDelete = (id) => {
         dispatch(removeExpense(id))
-        toast.success('Расход был удален!', {
+        toast.error('Расход был удален!', {
             position: toast.POSITION.TOP_RIGHT
         })
     }

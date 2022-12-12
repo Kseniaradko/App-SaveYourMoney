@@ -4,7 +4,7 @@ import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import SelectField from "../../common/form/selectField";
 import {useDispatch, useSelector} from "react-redux";
-import {getAccounts} from "../../../store/accounts";
+import {getAccounts, getCurrentUserAccounts} from "../../../store/accounts";
 import {createExpense} from "../../../store/expenses";
 import {toast} from "react-toastify";
 
@@ -27,6 +27,7 @@ const initialValues = {
 const ExpensesModalWindow = ({onCLick}) => {
     const dispatch = useDispatch()
     const accounts = useSelector(getAccounts())
+
     const handleSubmit = (formValue) => {
         dispatch(createExpense(formValue))
         toast.success('Расход был добавлен!', {

@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import localStorageService from "../../services/localStorage.service";
 import expenseService from "../../services/expense.service";
+import {loadAccountsList} from "../accounts";
 
 const initialState = {
     entities: null,
@@ -79,6 +80,7 @@ export const createExpense = (expense) => async (dispatch) => {
     try {
         const {content} = await expenseService.create(expense)
         dispatch(expenseCreated(content))
+        dispatch(loadAccountsList())
     } catch (error) {
         dispatch(expenseCreatedFailed(error.message))
     }
@@ -88,6 +90,7 @@ export const removeExpense = (expenseId) => async (dispatch) => {
     try {
         await expenseService.removeExpense(expenseId)
         dispatch(expenseDeleted(expenseId))
+        dispatch(loadAccountsList())
     } catch (error) {
         dispatch(expenseDeleteFailed(error.message))
     }
@@ -97,6 +100,7 @@ export const updateExpense = (expenseId, data) => async (dispatch) => {
     try {
         const {content} = await expenseService.updateExpense(expenseId, data)
         dispatch(expenseUpdated(content))
+        dispatch(loadAccountsList())
     } catch (error) {
         dispatch(expenseUpdateFailed(error.message))
     }

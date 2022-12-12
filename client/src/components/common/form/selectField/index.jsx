@@ -12,7 +12,6 @@ const SelectField = (props) => {
             (showedError ? ' ring-1 ring-red-500 focus:border-red-700 focus:ring-red-700 focus:' : '')
         )
     }
-    console.log(field)
 
     return (
         <div className='relative'>

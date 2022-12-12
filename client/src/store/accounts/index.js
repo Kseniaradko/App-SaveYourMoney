@@ -116,8 +116,7 @@ export const getAccountsForPlugin = () => (state) => {
     if (state.accounts.entities) {
         const newState = state.accounts.entities?.filter((account) => account.userId === currentUserId)
         if (newState.length > 3) {
-            const showedElements = newState.splice((newState.length - 3), 3).reverse()
-            return showedElements
+            return newState.splice((newState.length - 3), 3).reverse()
         }
         return newState.reverse()
     }

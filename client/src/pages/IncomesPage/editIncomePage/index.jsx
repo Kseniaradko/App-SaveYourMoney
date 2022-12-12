@@ -9,6 +9,7 @@ import {getAccounts} from "../../../store/accounts";
 import Loader from "../../../components/common/Loader";
 import history from "../../../utils/history";
 import SelectField from "../../../components/common/form/selectField";
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -35,6 +36,9 @@ const EditIncomePage = () => {
 
     const handleSubmit = (formValue) => {
         dispatch(updateIncome(incomeId, formValue))
+        toast.success('Доход был изменен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
         history.goBack()
     }
     const formik = useFormik({

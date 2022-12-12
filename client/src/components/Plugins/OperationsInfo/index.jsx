@@ -11,9 +11,11 @@ const OperationsInfo = ({label, data, img}) => {
         setShowModal(prevState => !prevState)
     }
 
+    const haveData = data.length > 0
+
     return (
         <div
-            className='border-dotted border-4 border-sky-300 rounded-md px-6 py-4 bg-slate-50 shadow-xl relative flex-1'
+            className='min-h-[182px] border-dotted border-4 border-sky-300 rounded-md px-6 py-4 bg-slate-50 shadow-xl relative flex-1'
         >
             <img
                 src={plusIcon}
@@ -32,15 +34,17 @@ const OperationsInfo = ({label, data, img}) => {
                     <Link to='/accountsPage' className='hover:underline underline-offset-4'>{label}</Link>}
                 {img && <img className='w-5' src={img} alt='Loading'/>}
             </div>
-            {data && data.map((item) => {
+            {haveData && data.map((item) => {
                 return (
                     <div key={item._id}
                          className='flex justify-between mb-2 border-b-2 border-slate-200 '>
-                        <div className=''>{`${data.indexOf(item) + 1}. ${item.category || item.accountName}`}</div>
+                        <div
+                            className=''>{`${data.indexOf(item) + 1}. ${item.category || item.accountName}`}</div>
                         <div className=''>{item.sum}р.</div>
                     </div>
                 )
             })}
+            {!haveData && <div className='mt-4 text-center text-xl font-light text-slate-500'>Нет данных!</div>}
         </div>
     )
 }

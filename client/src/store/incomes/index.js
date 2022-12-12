@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import incomeService from "../../services/income.service";
 import localStorageService from "../../services/localStorage.service";
+import {loadAccountsList} from "../accounts";
 
 const initialState = {
     entities: null,
@@ -79,6 +80,7 @@ export const createIncome = (income) => async (dispatch) => {
     try {
         const {content} = await incomeService.create(income)
         dispatch(incomeCreated(content))
+        dispatch(loadAccountsList())
     } catch (error) {
         dispatch(incomeCreatedFailed(error.message))
     }
@@ -88,6 +90,7 @@ export const removeIncome = (incomeId) => async (dispatch) => {
     try {
         await incomeService.removeIncome(incomeId)
         dispatch(incomeDeleted(incomeId))
+        dispatch(loadAccountsList())
     } catch (error) {
         dispatch(incomeDeleteFailed(error.message))
     }
@@ -97,6 +100,7 @@ export const updateIncome = (incomeId, data) => async (dispatch) => {
     try {
         const {content} = await incomeService.updateIncome(incomeId, data)
         dispatch(incomeUpdated(content))
+        dispatch(loadAccountsList())
     } catch (error) {
         dispatch(incomeUpdateFailed(error.message))
     }
@@ -112,8 +116,7 @@ export const getIncomesForPlugin = () => (state) => {
     if (state.incomes.entities) {
         const newState = state.incomes.entities?.filter((income) => income.userId === currentUserId)
         if (newState.length > 3) {
-            const showedElements = newState.splice((newState.length - 3), 3).reverse()
-            return showedElements
+            return newState.splice((newState.length - 3), 3).reverse()
         }
         return newState.reverse()
     }

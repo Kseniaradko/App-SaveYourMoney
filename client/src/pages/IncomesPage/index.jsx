@@ -5,7 +5,7 @@ import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUserIncomes, removeIncome} from "../../store/incomes";
 import {Link} from "react-router-dom";
-import {getCurrentUserAccounts} from "../../store/accounts";
+import {getCurrentUserAccounts, loadAccountsList} from "../../store/accounts";
 import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
 import {toast} from "react-toastify";
@@ -64,7 +64,7 @@ const IncomesPage = () => {
 
     const handleDelete = (id) => {
         dispatch(removeIncome(id))
-        toast.success('Доход был удален!', {
+        toast.error('Доход был удален!', {
             position: toast.POSITION.TOP_RIGHT
         })
     }
