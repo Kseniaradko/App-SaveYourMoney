@@ -10,6 +10,8 @@ import ExpensesPage from "../../pages/ExpensesPage";
 import AccountsPage from "../../pages/AccountsPage";
 import EditIncomePage from "../../pages/IncomesPage/editIncomePage";
 import EditExpensesPage from "../../pages/ExpensesPage/editExpensesPage";
+import ChartsPage from "../../pages/ChartsPage";
+import EditAccountPage from "../../pages/AccountsPage/editAccountPage";
 
 const AuthMainPage = () => {
     return (
@@ -23,7 +25,9 @@ const AuthMainPage = () => {
                 <Route path='/incomesPage/:incomeId?' exact component={EditIncomePage}/>
                 <Route path='/expensesPage' exact component={ExpensesPage}/>
                 <Route path='/expensesPage/:expenseId?' exact component={EditExpensesPage}/>
-                <Route path='/accountsPage/:accountId?' exact component={AccountsPage}/>
+                <Route path='/accountsPage' exact component={AccountsPage}/>
+                <Route path='/accountsPage/:accountId?' exact component={EditAccountPage}/>
+                <Route path='/chartsPage' exact component={ChartsPage}/>
                 <Redirect to='/dashboard'/>
             </Switch>
             <Footer/>

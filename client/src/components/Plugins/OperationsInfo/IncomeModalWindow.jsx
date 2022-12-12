@@ -2,14 +2,16 @@ import React from "react";
 import TextField from "../../common/form/textField";
 import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
-import {useSelector} from "react-redux";
-import {getAccountsName} from "../../../store/accounts";
+import {useDispatch, useSelector} from "react-redux";
+import {getAccounts} from "../../../store/accounts";
 import SelectField from "../../common/form/selectField";
+import {createIncome} from "../../../store/incomes";
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
-    type: Yup.string()
+    category: Yup.string()
         .required('Данное поле обязательно для заполнения'),
-    account: Yup.string()
+    accountId: Yup.string()
         .required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
@@ -17,15 +19,20 @@ const validationSchema = Yup.object().shape({
 })
 
 const initialValues = {
-    type: '',
-    account: '',
+    category: '',
+    accountId: '',
     sum: ''
 }
 
 const IncomeModalWindow = ({onCLick}) => {
-    const accounts = useSelector(getAccountsName())
+    const dispatch = useDispatch()
+    const accounts = useSelector(getAccounts())
+
     const handleSubmit = (formValue) => {
-        console.log(formValue)
+        dispatch(createIncome(formValue))
+        toast.success('Доход был добавлен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
         onCLick()
     }
     const formik = useFormik({
@@ -63,19 +70,22 @@ const IncomeModalWindow = ({onCLick}) => {
                                 <form onSubmit={formik.handleSubmit}>
                                     <TextField
                                         label='Категория:'
-                                        name='type'
+                                        name='category'
                                         placeholder='Заработная плата'
+                                        value={formik.values.category}
                                     />
                                     <SelectField
                                         label='Выберите счет зачисления денежных средств:'
-                                        name='account'
+                                        name='accountId'
                                         defaultOption='Choose...'
                                         options={accounts}
+                                        value={formik.values.accountId}
                                     />
                                     <TextField
                                         label='Сумма зачисления:'
                                         name='sum'
                                         placeholder='30000'
+                                        value={formik.values.sum}
                                     />
                                     <div className='flex justify-end mt-4'>
                                         <button

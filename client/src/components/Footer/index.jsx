@@ -7,7 +7,6 @@ const Footer = () => {
                 <div>
                     <div className="font-semibold">Contacts:</div>
                     <div>Vkontakte</div>
-                    <div>PhoneNumber</div>
                     <div>Email</div>
                 </div>
                 <span>Made by Ksenia Radko</span>

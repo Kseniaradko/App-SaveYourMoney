@@ -32,7 +32,6 @@ const TextField = (props) => {
                     type={showPassword ? 'text' : props.type}
                     name={props.name}
                     className={getInputClasses()}
-                    autoComplete='new-password'
                 />
                 {props.type === 'password' && (
                     <button

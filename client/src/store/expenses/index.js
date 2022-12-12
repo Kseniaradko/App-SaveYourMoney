@@ -1,4 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
+import localStorageService from "../../services/localStorage.service";
+import expenseService from "../../services/expense.service";
+import {loadAccountsList} from "../accounts";
 
 const initialState = {
     entities: null,
@@ -20,6 +23,31 @@ const expensesSlice = createSlice({
         expensesReceived: (state, action) => {
             state.isLoading = false
             state.entities = action.payload
+        },
+        expenseCreated: (state, action) => {
+            state.entities = [...state.entities, action.payload]
+        },
+        expenseCreatedFailed: (state, action) => {
+            state.error = action.payload
+        },
+        expenseDeleted: (state, action) => {
+            state.entities = state.entities.filter((expense) => expense._id !== action.payload)
+        },
+        expenseDeleteFailed: (state, action) => {
+            state.error = action.payload
+        },
+        expenseUpdated: (state, action) => {
+            state.isLoading = false
+            state.entities = state.entities.map((expense) => {
+                if (expense._id === action.payload._id) {
+                    return action.payload
+                }
+                return expense
+            })
+        },
+        expenseUpdateFailed: (state, action) => {
+            state.isLoading = false
+            state.error = action.payload
         }
     }
 })
@@ -29,81 +57,75 @@ const {reducer: expensesReducer, actions} = expensesSlice
 const {
     expensesRequested,
     expensesRequestedFailed,
-    expensesReceived
+    expensesReceived,
+    expenseCreated,
+    expenseCreatedFailed,
+    expenseDeleted,
+    expenseDeleteFailed,
+    expenseUpdated,
+    expenseUpdateFailed
 } = actions
 
-export const loadExpensesList = () => (dispatch) => {
+export const loadExpensesList = () => async (dispatch) => {
     dispatch(expensesRequested())
     try {
-        const content = [
-            {
-                id: 1,
-                userId: 1,
-                accountId: 1,
-                type: 'Развлечение',
-                sum: 2000,
-                date: new Date().toDateString()
-            },
-            {
-                id: 2,
-                userId: 1,
-                accountId: 2,
-                type: 'Еда',
-                sum: 8500,
-                date: new Date().toDateString()
-            },
-            {
-                id: 1,
-                userId: 2,
-                accountId: 2,
-                type: 'Подарок',
-                sum: 1500,
-                date: new Date().toDateString()
-            },
-            {
-                id: 2,
-                userId: 2,
-                accountId: 1,
-                type: 'Лекарства',
-                sum: 3000,
-                date: new Date().toDateString()
-            },
-            {
-                id: 1,
-                userId: 3,
-                accountId: 2,
-                type: 'Ресторан',
-                sum: 4000,
-                date: new Date().toDateString()
-            },
-            {
-                id: 2,
-                userId: 3,
-                accountId: 1,
-                type: 'Транспорт',
-                sum: 200,
-                date: new Date().toDateString()
-            }
-        ]
+        const {content} = await expenseService.get()
         dispatch(expensesReceived(content))
     } catch (error) {
         dispatch(expensesRequestedFailed(error.message))
     }
 }
 
+export const createExpense = (expense) => async (dispatch) => {
+    try {
+        const {content} = await expenseService.create(expense)
+        dispatch(expenseCreated(content))
+        dispatch(loadAccountsList())
+    } catch (error) {
+        dispatch(expenseCreatedFailed(error.message))
+    }
+}
+
+export const removeExpense = (expenseId) => async (dispatch) => {
+    try {
+        await expenseService.removeExpense(expenseId)
+        dispatch(expenseDeleted(expenseId))
+        dispatch(loadAccountsList())
+    } catch (error) {
+        dispatch(expenseDeleteFailed(error.message))
+    }
+}
+
+export const updateExpense = (expenseId, data) => async (dispatch) => {
+    try {
+        const {content} = await expenseService.updateExpense(expenseId, data)
+        dispatch(expenseUpdated(content))
+        dispatch(loadAccountsList())
+    } catch (error) {
+        dispatch(expenseUpdateFailed(error.message))
+    }
+}
+
 export const getCurrentUserExpenses = () => (state) => {
-    const currentUserId = Number(localStorage.getItem('id'))
+    const currentUserId = localStorageService.getUserId()
     return state.expenses.entities?.filter((exp) => exp.userId === currentUserId)
 }
 
 export const getExpensesForPlugin = () => (state) => {
-    const currentUserId = Number(localStorage.getItem('id'))
-    const newState = state.expenses.entities?.filter((income) => income.userId === currentUserId)
-    return newState.splice((newState.length - 4), 3)
+    const currentUserId = localStorageService.getUserId()
+    if (state.expenses.entities) {
+        const newState = state.expenses.entities?.filter((expense) => expense.userId === currentUserId)
+        if (newState.length > 3) {
+            const showedElements = newState.splice((newState.length - 3), 3).reverse()
+            return showedElements
+        }
+        return newState.reverse()
+    }
+    return
 }
 
 export const getExpenseById = (id) => (state) => {
-    return state.expenses.entities?.find((expense) => expense.id === Number(id))
+    return state.expenses.entities?.find((expense) => expense._id === id)
 }
 
 

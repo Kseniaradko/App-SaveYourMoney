@@ -1,18 +1,20 @@
 import React from "react";
 import {useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useFormik, FormikProvider} from "formik";
 import * as Yup from "yup";
 import TextField from "../../../components/common/form/textField";
-import {getAccountNameById} from "../../../store/accounts";
+import {getAccounts} from "../../../store/accounts";
 import Loader from "../../../components/common/Loader";
-import {getExpenseById} from "../../../store/expenses";
+import {getExpenseById, updateExpense} from "../../../store/expenses";
 import history from "../../../utils/history";
+import SelectField from "../../../components/common/form/selectField";
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
-    type: Yup.string()
+    category: Yup.string()
         .required('Данное поле обязательно для заполнения'),
-    account: Yup.string()
+    accountId: Yup.string()
         .required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
@@ -20,16 +22,28 @@ const validationSchema = Yup.object().shape({
 })
 
 const EditExpensesPage = () => {
+    const dispatch = useDispatch()
     const params = useParams()
     const {expenseId} = params
     const expense = useSelector(getExpenseById(expenseId))
-    const accountName = useSelector(getAccountNameById(expense?.accountId))
+    const accounts = useSelector(getAccounts())
+
+    const initialValues = {
+        category: expense.category,
+        sum: expense.sum,
+        accountId: expense.accountId
+    }
 
     const handleSubmit = (formValue) => {
-        console.log(formValue)
+        dispatch(updateExpense(expenseId, formValue))
+        toast.success('Расход был изменен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
+        history.goBack()
     }
+
     const formik = useFormik({
-        initialValues: expense,
+        initialValues,
         validationSchema,
         validateOnChange: true,
         onSubmit: handleSubmit
@@ -49,20 +63,21 @@ const EditExpensesPage = () => {
                 <form onSubmit={formik.handleSubmit}>
                     <TextField
                         label='Категория:'
-                        name='type'
-                        value={expense.type}
+                        name='category'
+                        value={formik.values.category}
                         placeholder='Заработная плата'
                     />
-                    <TextField
+                    <SelectField
                         label='Выберите счет зачисления денежных средств:'
-                        name='account'
-                        value={accountName}
-                        placeholder='Дебетовая карта 324567656938'
+                        name='accountId'
+                        value={formik.values.accountId}
+                        defaultOption='Choose...'
+                        options={accounts}
                     />
                     <TextField
                         label='Сумма зачисления:'
                         name='sum'
-                        value={expense.sum}
+                        value={formik.values.sum}
                         placeholder='30000'
                     />
                     <div className='flex justify-end mt-4'>

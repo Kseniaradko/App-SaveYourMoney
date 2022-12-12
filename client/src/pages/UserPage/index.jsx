@@ -1,11 +1,12 @@
 import React from "react";
 import {useSelector} from "react-redux";
 import {getCurrentUserData} from "../../store/users";
+import Loader from "../../components/common/Loader";
 
 const UserPage = () => {
     const user = useSelector(getCurrentUserData())
     if (!user) {
-        return <>Loading...</>
+        return <Loader/>
     }
     return (
         <div className='max-w-screen-xl m-auto flex-col justify-center'>

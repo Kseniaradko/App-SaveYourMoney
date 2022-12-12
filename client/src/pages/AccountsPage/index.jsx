@@ -1,50 +1,72 @@
-import React from "react";
+import React, {useState} from "react";
 import Table from "../../components/common/Table";
 import EditIcon from "../../components/common/Table/editIcon";
 import DeleteIcon from "../../components/common/Table/deleteIcon";
-import {useSelector} from "react-redux";
-import {getCurrentUserAccounts} from "../../store/accounts";
+import {useDispatch, useSelector} from "react-redux";
+import {getCurrentUserAccounts, removeAccount} from "../../store/accounts";
 import {Link} from "react-router-dom";
+import displayDate from "../../utils/displayDate";
+import {toast} from "react-toastify";
+import Button from "../../components/common/Button";
+import AccountModalWindow from "../../components/Plugins/OperationsInfo/AccountModalWindow";
 
 const AccountsPage = () => {
+    const dispatch = useDispatch()
     const userAccounts = useSelector(getCurrentUserAccounts())
+    const [showModal, setShowModal] = useState(false)
+    const handleClick = () => {
+        setShowModal(prevState => !prevState)
+    }
 
     const columns = {
-        accountId: {
+        _id: {
             name: '№',
-            path: 'accountId',
+            path: '_id',
             component: (data) => userAccounts.indexOf(data) + 1
         },
-        account: {
+        accountName: {
             name: 'Счет',
-            path: 'account',
+            path: 'accountName',
             component: (data) => <Link to={`/accountsPage/${data.id}`}
-                                       className='hover:text-sky-500'>{data.account}</Link>
+                                       className='hover:text-sky-500'>{data.accountName}</Link>
         },
         sum: {
             name: 'Сумма на счету',
             path: 'sum'
         },
-        date: {
+        createdAt: {
             name: 'Дата создания',
-            path: 'date'
+            path: 'createdAt',
+            component: (data) => displayDate(data.createdAt)
         },
         edit: {
             name: 'Редактировать',
-            component: (data) => <EditIcon onClick={() => handleEdit(data.id)}/>
+            component: (data) => <Link to={`/accountsPage/${data._id}`}><EditIcon/></Link>
         },
         delete: {
             name: 'Удалить',
-            component: (data) => <DeleteIcon onDelete={() => handleDelete(data.id)}/>
+            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id)}/>
         }
     }
 
-    const handleEdit = (id) => {
-        console.log(id)
+    const handleDelete = (id) => {
+        dispatch(removeAccount(id))
+        toast.success('Счет был удален!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     }
 
-    const handleDelete = (id) => {
-        console.log(id)
+    if (userAccounts.length === 0) {
+        return (
+            <div
+                className='max-w-screen-xl m-auto flex-col justify-center text-xl italic font-light text-slate-500'>
+                {showModal && <AccountModalWindow onCLick={handleClick}/>}
+                Счета отсутствуют. Начните добавлять их!
+                <div className='flex justify-center' onClick={handleClick}>
+                    <Button>Добавить</Button>
+                </div>
+            </div>
+        )
     }
 
     return (

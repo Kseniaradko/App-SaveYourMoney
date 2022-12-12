@@ -2,11 +2,15 @@ import React from "react";
 import {useField} from "formik";
 
 const RadioField = (props) => {
-    const [field] = useField(props)
+    const [field, meta] = useField(props)
+    const showedError = meta.error && meta.touched
+    const errorStyle =
+        'absolute -bottom-5 right-0 text-xs text-red-500 font-normal'
+
     return (
         <div className='pt-3'>
             <label>{props.label}</label>
-            <div className='flex'>
+            <div className='flex relative'>
                 {props.options.map((option) => (
                     <div
                         key={option.name + '-' + option.value}
@@ -25,6 +29,9 @@ const RadioField = (props) => {
                         </label>
                     </div>
                 ))}
+                {showedError ? (
+                    <div className={errorStyle}>{meta.error}</div>
+                ) : null}
             </div>
         </div>
     )
