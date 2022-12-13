@@ -4,7 +4,7 @@ import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import {useDispatch} from 'react-redux'
 import {createAccount} from "../../../store/accounts";
-import {toast} from "react-toastify";
+import {createOperation} from "../../../store/operationsHistory";
 
 const validationSchema = Yup.object().shape({
     accountName: Yup.string()
@@ -16,16 +16,22 @@ const validationSchema = Yup.object().shape({
 
 const initialValues = {
     accountName: '',
-    sum: null
+    sum: ''
 }
 
 const AccountModalWindow = ({onCLick}) => {
     const dispatch = useDispatch()
     const handleSubmit = (formValue) => {
         dispatch(createAccount(formValue))
-        toast.success('Счет был добавлен!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+        
+        const operation = {
+            type: 'ACCOUNT',
+            action: 'ADD',
+            sum: formValue.sum,
+            accountName: formValue.accountName
+        }
+        dispatch(createOperation(operation))
+
         onCLick()
     }
     const formik = useFormik({

@@ -4,9 +4,10 @@ import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import SelectField from "../../common/form/selectField";
 import {useDispatch, useSelector} from "react-redux";
-import {getAccounts, getCurrentUserAccounts} from "../../../store/accounts";
+import {getAccounts} from "../../../store/accounts";
 import {createExpense} from "../../../store/expenses";
 import {toast} from "react-toastify";
+import {createOperation} from "../../../store/operationsHistory";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -30,6 +31,17 @@ const ExpensesModalWindow = ({onCLick}) => {
 
     const handleSubmit = (formValue) => {
         dispatch(createExpense(formValue))
+
+        const accountLabel = accounts.filter((acc) => acc.accountId === formValue.accountId)[0].accountName
+        const operation = {
+            type: 'EXPENSE',
+            action: 'ADD',
+            category: formValue.category,
+            sum: formValue.sum,
+            accountName: accountLabel
+        }
+        dispatch(createOperation(operation))
+
         toast.success('Расход был добавлен!', {
             position: toast.POSITION.TOP_RIGHT
         })

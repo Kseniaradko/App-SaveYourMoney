@@ -8,5 +8,6 @@ router.use('/account', require('./account.routes'))
 router.use('/expense', require('./expense.routes'))
 router.use('/incomeTypes', require('./incomeTypes.routes'))
 router.use('/expenseTypes', require('./expensesTypes.routes'))
+router.use('/history', require('./operationsHistory.routes'))
 
 module.exports = router

@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import incomeService from "../../services/income.service";
 import localStorageService from "../../services/localStorage.service";
 import {loadAccountsList} from "../accounts";
+import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
@@ -81,6 +82,9 @@ export const createIncome = (income) => async (dispatch) => {
         const {content} = await incomeService.create(income)
         dispatch(incomeCreated(content))
         dispatch(loadAccountsList())
+        toast.success('Доход был добавлен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(incomeCreatedFailed(error.message))
     }
@@ -91,6 +95,9 @@ export const removeIncome = (incomeId) => async (dispatch) => {
         await incomeService.removeIncome(incomeId)
         dispatch(incomeDeleted(incomeId))
         dispatch(loadAccountsList())
+        toast.error('Доход был удален!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(incomeDeleteFailed(error.message))
     }
@@ -120,7 +127,6 @@ export const getIncomesForPlugin = () => (state) => {
         }
         return newState.reverse()
     }
-    return
 }
 
 export const getIncomeById = (id) => (state) => {
