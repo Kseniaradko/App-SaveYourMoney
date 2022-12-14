@@ -5,7 +5,8 @@ const schema = new Schema({
     category: {type: String},
     action: {type: String, required: true},
     sum: Number,
-    accountName: {type: String, required: true},
+    oldSum: Number,
+    accountName: {type: String},
     userId: {type: Schema.Types.ObjectId, ref: 'User', required: true}
 }, {
     timestamps: true

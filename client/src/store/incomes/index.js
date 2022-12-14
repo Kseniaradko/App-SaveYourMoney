@@ -108,6 +108,9 @@ export const updateIncome = (incomeId, data) => async (dispatch) => {
         const {content} = await incomeService.updateIncome(incomeId, data)
         dispatch(incomeUpdated(content))
         dispatch(loadAccountsList())
+        toast.success('Доход был изменен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(incomeUpdateFailed(error.message))
     }

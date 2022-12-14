@@ -92,6 +92,9 @@ export const removeAccount = (accountId) => async (dispatch) => {
     try {
         await accountService.removeAccount(accountId)
         dispatch(accountDeleted(accountId))
+        toast.success('Счет был удален!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(accountDeleteFailed(error.message))
     }
@@ -101,6 +104,9 @@ export const updateAccount = (accountId, data) => async (dispatch) => {
     try {
         const {content} = await accountService.updateAccount(accountId, data)
         dispatch(accountUpdated(content))
+        toast.success('Счет был изменен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(accountUpdateFailed(error.message))
     }

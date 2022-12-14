@@ -9,6 +9,7 @@ import displayDate from "../../utils/displayDate";
 import {toast} from "react-toastify";
 import Button from "../../components/common/Button";
 import AccountModalWindow from "../../components/Plugins/OperationsInfo/AccountModalWindow";
+import {createOperation} from "../../store/operationsHistory";
 
 const AccountsPage = () => {
     const dispatch = useDispatch()
@@ -51,9 +52,15 @@ const AccountsPage = () => {
 
     const handleDelete = (id) => {
         dispatch(removeAccount(id))
-        toast.success('Счет был удален!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+
+        const account = userAccounts.filter((acc) => acc._id === id)[0]
+        const operation = {
+            type: 'ACCOUNT',
+            action: 'DELETE',
+            sum: account.sum,
+            accountName: account.accountName || ''
+        }
+        dispatch(createOperation(operation))
     }
 
     if (userAccounts.length === 0) {

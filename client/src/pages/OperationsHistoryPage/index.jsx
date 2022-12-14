@@ -3,7 +3,11 @@ import Table from "../../components/common/Table";
 import {getUserOperations} from "../../store/operationsHistory";
 import {useSelector} from "react-redux";
 import displayDate from "../../utils/displayDate";
-import {displayAction, displayDataForOperations, displayType} from "../../utils/displayDataForOperations";
+import {
+    displayAction,
+    displayDetailsForOperations,
+    displayType
+} from "../../utils/displayDataForOperations";
 
 const OperationsHistoryPage = () => {
     const userOperations = useSelector(getUserOperations()).reverse()
@@ -27,7 +31,7 @@ const OperationsHistoryPage = () => {
         details: {
             name: 'Детали',
             path: 'details',
-            component: (data) => displayDataForOperations(data)
+            component: (data) => displayDetailsForOperations(data)
         }
     }
 

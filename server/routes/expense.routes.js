@@ -75,8 +75,10 @@ router.delete('/:expenseId', auth, async (req, res) => {
         const removedExpense = await Expense.findById(expenseId);
 
         const account = await Account.findById(removedExpense.accountId)
-        const resultSum = account.sum + removedExpense.sum
-        await Account.findByIdAndUpdate(removedExpense.accountId, {sum: resultSum}, {new: true})
+        if (account) {
+            const resultSum = account.sum + removedExpense.sum
+            await Account.findByIdAndUpdate(removedExpense.accountId, {sum: resultSum}, {new: true})
+        }
 
         await removedExpense.remove()
         return res.send(null)
