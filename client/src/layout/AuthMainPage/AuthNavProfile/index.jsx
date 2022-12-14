@@ -3,8 +3,8 @@ import {Menu, Transition} from '@headlessui/react'
 import {ChevronDownIcon} from '@heroicons/react/20/solid'
 import {Link} from 'react-router-dom'
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentUserData, logOut} from "../../../../store/users";
-import Loader from "../../../../components/common/Loader";
+import {getCurrentUserData, logOut} from "../../../store/users";
+import Loader from "../../../components/common/Loader";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -21,7 +21,7 @@ function AuthNavProfile() {
         <Menu as="div" className="relative inline-block text-left">
             <div>
                 <Menu.Button
-                    className="inline-flex w-full justify-center bg-white px-4 py-2 text-l font-semibold text-slate-500 shadow-sm focus:text-sky-500 hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-100"
+                    className="inline-flex w-full justify-center bg-white px-4 py-2 text-l font-semibold text-slate-500 hover:text-sky-500"
                 >
                     {user.name}
                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true"/>

@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import displayDate from "../../utils/displayDate";
 import {toast} from "react-toastify";
 import Button from "../../components/common/Button";
-import AccountModalWindow from "../../components/Plugins/OperationsInfo/AccountModalWindow";
+import AccountModalWindow from "../../components/Plugins/ModalWindows/AccountModalWindow";
 import {createOperation} from "../../store/operationsHistory";
 
 const AccountsPage = () => {

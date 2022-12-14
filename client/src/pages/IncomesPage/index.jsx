@@ -10,7 +10,7 @@ import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "../../components/common/Button";
-import IncomeModalWindow from "../../components/Plugins/OperationsInfo/IncomeModalWindow";
+import IncomeModalWindow from "../../components/Plugins/ModalWindows/IncomeModalWindow";
 import {createOperation} from "../../store/operationsHistory";
 
 const IncomesPage = () => {

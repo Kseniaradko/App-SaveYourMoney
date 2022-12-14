@@ -27,30 +27,32 @@ const usersSlice = createSlice({
     initialState,
     reducers: {
         usersRequested: (state) => {
-            state.isLoading = true;
+            state.isLoading = true
         },
         usersReceived: (state, action) => {
-            state.entities = action.payload;
-            state.isLoading = false;
-            state.dataLoaded = true;
+            state.entities = action.payload
+            state.isLoading = false
+            state.dataLoaded = true
         },
         usersRequestFailed: (state, action) => {
-            state.isLoading = false;
-            state.error = action.payload;
+            state.isLoading = false
+            state.error = action.payload
         },
         authRequested: (state) => {
             state.error = null
         },
         authRequestFailed: (state, action) => {
-            state.error = action.payload;
+            state.error = action.payload
         },
         authRequestSuccess: (state, action) => {
-            state.auth = action.payload;
-            state.isLoggedIn = true;
+            state.auth = action.payload
+            state.isLoggedIn = true
         },
         userLoggedOut: (state) => {
-            state.isLoggedIn = false;
-            state.auth = null;
+            state.entities = null
+            state.isLoggedIn = false
+            state.auth = null
+            state.dataLoaded = false
         },
         userUpdated: (state, action) => {
             state.isLoading = false
@@ -101,6 +103,7 @@ export const logIn = (payload) => async (dispatch) => {
         history.push('/dashboard')
     } catch (error) {
         const {code, message} = error.response.data.error;
+        console.log(message)
         if (code === 400) {
             const errorMessage = generateAuthError(message);
             dispatch(authRequestFailed(errorMessage));
@@ -118,10 +121,14 @@ export const signUp = (payload) => async (dispatch) => {
         dispatch(authRequestSuccess({userId: data.userId}))
         history.push('/dashboard')
     } catch (error) {
-        dispatch(authRequestFailed(error.message));
-        toast.error('Что-то пошло не так! Попробуйте еще раз немного позже.', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+        const {code, message} = error.response.data.error;
+        console.log(message)
+        if (code === 400) {
+            const errorMessage = generateAuthError(message);
+            dispatch(authRequestFailed(errorMessage));
+        } else {
+            dispatch(authRequestFailed(error.message));
+        }
     }
 }
 
@@ -152,6 +159,8 @@ export const getCurrentUserData = () => (state) => {
     return state.users.entities ?
         state.users.entities.find(u => u._id === state.users.auth.userId) : null;
 }
+
+export const getAuthErrors = () => (state) => state.users.error
 
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn
 

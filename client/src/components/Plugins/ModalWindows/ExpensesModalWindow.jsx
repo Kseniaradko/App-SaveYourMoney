@@ -8,6 +8,8 @@ import {getAccounts} from "../../../store/accounts";
 import {createExpense} from "../../../store/expenses";
 import {toast} from "react-toastify";
 import {createOperation} from "../../../store/operationsHistory";
+import Button from "../../common/Button";
+import closeIcon from "./closeIcon.svg";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -59,7 +61,7 @@ const ExpensesModalWindow = ({onCLick}) => {
             <div
                 className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
             >
-                <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                <div className="relative w-auto my-6 mx-auto min-w-[355px] min-h-[410px]">
                     <div
                         className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         <div
@@ -67,15 +69,12 @@ const ExpensesModalWindow = ({onCLick}) => {
                             <h3 className="text-3xl font-semibold">
                                 Добавить расход
                             </h3>
-                            <button
-                                className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                                onClick={() => onCLick}
-                            >
-                                            <span
-                                                className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                                ×
-                                            </span>
-                            </button>
+                            <img
+                                src={closeIcon}
+                                className='absolute top-4 right-4 w-8 cursor-pointer shadow-2xl'
+                                onClick={onCLick}
+                                alt='plus'
+                            />
                         </div>
                         <div className="relative px-6 py-3 flex-auto">
                             <FormikProvider value={formik}>
@@ -99,21 +98,14 @@ const ExpensesModalWindow = ({onCLick}) => {
                                         placeholder='2000'
                                         value={formik.values.sum}
                                     />
-                                    <div className='flex justify-end mt-4'>
-                                        <button
-                                            className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-sm outline-none hover:bg-red-50 rounded focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                            type="button"
-                                            onClick={() => onCLick()}
-                                        >
-                                            Закрыть
-                                        </button>
-                                        <button
-                                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    <div className='flex justify-end mb-3'>
+                                        <Button
+                                            face='primary'
                                             type="submit"
                                             disabled={!formik.isValid}
                                         >
                                             Сохранить
-                                        </button>
+                                        </Button>
                                     </div>
                                 </form>
                             </FormikProvider>

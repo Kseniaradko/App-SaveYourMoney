@@ -1,33 +1,11 @@
 import React from "react";
 import TextField from "../../components/common/form/textField";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import Button from "../../components/common/Button";
-import {nanoid} from "@reduxjs/toolkit";
-import {useDispatch} from "react-redux";
-import {logIn} from "../../store/users";
-
-const MOCKED_LOGIN = [
-    {
-        userId: 1,
-        name: 'Ksenia',
-        email: 'tester@example.ru',
-        password: 'Test1234'
-    },
-    {
-        userId: 2,
-        name: 'Aleksei',
-        email: 'tester2@example.ru',
-        password: 'Test1234'
-    },
-    {
-        userId: 3,
-        name: 'Larisa',
-        email: 'tester3@example.ru',
-        password: 'Test1234'
-    }
-]
+import {useDispatch, useSelector} from "react-redux";
+import {getAuthErrors, logIn} from "../../store/users";
 
 const initialValues = {
     email: '',
@@ -41,6 +19,7 @@ const validationSchema = Yup.object().shape({
 
 const LoginPage = () => {
     const dispatch = useDispatch()
+    const loginError = useSelector(getAuthErrors());
 
     const handleSubmit = (formValue) => {
         dispatch(logIn(formValue))
@@ -52,12 +31,10 @@ const LoginPage = () => {
         onSubmit: handleSubmit
     })
 
-    const isValid = formik.isValid
-
     return (
         <div className='max-w-screen-xl m-auto w-full flex justify-center'>
             <div
-                className='rounded-lg overflow-hidden ring-1 ring-slate-900/5 shadow-xl p-6 w-2/5 h-full flex flex-col bg-slate-50'>
+                className='rounded-lg overflow-hidden ring-1 ring-slate-900/5 shadow-xl p-6 w-96 h-full flex flex-col bg-slate-50'>
                 <span className='text-4xl font-serif text-center py-3'>Login</span>
                 <FormikProvider value={formik}>
                     <form autoComplete="new-password" onSubmit={formik.handleSubmit}>
@@ -72,13 +49,23 @@ const LoginPage = () => {
                             name='password'
                             type='password'
                         />
-                        <Button disabled={!isValid}>
+                        {loginError && (
+                            <div
+                                className='text-center text-red-500 text-sm font-medium'
+                            >
+                                {loginError}
+                            </div>
+                        )}
+                        <Button
+                            disabled={!formik.isValid || !formik.dirty}
+                            face='primary'
+                        >
                             Войти
                         </Button>
                     </form>
                 </FormikProvider>
                 <p className='py-4'>
-                    Еще нет аккаунта?{" "}
+                    Еще нет аккаунта?{' '}
                     <Link to='/signup' className='hover:underline'>Зарегистрироваться</Link>
                 </p>
             </div>
