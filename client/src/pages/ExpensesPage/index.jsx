@@ -9,7 +9,7 @@ import {getCurrentUserAccounts} from "../../store/accounts";
 import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
 import {toast} from "react-toastify";
-import ExpensesModalWindow from "../../components/Plugins/OperationsInfo/ExpensesModalWindow";
+import ExpensesModalWindow from "../../components/Plugins/ModalWindows/ExpensesModalWindow";
 import Button from "../../components/common/Button";
 import {createOperation} from "../../store/operationsHistory";
 

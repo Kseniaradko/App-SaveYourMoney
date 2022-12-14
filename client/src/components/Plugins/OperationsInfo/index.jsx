@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import plusIcon from './plusIcon.svg'
-import IncomeModalWindow from "./IncomeModalWindow";
-import ExpensesModalWindow from "./ExpensesModalWindow";
-import AccountModalWindow from "./AccountModalWindow";
+import IncomeModalWindow from "../ModalWindows/IncomeModalWindow";
+import ExpensesModalWindow from "../ModalWindows/ExpensesModalWindow";
+import AccountModalWindow from "../ModalWindows/AccountModalWindow";
 import {Link} from "react-router-dom";
 
 const OperationsInfo = ({label, data, img}) => {

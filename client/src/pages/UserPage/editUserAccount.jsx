@@ -66,15 +66,16 @@ const EditUserAccount = ({onClick}) => {
                         name='email'
                         value={formik.values.email}
                     />
-                    <div className='flex flex-row justify-end gap-2'>
+                    <div className='flex gap-2'>
                         <Button
                             disabled={!formik.isValid || !formik.dirty}
+                            face='primary'
                         >
                             Сохранить
                         </Button>
                         <Button
                             onClick={onBack}
-                            bg='bg-slate-500'
+                            face='secondary'
                             type='button'
                         >
                             Назад

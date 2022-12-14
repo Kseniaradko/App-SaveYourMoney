@@ -1,6 +1,5 @@
 import httpService from "./http.service";
 
-
 const accountEndPoint = '/account/'
 
 const accountService = {
