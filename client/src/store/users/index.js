@@ -4,6 +4,7 @@ import authService from "../../services/auth.service";
 import localStorageService from "../../services/localStorage.service";
 import {generateAuthError} from "../../utils/generateAuthError";
 import userService from "../../services/user.service";
+import {toast} from "react-toastify";
 
 const initialState = localStorageService.getAccessToken() ? {
     entities: null,
@@ -51,6 +52,19 @@ const usersSlice = createSlice({
             state.isLoggedIn = false;
             state.auth = null;
         },
+        userUpdated: (state, action) => {
+            state.isLoading = false
+            state.entities = state.entities.map((account) => {
+                if (account._id === action.payload._id) {
+                    return action.payload
+                }
+                return account
+            })
+        },
+        userUpdateFailed: (state, action) => {
+            state.isLoading = false
+            state.error = action.payload
+        }
     }
 })
 
@@ -62,7 +76,9 @@ const {
     usersRequested,
     usersReceived,
     usersRequestFailed,
-    userLoggedOut
+    userLoggedOut,
+    userUpdated,
+    userUpdateFailed
 } = actions
 
 export const loadUsersList = () => async (dispatch) => {
@@ -103,6 +119,9 @@ export const signUp = (payload) => async (dispatch) => {
         history.push('/dashboard')
     } catch (error) {
         dispatch(authRequestFailed(error.message));
+        toast.error('Что-то пошло не так! Попробуйте еще раз немного позже.', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     }
 }
 
@@ -111,6 +130,23 @@ export const logOut = () => (dispatch) => {
     dispatch(userLoggedOut())
     history.push('/login')
 }
+
+export const updateUser = (data) => async (dispatch) => {
+    try {
+        const {content} = await userService.update(data)
+        console.log('content', content)
+        dispatch(userUpdated(content))
+        toast.success('Данные были изменены!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
+    } catch (error) {
+        dispatch(userUpdateFailed(error.message))
+        toast.error('Что-то пошло не так! Попробуйте еще раз немного позже.', {
+            position: toast.POSITION.TOP_RIGHT
+        })
+    }
+}
+
 
 export const getCurrentUserData = () => (state) => {
     return state.users.entities ?

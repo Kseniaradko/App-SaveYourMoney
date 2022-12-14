@@ -9,7 +9,7 @@ const RadioField = (props) => {
 
     return (
         <div className='pt-3'>
-            <label>{props.label}</label>
+            <label className='font-medium text-sm text-gray-900'>{props.label}</label>
             <div className='flex relative'>
                 {props.options.map((option) => (
                     <div
@@ -18,7 +18,7 @@ const RadioField = (props) => {
                     >
                         <input
                             {...field}
-                            {...props}
+                            checked={option.value === field.value}
                             type='radio'
                             value={option.value}
                         />
