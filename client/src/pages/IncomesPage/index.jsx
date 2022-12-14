@@ -5,13 +5,13 @@ import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUserIncomes, removeIncome} from "../../store/incomes";
 import {Link} from "react-router-dom";
-import {getCurrentUserAccounts, loadAccountsList} from "../../store/accounts";
+import {getCurrentUserAccounts} from "../../store/accounts";
 import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
-import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "../../components/common/Button";
 import IncomeModalWindow from "../../components/Plugins/OperationsInfo/IncomeModalWindow";
+import {createOperation} from "../../store/operationsHistory";
 
 const IncomesPage = () => {
     const dispatch = useDispatch()
@@ -64,16 +64,27 @@ const IncomesPage = () => {
 
     const handleDelete = (id) => {
         dispatch(removeIncome(id))
-        toast.error('Доход был удален!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+
+        const income = userIncomes.filter((income) => income._id === id)[0]
+        const account = userAccounts.filter((acc) => acc._id === income.accountId)[0]
+        const accountLabel = account?.accountName
+        const operation = {
+            type: 'INCOME',
+            action: 'DELETE',
+            category: income.category,
+            sum: income.sum,
+            accountName: accountLabel || null
+        }
+
+        dispatch(createOperation(operation))
     }
 
     if (!userIncomes || !userAccounts) return <Loader/>
     if (userIncomes.length === 0) {
         return (
             <div
-                className='max-w-screen-xl m-auto flex-col justify-center text-xl italic font-light text-slate-500'>
+                className='flex-col justify-between text-center text-xl italic font-light text-slate-500'
+            >
                 {showModal && <IncomeModalWindow onCLick={handleClick}/>}
                 Доходы отсутствуют. Начните добавлять их!
                 <div className='flex justify-center' onClick={handleClick}>
@@ -85,7 +96,9 @@ const IncomesPage = () => {
 
     return (
         <div className='flex-1 max-w-screen-xl m-auto w-full'>
-            <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>Мои доходы</div>
+            <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
+                Мои доходы
+            </div>
             <Table columns={columns} data={userIncomes.reverse()}/>
         </div>
     )

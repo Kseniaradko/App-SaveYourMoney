@@ -7,6 +7,7 @@ import {getAccounts} from "../../../store/accounts";
 import SelectField from "../../common/form/selectField";
 import {createIncome} from "../../../store/incomes";
 import {toast} from "react-toastify";
+import {createOperation} from "../../../store/operationsHistory";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -30,9 +31,17 @@ const IncomeModalWindow = ({onCLick}) => {
 
     const handleSubmit = (formValue) => {
         dispatch(createIncome(formValue))
-        toast.success('Доход был добавлен!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+
+        const accountLabel = accounts.filter((acc) => acc.accountId === formValue.accountId)[0].accountName
+        const operation = {
+            type: 'INCOME',
+            action: 'ADD',
+            category: formValue.category,
+            sum: formValue.sum,
+            accountName: accountLabel
+        }
+        dispatch(createOperation(operation))
+
         onCLick()
     }
     const formik = useFormik({

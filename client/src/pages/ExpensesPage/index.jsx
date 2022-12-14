@@ -11,6 +11,7 @@ import displayDate from "../../utils/displayDate";
 import {toast} from "react-toastify";
 import ExpensesModalWindow from "../../components/Plugins/OperationsInfo/ExpensesModalWindow";
 import Button from "../../components/common/Button";
+import {createOperation} from "../../store/operationsHistory";
 
 const ExpensesPage = () => {
     const dispatch = useDispatch()
@@ -63,9 +64,19 @@ const ExpensesPage = () => {
 
     const handleDelete = (id) => {
         dispatch(removeExpense(id))
-        toast.error('Расход был удален!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+
+        const expense = userExpenses.filter((expense) => expense._id === id)[0]
+        const account = userAccounts.filter((acc) => acc._id === expense.accountId)[0]
+        const accountLabel = account?.accountName
+
+        const operation = {
+            type: 'EXPENSE',
+            action: 'DELETE',
+            category: expense.category,
+            sum: expense.sum,
+            accountName: accountLabel || null
+        }
+        dispatch(createOperation(operation))
     }
 
     if (!userExpenses && !userAccounts) return <Loader/>

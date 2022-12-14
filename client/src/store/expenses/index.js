@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import localStorageService from "../../services/localStorage.service";
 import expenseService from "../../services/expense.service";
 import {loadAccountsList} from "../accounts";
+import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
@@ -91,6 +92,9 @@ export const removeExpense = (expenseId) => async (dispatch) => {
         await expenseService.removeExpense(expenseId)
         dispatch(expenseDeleted(expenseId))
         dispatch(loadAccountsList())
+        toast.error('Расход был удален!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(expenseDeleteFailed(error.message))
     }
@@ -101,6 +105,9 @@ export const updateExpense = (expenseId, data) => async (dispatch) => {
         const {content} = await expenseService.updateExpense(expenseId, data)
         dispatch(expenseUpdated(content))
         dispatch(loadAccountsList())
+        toast.success('Расход был изменен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(expenseUpdateFailed(error.message))
     }

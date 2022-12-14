@@ -1,5 +1,7 @@
 const express = require('express')
 const Account = require('../models/Account')
+const Income = require('../models/Income')
+const Expense = require('../models/Expense')
 const auth = require('../middleware/auth.middleware')
 const router = express.Router({mergeParams: true})
 
@@ -44,6 +46,17 @@ router.delete('/:accountId', auth, async (req, res) => {
     try {
         const {accountId} = req.params;
         const removedAccount = await Account.findById(accountId);
+
+        const incomes = await Income.find({accountId: accountId})
+        for (const income of incomes) {
+            await Income.findByIdAndUpdate(i._id, {accountId: null}, {new: true})
+        }
+
+        const expenses = await Expense.find({accountId: accountId})
+        for (const expense of expenses) {
+            await Expense.findByIdAndUpdate(expense._id, {accountId: null}, {new: true})
+        }
+
         await removedAccount.remove()
         return res.send(null)
     } catch (error) {

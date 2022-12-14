@@ -8,6 +8,7 @@ import TextField from "../../../components/common/form/textField";
 import {getCurrentAccount, updateAccount} from "../../../store/accounts";
 import Loader from "../../../components/common/Loader";
 import {toast} from "react-toastify";
+import {createOperation} from "../../../store/operationsHistory";
 
 const validationSchema = Yup.object().shape({
     accountName: Yup.string().required('Данное поле обязательно для заполнения'),
@@ -29,9 +30,15 @@ const EditAccountPage = () => {
 
     const handleSubmit = (formValue) => {
         dispatch(updateAccount(accountId, formValue))
-        toast.success('Счет был изменен!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+        const operation = {
+            type: 'ACCOUNT',
+            action: 'EDIT',
+            sum: formValue.sum,
+            accountName: formValue.accountName
+        }
+
+        dispatch(createOperation(operation))
+        
         history.goBack()
     }
 
@@ -74,7 +81,7 @@ const EditAccountPage = () => {
                         <button
                             className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="submit"
-                            disabled={!formik.isValid}
+                            disabled={!formik.isValid || !formik.dirty}
                         >
                             Сохранить изменения
                         </button>

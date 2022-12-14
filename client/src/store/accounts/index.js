@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import localStorageService from "../../services/localStorage.service";
 import accountService from "../../services/account.service";
+import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
@@ -79,6 +80,9 @@ export const createAccount = (account) => async (dispatch) => {
     try {
         const {content} = await accountService.create(account)
         dispatch(accountCreated(content))
+        toast.success('Счет был добавлен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(accountCreatedFailed())
     }
@@ -88,6 +92,9 @@ export const removeAccount = (accountId) => async (dispatch) => {
     try {
         await accountService.removeAccount(accountId)
         dispatch(accountDeleted(accountId))
+        toast.success('Счет был удален!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(accountDeleteFailed(error.message))
     }
@@ -97,6 +104,9 @@ export const updateAccount = (accountId, data) => async (dispatch) => {
     try {
         const {content} = await accountService.updateAccount(accountId, data)
         dispatch(accountUpdated(content))
+        toast.success('Счет был изменен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(accountUpdateFailed(error.message))
     }
@@ -120,7 +130,6 @@ export const getAccountsForPlugin = () => (state) => {
         }
         return newState.reverse()
     }
-    return
 }
 
 export const getAccounts = () => (state) => {
@@ -133,6 +142,10 @@ export const getAccounts = () => (state) => {
         }
         return newArray
     }
+}
+
+export const getAmountOfAccounts = () => (state) => {
+    return state.accounts.entities.length
 }
 
 export default accountsReducer

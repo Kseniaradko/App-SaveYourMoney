@@ -9,7 +9,7 @@ import Loader from "../../../components/common/Loader";
 import {getExpenseById, updateExpense} from "../../../store/expenses";
 import history from "../../../utils/history";
 import SelectField from "../../../components/common/form/selectField";
-import {toast} from "react-toastify";
+import {createOperation} from "../../../store/operationsHistory";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -36,9 +36,19 @@ const EditExpensesPage = () => {
 
     const handleSubmit = (formValue) => {
         dispatch(updateExpense(expenseId, formValue))
-        toast.success('Расход был изменен!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
+        const account = accounts.filter((acc) => acc.accountId === formValue.accountId)[0]
+        const accountLabel = account.accountName
+
+        const operation = {
+            type: 'EXPENSE',
+            action: 'EDIT',
+            category: formValue.category,
+            sum: formValue.sum,
+            accountName: accountLabel
+        }
+
+        dispatch(createOperation(operation))
+
         history.goBack()
     }
 
@@ -91,7 +101,7 @@ const EditExpensesPage = () => {
                         <button
                             className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="submit"
-                            disabled={!formik.isValid}
+                            disabled={!formik.isValid || !formik.dirty}
                         >
                             Сохранить изменения
                         </button>
