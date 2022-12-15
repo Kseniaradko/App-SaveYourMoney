@@ -4,6 +4,8 @@ import incomesReducer from "../incomes";
 import expensesReducer from "../expenses";
 import accountsReducer from "../accounts";
 import operationsHistoryReducer from "../operationsHistory";
+import incomesTypeReducer from "../incomesType";
+import expensesTypeReducer from "../expensesType";
 
 
 const rootReducer = combineReducers({
@@ -11,7 +13,9 @@ const rootReducer = combineReducers({
     incomes: incomesReducer,
     expenses: expensesReducer,
     accounts: accountsReducer,
-    operationsHistory: operationsHistoryReducer
+    operationsHistory: operationsHistoryReducer,
+    incomesType: incomesTypeReducer,
+    expensesType: expensesTypeReducer
 })
 
 export function createStore() {

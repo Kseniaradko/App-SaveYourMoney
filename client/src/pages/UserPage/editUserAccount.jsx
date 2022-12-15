@@ -6,6 +6,7 @@ import Button from "../../components/common/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUserData, updateUser} from "../../store/users";
 import * as Yup from "yup";
+import {getIncomesTypes} from "../../store/incomesType";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -20,6 +21,7 @@ const validationSchema = Yup.object().shape({
 const EditUserAccount = ({onClick}) => {
     const dispatch = useDispatch()
     const user = useSelector(getCurrentUserData())
+    
     const onBack = (e) => {
         e.preventDefault()
         onClick()

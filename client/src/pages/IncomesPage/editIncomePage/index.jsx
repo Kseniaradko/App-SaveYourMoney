@@ -10,6 +10,8 @@ import Loader from "../../../components/common/Loader";
 import history from "../../../utils/history";
 import SelectField from "../../../components/common/form/selectField";
 import {createOperation} from "../../../store/operationsHistory";
+import {getIncomesTypes} from "../../../store/incomesType";
+import Button from "../../../components/common/Button";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -27,7 +29,8 @@ const EditIncomePage = () => {
     const {incomeId} = params
     const income = useSelector(getIncomeById(incomeId))
     const accounts = useSelector(getAccounts())
-    
+    const types = useSelector(getIncomesTypes())
+
 
     const initialValues = {
         category: income.category,
@@ -38,13 +41,14 @@ const EditIncomePage = () => {
     const handleSubmit = (formValue) => {
 
         dispatch(updateIncome(incomeId, formValue))
-        const account = accounts.filter((acc) => acc.accountId === formValue.accountId)[0]
-        const accountLabel = account.accountName
+        const account = accounts.filter((acc) => acc._id === formValue.accountId)[0]
+        const accountLabel = account?.name
+        const typeName = types.find((type) => type._id === formValue.category).name
 
         const operation = {
             type: 'INCOME',
             action: 'EDIT',
-            category: formValue.category,
+            category: typeName,
             sum: formValue.sum,
             accountName: accountLabel
         }
@@ -66,17 +70,18 @@ const EditIncomePage = () => {
 
     return (
         <div
-            className='max-w-screen-xl m-auto w-full flex flex-col items-center rounded-lg overflow-hidden w-96 ring-1 ring-slate-900/5 shadow-xl p-6 '>
+            className='max-w-screen-xl m-auto w-full flex flex-col items-center rounded-lg w-96 ring-1 ring-slate-900/5 shadow-xl p-6 '>
             <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
                 Редактирование операции
             </div>
             <FormikProvider value={formik}>
                 <form onSubmit={formik.handleSubmit}>
-                    <TextField
+                    <SelectField
                         label='Категория:'
                         name='category'
+                        defaultOption='Choose...'
+                        options={types}
                         value={formik.values.category}
-                        placeholder='Заработная плата'
                     />
                     <SelectField
                         label='Выберите счет зачисления денежных средств:'
@@ -91,21 +96,20 @@ const EditIncomePage = () => {
                         value={formik.values.sum}
                         placeholder='30000'
                     />
-                    <div className='flex justify-end mt-4'>
-                        <button
-                            className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-sm outline-none hover:bg-red-50 rounded focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    <div className='flex gap-2 mt-4'>
+                        <Button
+                            face='secondary'
                             type="button"
                             onClick={() => history.goBack()}
                         >
                             Назад
-                        </button>
-                        <button
-                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                            type="submit"
+                        </Button>
+                        <Button
+                            face='primary'
                             disabled={!formik.isValid || !formik.dirty}
                         >
-                            Сохранить изменения
-                        </button>
+                            Сохранить
+                        </Button>
                     </div>
                 </form>
             </FormikProvider>

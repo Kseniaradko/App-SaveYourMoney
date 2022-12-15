@@ -11,6 +11,8 @@ import {loadAccountsList} from "../../store/accounts";
 import {loadIncomesList} from "../../store/incomes";
 import {loadExpensesList} from "../../store/expenses";
 import {loadOperationsList} from "../../store/operationsHistory";
+import {loadIncomesTypeList} from "../../store/incomesType";
+import {loadExpensesTypeList} from "../../store/expensesType";
 
 const AuthContainer = withRouter(({children}) => {
     const isLoggedIn = useSelector(getIsLoggedIn())
@@ -23,6 +25,8 @@ const AuthContainer = withRouter(({children}) => {
             dispatch(loadIncomesList())
             dispatch(loadExpensesList())
             dispatch(loadOperationsList())
+            dispatch(loadIncomesTypeList())
+            dispatch(loadExpensesTypeList())
         }
     }, [isLoggedIn])
 

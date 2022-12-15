@@ -116,11 +116,6 @@ export const getCurrentAccount = (accountId) => (state) => {
     return state.accounts.entities?.find((acc) => acc._id === accountId)
 }
 
-export const getCurrentUserAccounts = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    return state.accounts.entities?.filter((acc) => acc.userId === currentUserId)
-}
-
 export const getAccountsForPlugin = () => (state) => {
     const currentUserId = localStorageService.getUserId()
     if (state.accounts.entities) {
@@ -138,7 +133,7 @@ export const getAccounts = () => (state) => {
     const newArray = []
     if (newState) {
         for (const account of newState) {
-            newArray.push({accountName: account.accountName, accountId: account._id})
+            newArray.push({name: account.accountName, _id: account._id, createdAt: account.createdAt, sum: account.sum})
         }
         return newArray
     }

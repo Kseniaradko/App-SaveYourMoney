@@ -82,6 +82,9 @@ export const createExpense = (expense) => async (dispatch) => {
         const {content} = await expenseService.create(expense)
         dispatch(expenseCreated(content))
         dispatch(loadAccountsList())
+        toast.success('Расход был добавлен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(expenseCreatedFailed(error.message))
     }

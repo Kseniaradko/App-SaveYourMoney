@@ -3,17 +3,16 @@ import Table from "../../components/common/Table";
 import EditIcon from "../../components/common/Table/editIcon";
 import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentUserAccounts, removeAccount} from "../../store/accounts";
+import {getAccounts, removeAccount} from "../../store/accounts";
 import {Link} from "react-router-dom";
 import displayDate from "../../utils/displayDate";
-import {toast} from "react-toastify";
 import Button from "../../components/common/Button";
 import AccountModalWindow from "../../components/Plugins/ModalWindows/AccountModalWindow";
 import {createOperation} from "../../store/operationsHistory";
 
 const AccountsPage = () => {
     const dispatch = useDispatch()
-    const userAccounts = useSelector(getCurrentUserAccounts())
+    const userAccounts = useSelector(getAccounts())
     const [showModal, setShowModal] = useState(false)
     const handleClick = () => {
         setShowModal(prevState => !prevState)
@@ -28,11 +27,11 @@ const AccountsPage = () => {
         accountName: {
             name: 'Счет',
             path: 'accountName',
-            component: (data) => <Link to={`/accountsPage/${data.id}`}
-                                       className='hover:text-sky-500'>{data.accountName}</Link>
+            component: (data) => <Link to={`/accountsPage/${data._id}`}
+                                       className='hover:text-sky-500'>{data.name}</Link>
         },
         sum: {
-            name: 'Сумма на счету',
+            name: 'Сумма на счету, р.',
             path: 'sum'
         },
         createdAt: {
@@ -58,7 +57,7 @@ const AccountsPage = () => {
             type: 'ACCOUNT',
             action: 'DELETE',
             sum: account.sum,
-            accountName: account.accountName || ''
+            accountName: account.name || ''
         }
         dispatch(createOperation(operation))
     }
@@ -70,7 +69,11 @@ const AccountsPage = () => {
                 {showModal && <AccountModalWindow onCLick={handleClick}/>}
                 Счета отсутствуют. Начните добавлять их!
                 <div className='flex justify-center' onClick={handleClick}>
-                    <Button>Добавить</Button>
+                    <Button
+                        face='add'
+                    >
+                        Добавить
+                    </Button>
                 </div>
             </div>
         )
