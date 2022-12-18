@@ -39,7 +39,6 @@ router.post("/signUp", [
                 ...req.body,
                 password: hashedPassword
             })
-            console.log(newUser)
 
             const tokens = tokenService.generate({id: newUser._id})
             await tokenService.save(newUser._id, tokens.refreshToken)
@@ -107,8 +106,10 @@ function isTokenInvalid(data, dbToken) {
 
 router.post("/token", async (req, res) => {
     try {
+        console.log('body', req.body)
         const {refresh_token: refreshToken} = req.body;
         const data = tokenService.validateRefresh(refreshToken);
+        console.log('data', data)
         const dbToken = tokenService.findToken(refreshToken);
 
         if (isTokenInvalid(data, dbToken)) {
@@ -117,10 +118,10 @@ router.post("/token", async (req, res) => {
             })
         }
 
-        const tokens = await tokenService.generate({_id: data._id});
+        const tokens = await tokenService.generate({_id: data.id});
         await tokenService.save(data._id, tokens.refreshToken);
 
-        res.status(200).send({...tokens, userId: data._id});
+        res.status(200).send({...tokens, userId: data.id});
     } catch (error) {
         res.status(500).json({
             message: "На сервере произошла ошибка. Попробуйте позже."

@@ -49,7 +49,7 @@ router.delete('/:accountId', auth, async (req, res) => {
 
         const incomes = await Income.find({accountId: accountId})
         for (const income of incomes) {
-            await Income.findByIdAndUpdate(i._id, {accountId: null}, {new: true})
+            await Income.findByIdAndUpdate(income._id, {accountId: null}, {new: true})
         }
 
         const expenses = await Expense.find({accountId: accountId})

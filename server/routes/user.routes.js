@@ -24,9 +24,9 @@ router.patch('/', auth, async (req, res) => {
     }
 })
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
     try {
-        const list = await User.find();
+        const list = await User.findById(req.user.id);
         res.status(200).send(list);
     } catch (error) {
         res.status(500).json({

@@ -86,7 +86,7 @@ const AccountsPage = () => {
             >
                 Мои счета
             </div>
-            <Table columns={columns} data={userAccounts.reverse()}/>
+            <Table columns={columns} data={userAccounts}/>
         </div>
     )
 }

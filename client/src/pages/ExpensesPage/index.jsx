@@ -35,6 +35,7 @@ const ExpensesPage = () => {
             component: (data) => {
                 const type = userTypes.find((item) => item._id === data.category)
                 if (type) return type.name
+                return <>Категория была удалена</>
             }
         },
         accountId: {
@@ -69,21 +70,23 @@ const ExpensesPage = () => {
         dispatch(removeExpense(id))
 
         const expense = userExpenses.filter((expense) => expense._id === id)[0]
-        const typeName = userTypes.find((type) => type._id === expense.category).name
+        const type = userTypes.filter((type) => type._id === expense.category)[0]
+        const typeName = type?.name
         const account = userAccounts.filter((acc) => acc._id === expense.accountId)[0]
         const accountLabel = account?.name
 
         const operation = {
             type: 'EXPENSE',
             action: 'DELETE',
-            category: typeName,
+            category: typeName || null,
             sum: expense.sum,
             accountName: accountLabel || null
         }
+        console.log(operation)
         dispatch(createOperation(operation))
     }
 
-    if (!userExpenses && !userAccounts) return <Loader/>
+    if (!userExpenses || !userAccounts || !userTypes) return <Loader/>
     if (userExpenses.length === 0) {
         return (
             <div
@@ -109,7 +112,7 @@ const ExpensesPage = () => {
             >
                 Мои расходы
             </div>
-            <Table columns={columns} data={userExpenses.reverse()}/>
+            <Table columns={columns} data={userExpenses}/>
         </div>
     )
 }

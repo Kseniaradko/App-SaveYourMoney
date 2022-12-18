@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {useField} from "formik";
 import eyeIcon from './eyeIcon.svg'
 import eyeSlashIcon from './eyeSlashIcon.svg'
-import plus from '../plus.svg'
 
 const TextField = (props) => {
     const [field, meta] = useField(props)
@@ -20,10 +19,6 @@ const TextField = (props) => {
 
     const toggleShowPassword = () => {
         setShowPassword((prevState) => !prevState);
-    }
-
-    const handleAddNewType = () => {
-
     }
 
     return (
@@ -49,15 +44,6 @@ const TextField = (props) => {
                         ) : (
                             <img src={eyeSlashIcon} className='relative w-6 h-6' alt={'eyeSlash'}/>
                         )}
-                    </button>
-                )}
-                {props.type === 'add' && (
-                    <button
-                        className='absolute inset-y-0.5 right-2.5 btn btn-outline-secondary text-slate-500'
-                        type='button'
-                        onClick={handleAddNewType}
-                    >
-                        <img src={plus} className='relative w-6 h-6 ' alt={'plus'}/>
                     </button>
                 )}
                 {showedError ? (

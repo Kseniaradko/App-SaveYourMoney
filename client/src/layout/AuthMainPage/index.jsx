@@ -12,6 +12,7 @@ import EditIncomePage from "../../pages/IncomesPage/editIncomePage";
 import EditExpensesPage from "../../pages/ExpensesPage/editExpensesPage";
 import ChartsPage from "../../pages/ChartsPage";
 import EditAccountPage from "../../pages/AccountsPage/editAccountPage";
+import Types from "../../pages/Types";
 
 const AuthMainPage = () => {
     return (
@@ -28,6 +29,7 @@ const AuthMainPage = () => {
                 <Route path='/accountsPage' exact component={AccountsPage}/>
                 <Route path='/accountsPage/:accountId?' exact component={EditAccountPage}/>
                 <Route path='/chartsPage' exact component={ChartsPage}/>
+                <Route path='/types' exact component={Types}/>
                 <Redirect to='/dashboard'/>
             </Switch>
             <Footer/>

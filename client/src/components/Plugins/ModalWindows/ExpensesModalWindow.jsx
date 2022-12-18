@@ -9,8 +9,7 @@ import {createExpense} from "../../../store/expenses";
 import {createOperation} from "../../../store/operationsHistory";
 import Button from "../../common/Button";
 import closeIcon from "./closeIcon.svg";
-import {getExpensesTypes} from "../../../store/expensesType";
-
+import {createExpenseType, getExpensesTypes} from "../../../store/expensesType";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -19,28 +18,39 @@ const validationSchema = Yup.object().shape({
         .required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
-        .typeError('Сумма зачисления должна быть числом')
+        .typeError('Сумма зачисления должна быть числом'),
+    newCategory: Yup.string()
+        .min(1, 'Категория должно содержать не менее 1 символа')
 })
 
 const initialValues = {
     category: '',
     accountId: '',
-    sum: ''
+    sum: '',
+    newCategory: ''
 }
 
 const ExpensesModalWindow = ({onCLick}) => {
     const dispatch = useDispatch()
     const accounts = useSelector(getAccounts())
-    console.log(accounts)
     const types = useSelector(getExpensesTypes())
 
     const [category, setCategory] = useState(false)
+    const addNewCategory = (data) => {
+        dispatch(createExpenseType({name: data}))
+        onAdd()
+    }
     const onAdd = () => {
         setCategory(prevState => !prevState)
     }
 
     const handleSubmit = (formValue) => {
-        dispatch(createExpense(formValue))
+        const result = {
+            category: formValue.category,
+            accountId: formValue.accountId,
+            sum: formValue.sum
+        }
+        dispatch(createExpense(result))
 
         const typeName = types.filter((type) => type._id === formValue.category)[0].name
         const accountLabel = accounts.filter((acc) => acc._id === formValue.accountId)[0].name
@@ -108,9 +118,17 @@ const ExpensesModalWindow = ({onCLick}) => {
                                                 label='Новая категория'
                                                 name='newCategory'
                                                 placeholder='Транспорт'
-                                                value=''
+                                                value={formik.values.newCategory}
                                                 type='add'
                                             />
+                                            <div className='flex justify-end'>
+                                                <Button
+                                                    face='addition'
+                                                    onClick={() => addNewCategory(formik.values.newCategory)}
+                                                >
+                                                    Добавить
+                                                </Button>
+                                            </div>
                                         </>
                                     )}
                                     <SelectField

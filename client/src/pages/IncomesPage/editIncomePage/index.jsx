@@ -81,12 +81,12 @@ const EditIncomePage = () => {
                         name='category'
                         defaultOption='Choose...'
                         options={types}
-                        value={formik.values.category}
+                        value={formik.values.category || ''}
                     />
                     <SelectField
                         label='Выберите счет зачисления денежных средств:'
                         name='accountId'
-                        value={formik.values.accountId}
+                        value={formik.values.accountId || ''}
                         defaultOption='Choose...'
                         options={accounts}
                     />

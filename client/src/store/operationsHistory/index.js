@@ -55,6 +55,7 @@ export const loadOperationsList = () => async (dispatch) => {
 export const createOperation = (operation) => async (dispatch) => {
     try {
         const {content} = await operationsHistoryService.create(operation)
+        console.log(content)
         dispatch(operationCreated(content))
     } catch (error) {
         dispatch(operationCreatedFailed(error.message))
@@ -62,8 +63,8 @@ export const createOperation = (operation) => async (dispatch) => {
 }
 
 export const getUserOperations = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    return state.operationsHistory.entities.filter((operation) => operation.userId === currentUserId)
+    const entities = state.operationsHistory.entities ? [...state.operationsHistory.entities] : null
+    if (entities) return entities.reverse()
 }
 
 export default operationsHistoryReducer

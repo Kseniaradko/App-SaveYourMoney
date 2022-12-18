@@ -1,6 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
 import incomeService from "../../services/income.service";
-import localStorageService from "../../services/localStorage.service";
 import {loadAccountsList} from "../accounts";
 import {toast} from "react-toastify";
 
@@ -117,18 +116,17 @@ export const updateIncome = (incomeId, data) => async (dispatch) => {
 }
 
 export const getCurrentUserIncomes = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    return state.incomes.entities?.filter((income) => income.userId === currentUserId)
+    const entities = state.incomes.entities ? [...state.incomes.entities] : null
+    if (entities) return entities.reverse()
 }
 
 export const getIncomesForPlugin = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    if (state.incomes.entities) {
-        const newState = state.incomes.entities?.filter((income) => income.userId === currentUserId)
-        if (newState.length > 3) {
-            return newState.splice((newState.length - 3), 3).reverse()
+    const entities = state.incomes.entities ? [...state.incomes.entities] : null
+    if (entities) {
+        if (entities.length > 3) {
+            return entities.splice((entities.length - 3), 3).reverse()
         }
-        return newState.reverse()
+        return entities.reverse()
     }
 }
 

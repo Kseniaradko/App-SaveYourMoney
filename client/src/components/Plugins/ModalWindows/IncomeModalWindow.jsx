@@ -9,7 +9,7 @@ import {createIncome} from "../../../store/incomes"
 import {createOperation} from "../../../store/operationsHistory"
 import closeIcon from "./closeIcon.svg"
 import Button from "../../common/Button";
-import {getIncomesTypes} from "../../../store/incomesType";
+import {createIncomeType, getIncomesTypes} from "../../../store/incomesType";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -19,15 +19,15 @@ const validationSchema = Yup.object().shape({
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
         .typeError('Сумма зачисления должна быть числом'),
-    // newCategory: Yup.string()
-    //     .required('Данное поле обязательно для заполнения')
-    //     .typeError('Категория не должна содеражть цифр или других символов')
+    newCategory: Yup.string()
+        .min(1, 'Категория должно содержать не менее 1 символа')
 })
 
 const initialValues = {
     category: '',
     accountId: '',
-    sum: ''
+    sum: '',
+    newCategory: ''
 }
 
 const IncomeModalWindow = ({onCLick}) => {
@@ -36,13 +36,24 @@ const IncomeModalWindow = ({onCLick}) => {
     const types = useSelector(getIncomesTypes())
 
     const [category, setCategory] = useState(false)
+    const addNewCategory = (data) => {
+        dispatch(createIncomeType({name: data}))
+        onAdd()
+    }
+
     const onAdd = () => {
         setCategory(prevState => !prevState)
     }
 
+
     const handleSubmit = (formValue) => {
-        dispatch(createIncome(formValue))
-        console.log(formValue)
+        const result = {
+            category: formValue.category,
+            accountId: formValue.accountId,
+            sum: formValue.sum
+        }
+        dispatch(createIncome(result))
+
         const typeName = types.filter((type) => type._id === formValue.category)[0].name
         const accountLabel = accounts.filter((acc) => acc._id === formValue.accountId)[0].name
         const operation = {
@@ -101,7 +112,7 @@ const IncomeModalWindow = ({onCLick}) => {
                                         </div>
                                     )}
                                     {category && (
-                                        <>
+                                        <div className='flex flex-col justify-center'>
                                             <div onClick={onAdd}
                                                  className='mt-2 text-sm text-slate-400 cursor-pointer text-right hover:text-slate-700'>
                                                 Скрыть поле добавления
@@ -110,10 +121,18 @@ const IncomeModalWindow = ({onCLick}) => {
                                                 label='Новая категория'
                                                 name='newCategory'
                                                 placeholder='Заработная плата'
-                                                value=''
+                                                value={formik.values.newCategory}
                                                 type='add'
                                             />
-                                        </>
+                                            <div className='flex justify-end'>
+                                                <Button
+                                                    face='addition'
+                                                    onClick={() => addNewCategory(formik.values.newCategory)}
+                                                >
+                                                    Добавить
+                                                </Button>
+                                            </div>
+                                        </div>
                                     )}
                                     <SelectField
                                         label='Выберите счет зачисления денежных средств:'

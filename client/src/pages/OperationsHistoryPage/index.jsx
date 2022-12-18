@@ -8,9 +8,11 @@ import {
     displayDetailsForOperations,
     displayType
 } from "../../utils/displayDataForOperations";
+import Loader from "../../components/common/Loader";
+import Pagination from "../../components/common/pagination";
 
 const OperationsHistoryPage = () => {
-    const userOperations = useSelector(getUserOperations()).reverse()
+    const userOperations = useSelector(getUserOperations())
 
     const columns = {
         type: {
@@ -35,6 +37,8 @@ const OperationsHistoryPage = () => {
         }
     }
 
+    if (!userOperations) return <Loader/>
+
     return (
         <div className='flex-1 max-w-screen-xl m-auto w-full'>
             <div className='text-center text-slate-600 font-semibold py-5 uppercase italic'>История операций</div>
@@ -49,6 +53,7 @@ const OperationsHistoryPage = () => {
                     data={userOperations}
                 />
             )}
+            <Pagination/>
         </div>
     )
 }

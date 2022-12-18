@@ -34,17 +34,18 @@ const IncomesPage = () => {
             name: 'Категория',
             path: 'category',
             component: (data) => {
+                if (!data.category) return <>Категория была удалена</>
                 const type = userTypes.find((item) => item._id === data.category)
-                if (type) return type.name
+                return type.name
             }
         },
         accountId: {
             name: 'Счет зачисления',
             path: 'accountId',
             component: (data) => {
+                if (!data.accountId) return 'Данный счет был удален'
                 const account = userAccounts.find((account) => account._id === data.accountId)
                 if (account) return account.name
-                return 'Данный счет был удален'
             }
         },
         sum: {
@@ -70,13 +71,14 @@ const IncomesPage = () => {
         dispatch(removeIncome(id))
 
         const income = userIncomes.filter((income) => income._id === id)[0]
-        const typeName = userTypes.find((type) => type._id === income.category).name
+        const type = userTypes.filter((type) => type._id === income.category)[0]
+        const typeName = type?.name
         const account = userAccounts.filter((acc) => acc._id === income.accountId)[0]
         const accountLabel = account?.name
         const operation = {
             type: 'INCOME',
             action: 'DELETE',
-            category: typeName,
+            category: typeName || null,
             sum: income.sum,
             accountName: accountLabel || null
         }
@@ -84,7 +86,8 @@ const IncomesPage = () => {
         dispatch(createOperation(operation))
     }
 
-    if (!userIncomes || !userAccounts) return <Loader/>
+    if (!userIncomes || !userAccounts || !userTypes) return <Loader/>
+
     if (userIncomes.length === 0) {
         return (
             <div
@@ -108,7 +111,7 @@ const IncomesPage = () => {
             <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
                 Мои доходы
             </div>
-            <Table columns={columns} data={userIncomes.reverse()}/>
+            <Table columns={columns} data={userIncomes}/>
         </div>
     )
 }

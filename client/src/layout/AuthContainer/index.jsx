@@ -13,14 +13,21 @@ import {loadExpensesList} from "../../store/expenses";
 import {loadOperationsList} from "../../store/operationsHistory";
 import {loadIncomesTypeList} from "../../store/incomesType";
 import {loadExpensesTypeList} from "../../store/expensesType";
+import localStorageService from "../../services/localStorage.service";
 
 const AuthContainer = withRouter(({children}) => {
     const isLoggedIn = useSelector(getIsLoggedIn())
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (isLoggedIn) {
+        const token = localStorageService.getAccessToken()
+        if (isLoggedIn && token) {
             dispatch(loadUsersList())
+        }
+    }, [dispatch, isLoggedIn])
+
+    useEffect(() => {
+        if (isLoggedIn) {
             dispatch(loadAccountsList())
             dispatch(loadIncomesList())
             dispatch(loadExpensesList())
