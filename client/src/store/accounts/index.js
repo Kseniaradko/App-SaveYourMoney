@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-import localStorageService from "../../services/localStorage.service";
 import accountService from "../../services/account.service";
 import {toast} from "react-toastify";
 
@@ -116,36 +115,30 @@ export const getCurrentAccount = (accountId) => (state) => {
     return state.accounts.entities?.find((acc) => acc._id === accountId)
 }
 
-export const getCurrentUserAccounts = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    return state.accounts.entities?.filter((acc) => acc.userId === currentUserId)
-}
-
 export const getAccountsForPlugin = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    if (state.accounts.entities) {
-        const newState = state.accounts.entities?.filter((account) => account.userId === currentUserId)
-        if (newState.length > 3) {
-            return newState.splice((newState.length - 3), 3).reverse()
-        }
-        return newState.reverse()
+    const entities = state.accounts.entities ? [...state.accounts.entities] : []
+
+    if (entities.length > 3) {
+        return entities.splice((entities.length - 3), 3).reverse()
     }
+
+    if (entities) return entities.reverse()
 }
 
 export const getAccounts = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    const newState = state.accounts.entities?.filter((account) => account.userId === currentUserId)
+    const entities = state.accounts.entities ? [...state.accounts.entities] : []
     const newArray = []
-    if (newState) {
-        for (const account of newState) {
-            newArray.push({accountName: account.accountName, accountId: account._id})
+    if (entities) {
+        for (const account of entities) {
+            newArray.push({name: account.accountName, _id: account._id, createdAt: account.createdAt, sum: account.sum})
         }
-        return newArray
+        return newArray.reverse()
     }
 }
 
 export const getAmountOfAccounts = () => (state) => {
-    return state.accounts.entities.length
+    const entities = state.accounts.entities ? [...state.accounts.entities] : null
+    if (entities) return entities.length
 }
 
 export default accountsReducer

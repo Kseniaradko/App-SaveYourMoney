@@ -5,18 +5,19 @@ import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUserExpenses, removeExpense} from "../../store/expenses";
 import {Link} from "react-router-dom";
-import {getCurrentUserAccounts} from "../../store/accounts";
+import {getAccounts} from "../../store/accounts";
 import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
-import {toast} from "react-toastify";
 import ExpensesModalWindow from "../../components/Plugins/ModalWindows/ExpensesModalWindow";
 import Button from "../../components/common/Button";
 import {createOperation} from "../../store/operationsHistory";
+import {getExpensesTypes} from "../../store/expensesType";
 
 const ExpensesPage = () => {
     const dispatch = useDispatch()
     const userExpenses = useSelector(getCurrentUserExpenses())
-    const userAccounts = useSelector(getCurrentUserAccounts())
+    const userAccounts = useSelector(getAccounts())
+    const userTypes = useSelector(getExpensesTypes())
     const [showModal, setShowModal] = useState(false)
     const handleClick = () => {
         setShowModal(prevState => !prevState)
@@ -31,15 +32,18 @@ const ExpensesPage = () => {
         category: {
             name: 'Категория',
             path: 'category',
-            component: (data) => <Link to={`/expensesPage/${data._id}`}
-                                       className='hover:text-sky-500'>{data.category}</Link>
+            component: (data) => {
+                const type = userTypes.find((item) => item._id === data.category)
+                if (type) return type.name
+                return <>Категория была удалена</>
+            }
         },
         accountId: {
             name: 'Счет зачисления',
             path: 'accountId',
             component: (data) => {
                 const account = userAccounts.find((account) => account._id === data.accountId)
-                if (account) return account.accountName
+                if (account) return account.name
                 return 'Данный счет был удален'
             }
         },
@@ -66,20 +70,23 @@ const ExpensesPage = () => {
         dispatch(removeExpense(id))
 
         const expense = userExpenses.filter((expense) => expense._id === id)[0]
+        const type = userTypes.filter((type) => type._id === expense.category)[0]
+        const typeName = type?.name
         const account = userAccounts.filter((acc) => acc._id === expense.accountId)[0]
-        const accountLabel = account?.accountName
+        const accountLabel = account?.name
 
         const operation = {
             type: 'EXPENSE',
             action: 'DELETE',
-            category: expense.category,
+            category: typeName || null,
             sum: expense.sum,
             accountName: accountLabel || null
         }
+        console.log(operation)
         dispatch(createOperation(operation))
     }
 
-    if (!userExpenses && !userAccounts) return <Loader/>
+    if (!userExpenses || !userAccounts || !userTypes) return <Loader/>
     if (userExpenses.length === 0) {
         return (
             <div
@@ -87,7 +94,11 @@ const ExpensesPage = () => {
                 {showModal && <ExpensesModalWindow onCLick={handleClick}/>}
                 Расходы отсутствуют. Начните добавлять их!
                 <div className='flex justify-center' onClick={handleClick}>
-                    <Button>Добавить</Button>
+                    <Button
+                        face='add'
+                    >
+                        Добавить
+                    </Button>
                 </div>
             </div>
         )
@@ -101,7 +112,7 @@ const ExpensesPage = () => {
             >
                 Мои расходы
             </div>
-            <Table columns={columns} data={userExpenses.reverse()}/>
+            <Table columns={columns} data={userExpenses}/>
         </div>
     )
 }

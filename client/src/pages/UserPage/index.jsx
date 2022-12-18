@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useSelector} from "react-redux";
-import {getCurrentUserData} from "../../store/users";
+import {getCurrentUserData, getUserLoadingStatus} from "../../store/users";
 import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
 import {getAmountOfAccounts} from "../../store/accounts";
@@ -13,11 +13,10 @@ const UserPage = () => {
     }
 
     const user = useSelector(getCurrentUserData())
+    const loadingStatus = useSelector(getUserLoadingStatus())
     const amountOfAccounts = useSelector(getAmountOfAccounts())
 
-    if (!user) {
-        return <Loader/>
-    }
+    if (!user || !amountOfAccounts) return <Loader/>
     const dateOfRegistration = displayDate(user.createdAt)
 
     return (
@@ -26,37 +25,41 @@ const UserPage = () => {
                 <div
                     className="bg-white mb-6 shadow-2xl rounded-lg">
                     <div className="px-6 flex flex-row justify-around">
-                        <div className="flex flex-col w-full">
-                            {!edit && (
-                                <div className='flex flex-col justify-between h-full mb-6'>
-                                    <div>
-                                        <div
-                                            className="mt-5 text-xl font-semibold leading-normal text-blueGray-700 text-center"
-                                        >
-                                            {user.name}
+                        <div className="flex flex-col w-full justify-center">
+                            {loadingStatus ? <Loader/> : (
+                                !edit ? (
+                                    <div className='flex flex-col justify-between h-full mb-6'>
+                                        <div>
+                                            <div
+                                                className="mt-5 text-xl font-semibold leading-normal text-blueGray-700 text-center"
+                                            >
+                                                {user.name}
+                                            </div>
+                                            <div className="mb-2 mt-3 text-lg text-blueGray-600 ">
+                                                {`Пол: ${user.sex}`}
+                                            </div>
+                                            <div className="mb-2 text-lg text-blueGray-600">
+                                                {`Электронная почта: ${user.email}`}
+                                            </div>
+                                            <div className='mb-2 text-lg text-blueGray-600'>
+                                                {`Дата регистрации: ${dateOfRegistration}`}
+                                            </div>
+                                            <div className='mb-2 text-lg text-blueGray-600'>
+                                                {`Количество счетов: ${amountOfAccounts}`}
+                                            </div>
                                         </div>
-                                        <div className="mb-2 mt-3 text-lg text-blueGray-600 ">
-                                            {`Пол: ${user.sex}`}
-                                        </div>
-                                        <div className="mb-2 text-lg text-blueGray-600">
-                                            {`Электронная почта: ${user.email}`}
-                                        </div>
-                                        <div className='mb-2 text-lg text-blueGray-600'>
-                                            {`Дата регистрации: ${dateOfRegistration}`}
-                                        </div>
-                                        <div className='mb-2 text-lg text-blueGray-600'>
-                                            {`Количество счетов: ${amountOfAccounts}`}
+                                        <div className='text-center'>
+                                            <button onClick={handleClick}
+                                                    className="font-semibold text-slate-400 mt-4 hover:text-sky-500">
+                                                Редактировать информацию о себе
+                                            </button>
                                         </div>
                                     </div>
-                                    <div className='text-center'>
-                                        <button onClick={handleClick}
-                                                className="font-semibold text-slate-400 mt-4 hover:text-sky-500">
-                                            Редактировать информацию о себе
-                                        </button>
-                                    </div>
-                                </div>
+                                ) : (
+                                    edit && <EditUserAccount onClick={handleClick}/>
+                                )
                             )}
-                            {edit && <EditUserAccount onClick={handleClick}/>}
+
                         </div>
                         <div className="border-l border-blueGray-200 text-center text-blueGray-700">
                             <div className="flex flex-col justify-center mt-5 mb-5">

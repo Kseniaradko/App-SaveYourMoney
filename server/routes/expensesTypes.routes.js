@@ -1,5 +1,6 @@
 const express = require('express')
 const ExpenseType = require('../models/ExpenseType')
+const Expense = require('../models/Expense')
 const auth = require('../middleware/auth.middleware')
 const router = express.Router({mergeParams: true})
 
@@ -44,6 +45,12 @@ router.delete('/:expenseTypeId', auth, async (req, res) => {
     try {
         const {expenseTypeId} = req.params;
         const removedExpenseType = await ExpenseType.findById(expenseTypeId);
+
+        const expenses = await Expense.find({category: expenseTypeId})
+        for (const expense of expenses) {
+            await Expense.findByIdAndUpdate(expense._id, {category: null}, {new: true})
+        }
+        
         await removedExpenseType.remove()
         return res.send(null)
     } catch (error) {

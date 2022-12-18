@@ -16,6 +16,7 @@ function AuthNavProfile() {
     const handleClick = () => {
         dispatch(logOut())
     }
+
     if (!user) return <Loader/>
     return (
         <Menu as="div" className="relative inline-block text-left">

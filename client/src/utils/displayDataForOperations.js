@@ -41,19 +41,19 @@ export const displayDetailsForOperations = (data) => {
         if (data.action === 'DELETE') return `Счет ${data.accountName} удален`
     }
     if (data.type === 'INCOME') {
-        if (data.action === 'ADD') return `${operations[data.type].label} на сумму ${data.sum}р. (${data.category}) добавлен на счет ${data.accountName}`
-        if (data.action === 'EDIT') return `Доход был изменен. Текущие данные: категория - ${data.category}, счет - ${data.accountName}, сумма - ${data.sum}`
+        if (data.action === 'ADD') return `${operations[data.type].label} на сумму ${data.sum}р. (${data.category || 'категория была удалена'}) добавлен на счет ${data.accountName}`
+        if (data.action === 'EDIT') return `Доход был изменен. Текущие данные: категория - ${data.category || 'категория была удалена'}, счет - ${data.accountName}, сумма - ${data.sum}`
         if (data.action === 'DELETE') {
-            if (data.accountName) return `${operations[data.type].label} на сумму ${data.sum}р. (${data.category}) удален со счета ${data.accountName}`
-            return `${operations[data.type].label} ${data.sum}р. (${data.category}) удален с ранее удаленного счета`
+            if (data.accountName) return `${operations[data.type].label} на сумму ${data.sum}р. (${data.category || 'категория была удалена'}) удален со счета ${data.accountName}`
+            return `${operations[data.type].label} ${data.sum}р. (${data.category || 'категория была удалена'}) удален с ранее удаленного счета`
         }
     }
     if (data.type === 'EXPENSE') {
-        if (data.action === 'ADD') return `${operations[data.type].label} на сумму ${data.sum}р. (${data.category}) списан со счета ${data.accountName}`
-        if (data.action === 'EDIT') return `Расход был изменен. Текущие данные: категория - ${data.category}, счет - ${data.accountName}, сумма - ${data.sum}`
+        if (data.action === 'ADD') return `${operations[data.type].label} на сумму ${data.sum}р. (${data.category || 'категория была удалена'}) списан со счета ${data.accountName}`
+        if (data.action === 'EDIT') return `Расход был изменен. Текущие данные: категория - ${data.category || 'категория была удалена'}, счет - ${data.accountName}, сумма - ${data.sum}`
         if (data.action === 'DELETE') {
-            if (data.accountName) return `${operations[data.type].label} на сумму ${data.sum}р (${data.category}). удален со счета ${data.accountName}`
-            return `${operations[data.type].label} ${data.sum}р. (${data.category}) удален с ранее удаленного счета`
+            if (data.accountName) return `${operations[data.type].label} на сумму ${data.sum}р (${data.category || 'категория была удалена'}). удален со счета ${data.accountName}`
+            return `${operations[data.type].label} ${data.sum}р. (${data.category || 'категория была удалена'}) удален с ранее удаленного счета`
         }
     }
 }

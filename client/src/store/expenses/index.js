@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-import localStorageService from "../../services/localStorage.service";
 import expenseService from "../../services/expense.service";
 import {loadAccountsList} from "../accounts";
 import {toast} from "react-toastify";
@@ -82,6 +81,9 @@ export const createExpense = (expense) => async (dispatch) => {
         const {content} = await expenseService.create(expense)
         dispatch(expenseCreated(content))
         dispatch(loadAccountsList())
+        toast.success('Расход был добавлен!', {
+            position: toast.POSITION.TOP_RIGHT
+        })
     } catch (error) {
         dispatch(expenseCreatedFailed(error.message))
     }
@@ -114,21 +116,18 @@ export const updateExpense = (expenseId, data) => async (dispatch) => {
 }
 
 export const getCurrentUserExpenses = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    return state.expenses.entities?.filter((exp) => exp.userId === currentUserId)
+    const entities = state.expenses.entities ? [...state.expenses.entities] : null
+    if (entities) return entities.reverse()
 }
 
 export const getExpensesForPlugin = () => (state) => {
-    const currentUserId = localStorageService.getUserId()
-    if (state.expenses.entities) {
-        const newState = state.expenses.entities?.filter((expense) => expense.userId === currentUserId)
-        if (newState.length > 3) {
-            const showedElements = newState.splice((newState.length - 3), 3).reverse()
-            return showedElements
+    const entities = state.expenses.entities ? [...state.expenses.entities] : null
+    if (entities) {
+        if (entities.length > 3) {
+            return entities.splice((entities.length - 3), 3).reverse()
         }
-        return newState.reverse()
+        return entities.reverse()
     }
-    return
 }
 
 export const getExpenseById = (id) => (state) => {

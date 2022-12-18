@@ -39,7 +39,8 @@ const OperationsInfo = ({label, data, img}) => {
                     <div key={item._id}
                          className='flex justify-between mb-2 border-b-2 border-slate-200 '>
                         <div
-                            className=''>{`${data.indexOf(item) + 1}. ${item.category || item.accountName}`}</div>
+                            className=''>{`${data.indexOf(item) + 1}. ${item.accountName || item.name || 'Категория была удалена'}`}
+                        </div>
                         <div className=''>{item.sum}р.</div>
                     </div>
                 )

@@ -27,8 +27,8 @@ const SelectField = (props) => {
                 </option>
                 {props.options.length > 0 &&
                     props.options.map((option) => (
-                        <option value={option.accountId} key={option.accountId}>
-                            {option.accountName}
+                        <option value={option._id} key={option._id}>
+                            {option.name}
                         </option>
                     ))}
             </Field>

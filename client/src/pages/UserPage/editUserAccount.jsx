@@ -20,6 +20,7 @@ const validationSchema = Yup.object().shape({
 const EditUserAccount = ({onClick}) => {
     const dispatch = useDispatch()
     const user = useSelector(getCurrentUserData())
+
     const onBack = (e) => {
         e.preventDefault()
         onClick()

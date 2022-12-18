@@ -1,5 +1,6 @@
 const express = require('express')
 const IncomeType = require('../models/IncomeType')
+const Income = require('../models/Income')
 const auth = require("../middleware/auth.middleware");
 const router = express.Router({mergeParams: true})
 
@@ -16,7 +17,6 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
     try {
-        console.log(req.user.id)
         const newType = await IncomeType.create({
             ...req.body,
             userId: req.user.id
@@ -43,8 +43,14 @@ router.patch('/:incomeTypeId', auth, async (req, res) => {
 
 router.delete('/:incomeTypeId', auth, async (req, res) => {
     try {
-        const {incomeTypeId} = req.params;
-        const removedIncomeType = await IncomeType.findById(incomeTypeId);
+        const {incomeTypeId} = req.params
+        const removedIncomeType = await IncomeType.findById(incomeTypeId)
+
+        const incomes = await Income.find({category: incomeTypeId})
+        for (const income of incomes) {
+            await Income.findByIdAndUpdate(income._id, {category: null}, {new: true})
+        }
+
         await removedIncomeType.remove()
         return res.send(null)
     } catch (error) {

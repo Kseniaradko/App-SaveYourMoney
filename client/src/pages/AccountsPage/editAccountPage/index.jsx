@@ -7,8 +7,8 @@ import {FormikProvider, useFormik} from "formik";
 import TextField from "../../../components/common/form/textField";
 import {getCurrentAccount, updateAccount} from "../../../store/accounts";
 import Loader from "../../../components/common/Loader";
-import {toast} from "react-toastify";
 import {createOperation} from "../../../store/operationsHistory";
+import Button from "../../../components/common/Button";
 
 const validationSchema = Yup.object().shape({
     accountName: Yup.string().required('Данное поле обязательно для заполнения'),
@@ -38,7 +38,7 @@ const EditAccountPage = () => {
         }
 
         dispatch(createOperation(operation))
-        
+
         history.goBack()
     }
 
@@ -52,42 +52,46 @@ const EditAccountPage = () => {
 
     return (
         <div
-            className='max-w-screen-xl m-auto w-full flex flex-col items-center rounded-lg overflow-hidden w-96 ring-1 ring-slate-900/5 shadow-xl p-6 '>
+            className='max-w-screen-xl m-auto flex flex-col items-center rounded-lg min-w-[350px] ring-1 ring-slate-900/5 shadow-xl p-6 '
+        >
             <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
                 Редактирование счета
             </div>
-            <FormikProvider value={formik}>
-                <form onSubmit={formik.handleSubmit}>
-                    <TextField
-                        label='Название счета:'
-                        name='accountName'
-                        value={formik.values.accountName}
-                        placeholder='Заработная плата'
-                    />
-                    <TextField
-                        label='Сумма зачисления:'
-                        name='sum'
-                        value={formik.values.sum}
-                        placeholder='30000'
-                    />
-                    <div className='flex justify-end mt-4'>
-                        <button
-                            className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-sm outline-none hover:bg-red-50 rounded focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                            type="button"
-                            onClick={() => history.goBack()}
-                        >
-                            Назад
-                        </button>
-                        <button
-                            className="bg-sky-500 text-white active:bg-sky-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                            type="submit"
-                            disabled={!formik.isValid || !formik.dirty}
-                        >
-                            Сохранить изменения
-                        </button>
-                    </div>
-                </form>
-            </FormikProvider>
+            <div
+                className='min-w-[300px]'
+            >
+                <FormikProvider value={formik}>
+                    <form onSubmit={formik.handleSubmit}>
+                        <TextField
+                            label='Название счета:'
+                            name='accountName'
+                            value={formik.values.accountName}
+                            placeholder='Заработная плата'
+                        />
+                        <TextField
+                            label='Сумма зачисления:'
+                            name='sum'
+                            value={formik.values.sum}
+                            placeholder='30000'
+                        />
+                        <div className='flex mt-4 gap-2'>
+                            <Button
+                                face='secondary'
+                                type="button"
+                                onClick={() => history.goBack()}
+                            >
+                                Назад
+                            </Button>
+                            <Button
+                                face='primary'
+                                disabled={!formik.isValid || !formik.dirty}
+                            >
+                                Сохранить
+                            </Button>
+                        </div>
+                    </form>
+                </FormikProvider>
+            </div>
         </div>
     )
 }

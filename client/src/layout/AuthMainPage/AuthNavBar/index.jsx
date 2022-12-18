@@ -15,6 +15,12 @@ const AuthNavBar = () => {
                         Main
                     </Link>
                     <Link
+                        to='/types'
+                        className="hover:text-sky-500 py-2 text-slate-500 pr-6"
+                    >
+                        Categories
+                    </Link>
+                    <Link
                         to="/history"
                         className="hover:text-sky-500 py-2 text-slate-500"
                     >

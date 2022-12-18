@@ -56,12 +56,7 @@ const usersSlice = createSlice({
         },
         userUpdated: (state, action) => {
             state.isLoading = false
-            state.entities = state.entities.map((account) => {
-                if (account._id === action.payload._id) {
-                    return action.payload
-                }
-                return account
-            })
+            state.entities = action.payload
         },
         userUpdateFailed: (state, action) => {
             state.isLoading = false
@@ -102,13 +97,12 @@ export const logIn = (payload) => async (dispatch) => {
         dispatch(authRequestSuccess({userId: data.userId}))
         history.push('/dashboard')
     } catch (error) {
-        const {code, message} = error.response.data.error;
-        console.log(message)
+        const {code, message} = error.response.data.error
         if (code === 400) {
-            const errorMessage = generateAuthError(message);
-            dispatch(authRequestFailed(errorMessage));
+            const errorMessage = generateAuthError(message)
+            dispatch(authRequestFailed(errorMessage))
         } else {
-            dispatch(authRequestFailed(error.message));
+            dispatch(authRequestFailed(error.message))
         }
     }
 }
@@ -122,7 +116,6 @@ export const signUp = (payload) => async (dispatch) => {
         history.push('/dashboard')
     } catch (error) {
         const {code, message} = error.response.data.error;
-        console.log(message)
         if (code === 400) {
             const errorMessage = generateAuthError(message);
             dispatch(authRequestFailed(errorMessage));
@@ -139,9 +132,9 @@ export const logOut = () => (dispatch) => {
 }
 
 export const updateUser = (data) => async (dispatch) => {
+    dispatch(usersRequested())
     try {
         const {content} = await userService.update(data)
-        console.log('content', content)
         dispatch(userUpdated(content))
         toast.success('Данные были изменены!', {
             position: toast.POSITION.TOP_RIGHT
@@ -156,12 +149,15 @@ export const updateUser = (data) => async (dispatch) => {
 
 
 export const getCurrentUserData = () => (state) => {
-    return state.users.entities ?
-        state.users.entities.find(u => u._id === state.users.auth.userId) : null;
+    return state.users.entities || null
 }
+
+export const getDataStatus = () => (state) => state.users.dataLoaded
 
 export const getAuthErrors = () => (state) => state.users.error
 
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn
+
+export const getUserLoadingStatus = () => (state) => state.users.isLoading
 
 export default usersReducer

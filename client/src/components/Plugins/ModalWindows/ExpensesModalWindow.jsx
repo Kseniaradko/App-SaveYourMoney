@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import TextField from "../../common/form/textField";
 import {FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
@@ -6,10 +6,10 @@ import SelectField from "../../common/form/selectField";
 import {useDispatch, useSelector} from "react-redux";
 import {getAccounts} from "../../../store/accounts";
 import {createExpense} from "../../../store/expenses";
-import {toast} from "react-toastify";
 import {createOperation} from "../../../store/operationsHistory";
 import Button from "../../common/Button";
 import closeIcon from "./closeIcon.svg";
+import {createExpenseType, getExpensesTypes} from "../../../store/expensesType";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -18,35 +18,51 @@ const validationSchema = Yup.object().shape({
         .required('Данное поле обязательно для заполнения'),
     sum: Yup.number()
         .required('Данное поле обязательно для заполнения')
-        .typeError('Сумма зачисления должна быть числом')
+        .typeError('Сумма зачисления должна быть числом'),
+    newCategory: Yup.string()
+        .min(1, 'Категория должно содержать не менее 1 символа')
 })
 
 const initialValues = {
     category: '',
     accountId: '',
-    sum: ''
+    sum: '',
+    newCategory: ''
 }
 
 const ExpensesModalWindow = ({onCLick}) => {
     const dispatch = useDispatch()
     const accounts = useSelector(getAccounts())
+    const types = useSelector(getExpensesTypes())
+
+    const [category, setCategory] = useState(false)
+    const addNewCategory = (data) => {
+        dispatch(createExpenseType({name: data}))
+        onAdd()
+    }
+    const onAdd = () => {
+        setCategory(prevState => !prevState)
+    }
 
     const handleSubmit = (formValue) => {
-        dispatch(createExpense(formValue))
+        const result = {
+            category: formValue.category,
+            accountId: formValue.accountId,
+            sum: formValue.sum
+        }
+        dispatch(createExpense(result))
 
-        const accountLabel = accounts.filter((acc) => acc.accountId === formValue.accountId)[0].accountName
+        const typeName = types.filter((type) => type._id === formValue.category)[0].name
+        const accountLabel = accounts.filter((acc) => acc._id === formValue.accountId)[0].name
         const operation = {
             type: 'EXPENSE',
             action: 'ADD',
-            category: formValue.category,
+            category: typeName,
             sum: formValue.sum,
             accountName: accountLabel
         }
         dispatch(createOperation(operation))
 
-        toast.success('Расход был добавлен!', {
-            position: toast.POSITION.TOP_RIGHT
-        })
         onCLick()
     }
     const formik = useFormik({
@@ -79,12 +95,42 @@ const ExpensesModalWindow = ({onCLick}) => {
                         <div className="relative px-6 py-3 flex-auto">
                             <FormikProvider value={formik}>
                                 <form onSubmit={formik.handleSubmit}>
-                                    <TextField
+                                    <SelectField
                                         label='Категория:'
                                         name='category'
-                                        placeholder='Развлечения'
+                                        defaultOption='Choose...'
+                                        options={types}
                                         value={formik.values.category}
                                     />
+                                    {!category && (
+                                        <div onClick={onAdd}
+                                             className='mt-2 text-sm text-slate-400 cursor-pointer text-right hover:text-slate-700'>
+                                            Добавить новую категорию
+                                        </div>
+                                    )}
+                                    {category && (
+                                        <>
+                                            <div onClick={onAdd}
+                                                 className='mt-2 text-sm text-slate-400 cursor-pointer text-right hover:text-slate-700'>
+                                                Скрыть поле добавления
+                                            </div>
+                                            <TextField
+                                                label='Новая категория'
+                                                name='newCategory'
+                                                placeholder='Транспорт'
+                                                value={formik.values.newCategory}
+                                                type='add'
+                                            />
+                                            <div className='flex justify-end'>
+                                                <Button
+                                                    face='addition'
+                                                    onClick={() => addNewCategory(formik.values.newCategory)}
+                                                >
+                                                    Добавить
+                                                </Button>
+                                            </div>
+                                        </>
+                                    )}
                                     <SelectField
                                         label='Выберите счет списания денежных средств:'
                                         name='accountId'

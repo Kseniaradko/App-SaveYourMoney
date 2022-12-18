@@ -19,7 +19,7 @@ const TextField = (props) => {
 
     const toggleShowPassword = () => {
         setShowPassword((prevState) => !prevState);
-    };
+    }
 
     return (
         <div className='py-2'>
