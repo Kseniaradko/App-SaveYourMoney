@@ -12,6 +12,7 @@ import SelectField from "../../../components/common/form/selectField";
 import {createOperation} from "../../../store/operationsHistory";
 import {getIncomesTypes} from "../../../store/incomesType";
 import Button from "../../../components/common/Button";
+import useGetTypes from "../../../hooks/useGetTypes";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -24,6 +25,7 @@ const validationSchema = Yup.object().shape({
 })
 
 const EditIncomePage = () => {
+    useGetTypes()
     const dispatch = useDispatch()
     const params = useParams()
     const {incomeId} = params

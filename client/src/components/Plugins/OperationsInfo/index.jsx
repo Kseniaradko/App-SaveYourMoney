@@ -4,8 +4,9 @@ import IncomeModalWindow from "../ModalWindows/IncomeModalWindow";
 import ExpensesModalWindow from "../ModalWindows/ExpensesModalWindow";
 import AccountModalWindow from "../ModalWindows/AccountModalWindow";
 import {Link} from "react-router-dom";
+import Loader from "../../common/Loader";
 
-const OperationsInfo = ({label, data, img}) => {
+const OperationsInfo = ({label, data, img, loadingStatus}) => {
     const [showModal, setShowModal] = useState(false)
     const handleClick = () => {
         setShowModal(prevState => !prevState)
@@ -21,7 +22,8 @@ const OperationsInfo = ({label, data, img}) => {
                 src={plusIcon}
                 className='absolute top-3 right-4 w-6 cursor-pointer rounded-full bg-slate-300 shadow-2xl'
                 onClick={handleClick}
-                alt='plus'/>
+                alt='plus'
+            />
             {showModal && label === 'Доходы' && <IncomeModalWindow onCLick={handleClick}/>}
             {showModal && label === 'Расходы' && <ExpensesModalWindow onCLick={handleClick}/>}
             {showModal && label === 'Счета' && <AccountModalWindow onCLick={handleClick}/>}
@@ -34,18 +36,25 @@ const OperationsInfo = ({label, data, img}) => {
                     <Link to='/accountsPage' className='hover:underline underline-offset-4'>{label}</Link>}
                 {img && <img className='w-5' src={img} alt='Loading'/>}
             </div>
-            {haveData && data.map((item) => {
-                return (
-                    <div key={item._id}
-                         className='flex justify-between mb-2 border-b-2 border-slate-200 '>
-                        <div
-                            className=''>{`${data.indexOf(item) + 1}. ${item.accountName || item.name || 'Категория была удалена'}`}
-                        </div>
-                        <div className=''>{item.sum}р.</div>
+            {loadingStatus ?
+                <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'><Loader/></div> : (
+                    <div>
+                        {haveData && data.map((item) => {
+                            return (
+                                <div key={item._id}
+                                     className='flex justify-between mb-2 border-b-2 border-slate-200 '>
+                                    <div
+                                        className=''>{`${data.indexOf(item) + 1}. ${item.accountName || item.name || 'Категория была удалена'}`}
+                                    </div>
+                                    <div className=''>{item.sum}р.</div>
+                                </div>
+                            )
+                        })}
+                        {!haveData &&
+                            <div className='mt-4 text-center text-xl font-light text-slate-500'>Нет данных!</div>}
                     </div>
-                )
-            })}
-            {!haveData && <div className='mt-4 text-center text-xl font-light text-slate-500'>Нет данных!</div>}
+                )}
+
         </div>
     )
 }

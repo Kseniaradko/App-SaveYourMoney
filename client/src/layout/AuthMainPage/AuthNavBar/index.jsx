@@ -12,19 +12,19 @@ const AuthNavBar = () => {
                         to="/dashboard"
                         className="hover:text-sky-500 py-2 text-slate-500 pr-6"
                     >
-                        Main
+                        Главная
                     </Link>
                     <Link
                         to='/types'
                         className="hover:text-sky-500 py-2 text-slate-500 pr-6"
                     >
-                        Categories
+                        Категории
                     </Link>
                     <Link
                         to="/history"
                         className="hover:text-sky-500 py-2 text-slate-500"
                     >
-                        History
+                        История операций
                     </Link>
                 </div>
                 <AuthNavProfile/>

@@ -1,5 +1,4 @@
 export function generateAuthError(message) {
-    console.log(message)
     switch (message) {
         case 'INVALID_PASSWORD':
             return 'Email или Пароль введены некорректно'

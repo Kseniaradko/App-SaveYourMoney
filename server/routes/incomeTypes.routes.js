@@ -6,8 +6,23 @@ const router = express.Router({mergeParams: true})
 
 router.get('/', auth, async (req, res) => {
     try {
+        if (!req.query) {
+            const list = await IncomeType.find({$or: [{userId: req.user.id}, {userId: null}]}).sort({_id: -1})
+            const count = await IncomeType.find({$or: [{userId: req.user.id}, {userId: null}]}).countDocuments()
+            const totalPages = Math.ceil(count / 10)
+            return res.status(200).send({list, totalPages})
+        }
+
+        const {offset, limit} = req.query
         const list = await IncomeType.find({$or: [{userId: req.user.id}, {userId: null}]})
-        res.status(200).send(list)
+            .sort({_id: -1})
+            .limit(limit)
+            .skip(offset)
+            .exec()
+
+        const count = await IncomeType.find({$or: [{userId: req.user.id}, {userId: null}]}).countDocuments() - 2
+        const totalPages = Math.ceil(count / limit)
+        res.status(200).send({list, totalPages})
     } catch (error) {
         res.status(500).json({
             message: 'На сервере произошла ошибка. Попробуйте позже.'

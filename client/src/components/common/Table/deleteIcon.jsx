@@ -1,6 +1,7 @@
 import React from "react";
 
-const DeleteIcon = ({onDelete}) => {
+const DeleteIcon = ({onDelete, loadingStatus}) => {
+
     return (
         <div onClick={onDelete}>
             <svg

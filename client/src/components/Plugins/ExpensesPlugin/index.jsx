@@ -2,13 +2,14 @@ import React from "react";
 import OperationsInfo from "../OperationsInfo";
 import expensesIcon from './expensesIcon.svg'
 import {useSelector} from "react-redux";
-import {getExpensesForPlugin} from "../../../store/expenses";
+import {getExpenseLoadingStatus, getExpensesForPlugin} from "../../../store/expenses";
 import Loader from "../../common/Loader";
 import {getExpensesTypes} from "../../../store/expensesType";
 
 const ExpensesPlugin = () => {
     const userExpensesForPlugin = useSelector(getExpensesForPlugin())
     const types = useSelector(getExpensesTypes())
+    const loadingStatus = useSelector(getExpenseLoadingStatus())
 
     const info = userExpensesForPlugin?.map((expense) => {
         const type = types?.find((type) => type._id === expense.category)
@@ -22,7 +23,7 @@ const ExpensesPlugin = () => {
 
     if (!userExpensesForPlugin) return <Loader/>
     return (
-        <OperationsInfo label='Расходы' data={info} img={expensesIcon}/>
+        <OperationsInfo label='Расходы' data={info} img={expensesIcon} loadingStatus={loadingStatus}/>
     )
 }
 

@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
+    totalPages: null,
     error: null,
     isLoading: false
 }
@@ -22,15 +23,19 @@ const expensesSlice = createSlice({
         },
         expensesReceived: (state, action) => {
             state.isLoading = false
-            state.entities = action.payload
+            state.entities = action.payload.list
+            state.totalPages = action.payload.totalPages
         },
         expenseCreated: (state, action) => {
-            state.entities = [...state.entities, action.payload]
+            state.isLoading = false
+            state.entities = [action.payload, ...state.entities]
         },
         expenseCreatedFailed: (state, action) => {
+            state.isLoading = false
             state.error = action.payload
         },
         expenseDeleted: (state, action) => {
+            state.isLoading = false
             state.entities = state.entities.filter((expense) => expense._id !== action.payload)
         },
         expenseDeleteFailed: (state, action) => {
@@ -66,10 +71,10 @@ const {
     expenseUpdateFailed
 } = actions
 
-export const loadExpensesList = () => async (dispatch) => {
+export const loadExpensesList = (offset, limit) => async (dispatch) => {
     dispatch(expensesRequested())
     try {
-        const {content} = await expenseService.get()
+        const {content} = await expenseService.get(offset, limit)
         dispatch(expensesReceived(content))
     } catch (error) {
         dispatch(expensesRequestedFailed(error.message))
@@ -77,6 +82,7 @@ export const loadExpensesList = () => async (dispatch) => {
 }
 
 export const createExpense = (expense) => async (dispatch) => {
+    dispatch(expensesRequested())
     try {
         const {content} = await expenseService.create(expense)
         dispatch(expenseCreated(content))
@@ -89,7 +95,8 @@ export const createExpense = (expense) => async (dispatch) => {
     }
 }
 
-export const removeExpense = (expenseId) => async (dispatch) => {
+export const removeExpense = (expenseId, currentPage) => async (dispatch) => {
+    dispatch(expensesRequested())
     try {
         await expenseService.removeExpense(expenseId)
         dispatch(expenseDeleted(expenseId))
@@ -97,6 +104,8 @@ export const removeExpense = (expenseId) => async (dispatch) => {
         toast.error('Расход был удален!', {
             position: toast.POSITION.TOP_RIGHT
         })
+
+        dispatch(loadExpensesList((currentPage - 1) * 6, 6))
     } catch (error) {
         dispatch(expenseDeleteFailed(error.message))
     }
@@ -117,16 +126,16 @@ export const updateExpense = (expenseId, data) => async (dispatch) => {
 
 export const getCurrentUserExpenses = () => (state) => {
     const entities = state.expenses.entities ? [...state.expenses.entities] : null
-    if (entities) return entities.reverse()
+    if (entities) return entities
 }
 
 export const getExpensesForPlugin = () => (state) => {
     const entities = state.expenses.entities ? [...state.expenses.entities] : null
     if (entities) {
         if (entities.length > 3) {
-            return entities.splice((entities.length - 3), 3).reverse()
+            return entities.splice(0, 3)
         }
-        return entities.reverse()
+        return entities
     }
 }
 
@@ -134,5 +143,12 @@ export const getExpenseById = (id) => (state) => {
     return state.expenses.entities?.find((expense) => expense._id === id)
 }
 
+export const getTotalExpensePages = () => (state) => {
+    return state.expenses.totalPages
+}
+
+export const getExpenseLoadingStatus = () => (state) => {
+    return state.expenses.isLoading
+}
 
 export default expensesReducer

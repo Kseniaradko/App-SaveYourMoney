@@ -12,6 +12,7 @@ import SelectField from "../../../components/common/form/selectField";
 import {createOperation} from "../../../store/operationsHistory";
 import {getExpensesTypes} from "../../../store/expensesType";
 import Button from "../../../components/common/Button";
+import useGetTypes from "../../../hooks/useGetTypes";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -24,6 +25,7 @@ const validationSchema = Yup.object().shape({
 })
 
 const EditExpensesPage = () => {
+    useGetTypes()
     const dispatch = useDispatch()
     const params = useParams()
     const {expenseId} = params
