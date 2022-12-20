@@ -4,6 +4,8 @@ import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
+    pageEntity: null,
+    totalPages: null,
     error: null,
     isLoading: false
 }
@@ -21,17 +23,31 @@ const expensesTypeSlice = createSlice({
         },
         expensesTypeReceived: (state, action) => {
             state.isLoading = false
-            state.entities = action.payload
+            state.entities = action.payload.list
+            state.totalPages = action.payload.totalPages
+        },
+        expensesTypeRec: (state, action) => {
+            state.isLoading = false
+            state.pageEntity = action.payload.list
+            state.totalPages = action.payload.totalPages
         },
         expensesTypeCreated: (state, action) => {
-            state.entities = [...state.entities, action.payload]
+            state.isLoading = false
+            state.entities = [action.payload, ...state.entities]
         },
         expensesTypeCreatedFailed: (state, action) => {
+            state.isLoading = false
             state.error = action.payload
         },
         expenseTypeUpdated: (state, action) => {
             state.isLoading = false
             state.entities = state.entities.map((income) => {
+                if (income._id === action.payload._id) {
+                    return action.payload
+                }
+                return income
+            })
+            state.pageEntity = state.pageEntity.map((income) => {
                 if (income._id === action.payload._id) {
                     return action.payload
                 }
@@ -43,9 +59,12 @@ const expensesTypeSlice = createSlice({
             state.error = action.payload
         },
         expenseTypeDeleted: (state, action) => {
+            state.isLoading = false
             state.entities = state.entities.filter((incomeType) => incomeType._id !== action.payload)
+            state.pageEntity = state.pageEntity.filter((incomeType) => incomeType._id !== action.payload)
         },
         expenseTypeDeleteFailed: (state, action) => {
+            state.isLoading = false
             state.error = action.payload
         }
     }
@@ -62,10 +81,21 @@ const {
     expenseTypeUpdated,
     expenseTypeUpdateFailed,
     expenseTypeDeleted,
-    expenseTypeDeleteFailed
+    expenseTypeDeleteFailed,
+    expensesTypeRec
 } = actions
 
-export const loadExpensesTypeList = () => async (dispatch) => {
+export const loadExpensesTypeList = (offset, limit) => async (dispatch) => {
+    dispatch(expensesTypeRequested())
+    try {
+        const {content} = await expensesTypeService.get(offset, limit)
+        dispatch(expensesTypeRec(content))
+    } catch (error) {
+        dispatch(expensesTypeRequestedFailed(error.message))
+    }
+}
+
+export const loadExpenseType = () => async (dispatch) => {
     dispatch(expensesTypeRequested())
     try {
         const {content} = await expensesTypeService.get()
@@ -76,6 +106,7 @@ export const loadExpensesTypeList = () => async (dispatch) => {
 }
 
 export const createExpenseType = (data) => async (dispatch) => {
+    dispatch(expensesTypeRequested())
     try {
         const {content} = await expensesTypeService.create(data)
         dispatch(expensesTypeCreated(content))
@@ -88,6 +119,7 @@ export const createExpenseType = (data) => async (dispatch) => {
 }
 
 export const updateExpenseType = (expenseTypeId, data) => async (dispatch) => {
+    dispatch(expensesTypeRequested())
     try {
         const {content} = await expensesTypeService.update(expenseTypeId, data)
         dispatch(expenseTypeUpdated(content))
@@ -99,13 +131,16 @@ export const updateExpenseType = (expenseTypeId, data) => async (dispatch) => {
     }
 }
 
-export const removeExpenseType = (expenseTypeId) => async (dispatch) => {
+export const removeExpenseType = (expenseTypeId, currentPage) => async (dispatch) => {
+    dispatch(expensesTypeRequested())
     try {
         await expensesTypeService.remove(expenseTypeId)
         dispatch(expenseTypeDeleted(expenseTypeId))
-        toast.error('Категория была удален!', {
+        toast.error('Категория была удалена!', {
             position: toast.POSITION.TOP_RIGHT
         })
+
+        dispatch(loadExpensesTypeList((currentPage - 1) * 10, 10))
     } catch (error) {
         dispatch(expenseTypeDeleteFailed(error.message))
     }
@@ -116,7 +151,15 @@ export const getExpensesTypes = () => (state) => {
 }
 
 export const getExpensesTypesWithoutDefault = () => (state) => {
-    return state.expensesType.entities?.filter((exp) => exp.type !== 'default' || exp.type === null)
+    return state.expensesType.pageEntity?.filter((exp) => exp.type !== 'default' || exp.type === null)
+}
+
+export const getExpenseTypeLoadingStatus = () => (state) => {
+    return state.expensesType.isLoading
+}
+
+export const getTotalExpenseTypesPages = () => (state) => {
+    return state.expensesType.totalPages
 }
 
 export default expensesTypeReducer

@@ -106,10 +106,8 @@ function isTokenInvalid(data, dbToken) {
 
 router.post("/token", async (req, res) => {
     try {
-        console.log('body', req.body)
         const {refresh_token: refreshToken} = req.body;
         const data = tokenService.validateRefresh(refreshToken);
-        console.log('data', data)
         const dbToken = tokenService.findToken(refreshToken);
 
         if (isTokenInvalid(data, dbToken)) {

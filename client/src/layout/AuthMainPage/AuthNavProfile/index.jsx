@@ -50,7 +50,7 @@ function AuthNavProfile() {
                                         'block px-4 py-2 text-sm'
                                     )}
                                 >
-                                    User page
+                                    Моя страница
                                 </Link>
                             )}
                         </Menu.Item>

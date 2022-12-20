@@ -3,7 +3,7 @@ import Table from "../../components/common/Table";
 import EditIcon from "../../components/common/Table/editIcon";
 import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentUserIncomes, removeIncome} from "../../store/incomes";
+import {getCurrentUserIncomes, getIncomeLoadingStatus, getTotalIncomePages, removeIncome} from "../../store/incomes";
 import {Link} from "react-router-dom";
 import {getAccounts} from "../../store/accounts";
 import Loader from "../../components/common/Loader";
@@ -13,15 +13,38 @@ import Button from "../../components/common/Button";
 import IncomeModalWindow from "../../components/Plugins/ModalWindows/IncomeModalWindow";
 import {createOperation} from "../../store/operationsHistory";
 import {getIncomesTypes} from "../../store/incomesType";
+import Pagination from "../../components/common/pagination";
+import useGetIncomes from "../../hooks/useGetIncomes";
+import useGetTypes from "../../hooks/useGetTypes";
 
 const IncomesPage = () => {
     const dispatch = useDispatch()
+
     const userIncomes = useSelector(getCurrentUserIncomes())
     const userAccounts = useSelector(getAccounts())
     const userTypes = useSelector(getIncomesTypes())
+    const incomesPages = useSelector(getTotalIncomePages())
+    const loadingStatus = useSelector(getIncomeLoadingStatus())
+
+    const limit = 6
+    const [currentPage, setCurrentPage] = useState(1)
     const [showModal, setShowModal] = useState(false)
+    useGetIncomes(currentPage, limit)
+    useGetTypes()
+
     const handleClick = () => {
         setShowModal(prevState => !prevState)
+    }
+
+    const disabledNext = incomesPages === currentPage
+    const disabledPrevious = currentPage === 1
+
+    const handlePageNext = () => {
+        setCurrentPage(prevState => prevState + 1)
+    }
+
+    const handlePagePrevious = (pageIndex) => {
+        setCurrentPage(prevState => prevState - 1)
     }
 
     const columns = {
@@ -63,12 +86,12 @@ const IncomesPage = () => {
         },
         delete: {
             name: 'Удалить',
-            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id)}/>
+            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id, currentPage)}/>
         }
     }
 
-    const handleDelete = (id) => {
-        dispatch(removeIncome(id))
+    const handleDelete = (id, currentPage) => {
+        dispatch(removeIncome(id, currentPage))
 
         const income = userIncomes.filter((income) => income._id === id)[0]
         const type = userTypes.filter((type) => type._id === income.category)[0]
@@ -87,6 +110,7 @@ const IncomesPage = () => {
     }
 
     if (!userIncomes || !userAccounts || !userTypes) return <Loader/>
+    if (userIncomes.length === 0 && currentPage > 1) setCurrentPage(prevState => prevState - 1)
 
     if (userIncomes.length === 0) {
         return (
@@ -107,11 +131,27 @@ const IncomesPage = () => {
     }
 
     return (
-        <div className='flex-1 max-w-screen-xl m-auto w-full'>
-            <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
-                Мои доходы
+        <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full'>
+            <div className='relative'>
+                <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
+                    Мои доходы
+                </div>
+                <Table columns={columns} data={userIncomes}/>
+                {loadingStatus &&
+                    <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
+                        <Loader/>
+                    </div>
+                }
             </div>
-            <Table columns={columns} data={userIncomes}/>
+            <div>
+                <Pagination
+                    totalPages={incomesPages}
+                    onPageNext={handlePageNext}
+                    onPagePrevious={handlePagePrevious}
+                    disabledNext={disabledNext}
+                    disabledPrevious={disabledPrevious}
+                />
+            </div>
         </div>
     )
 }

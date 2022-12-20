@@ -3,7 +3,12 @@ import Table from "../../components/common/Table";
 import EditIcon from "../../components/common/Table/editIcon";
 import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentUserExpenses, removeExpense} from "../../store/expenses";
+import {
+    getCurrentUserExpenses,
+    getExpenseLoadingStatus,
+    getTotalExpensePages,
+    removeExpense
+} from "../../store/expenses";
 import {Link} from "react-router-dom";
 import {getAccounts} from "../../store/accounts";
 import Loader from "../../components/common/Loader";
@@ -12,15 +17,37 @@ import ExpensesModalWindow from "../../components/Plugins/ModalWindows/ExpensesM
 import Button from "../../components/common/Button";
 import {createOperation} from "../../store/operationsHistory";
 import {getExpensesTypes} from "../../store/expensesType";
+import Pagination from "../../components/common/pagination";
+import useGetExpenses from "../../hooks/useGetExpenses";
+import useGetTypes from "../../hooks/useGetTypes";
 
 const ExpensesPage = () => {
+    useGetTypes()
     const dispatch = useDispatch()
     const userExpenses = useSelector(getCurrentUserExpenses())
     const userAccounts = useSelector(getAccounts())
     const userTypes = useSelector(getExpensesTypes())
+    const expensesPages = useSelector(getTotalExpensePages())
+    const loadingStatus = useSelector(getExpenseLoadingStatus())
+
+    const limit = 6
+    const [currentPage, setCurrentPage] = useState(1)
+    useGetExpenses(currentPage, limit)
+
     const [showModal, setShowModal] = useState(false)
     const handleClick = () => {
         setShowModal(prevState => !prevState)
+    }
+
+    const disabledNext = expensesPages === currentPage
+    const disabledPrevious = currentPage === 1
+
+    const handlePageNext = () => {
+        setCurrentPage(prevState => prevState + 1)
+    }
+
+    const handlePagePrevious = (pageIndex) => {
+        setCurrentPage(prevState => prevState - 1)
     }
 
     const columns = {
@@ -62,12 +89,12 @@ const ExpensesPage = () => {
         },
         delete: {
             name: 'Удалить',
-            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id)}/>
+            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id, currentPage)}/>
         }
     }
 
-    const handleDelete = (id) => {
-        dispatch(removeExpense(id))
+    const handleDelete = (id, currentPage) => {
+        dispatch(removeExpense(id, currentPage))
 
         const expense = userExpenses.filter((expense) => expense._id === id)[0]
         const type = userTypes.filter((type) => type._id === expense.category)[0]
@@ -82,11 +109,11 @@ const ExpensesPage = () => {
             sum: expense.sum,
             accountName: accountLabel || null
         }
-        console.log(operation)
         dispatch(createOperation(operation))
     }
 
     if (!userExpenses || !userAccounts || !userTypes) return <Loader/>
+    if (userExpenses.length === 0 && currentPage > 1) setCurrentPage(prevState => prevState - 1)
     if (userExpenses.length === 0) {
         return (
             <div
@@ -106,13 +133,29 @@ const ExpensesPage = () => {
 
 
     return (
-        <div className='flex-1 max-w-screen-xl m-auto w-full'>
-            <div
-                className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'
-            >
-                Мои расходы
+        <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full'>
+            <div className='relative'>
+                <div
+                    className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'
+                >
+                    Мои расходы
+                </div>
+                <Table columns={columns} data={userExpenses}/>
+                {loadingStatus &&
+                    <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
+                        <Loader/>
+                    </div>
+                }
             </div>
-            <Table columns={columns} data={userExpenses}/>
+            <div>
+                <Pagination
+                    totalPages={expensesPages}
+                    onPageNext={handlePageNext}
+                    onPagePrevious={handlePagePrevious}
+                    disabledNext={disabledNext}
+                    disabledPrevious={disabledPrevious}
+                />
+            </div>
         </div>
     )
 }

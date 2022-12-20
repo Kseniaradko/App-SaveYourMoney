@@ -3,17 +3,39 @@ import Table from "../../components/common/Table";
 import EditIcon from "../../components/common/Table/editIcon";
 import DeleteIcon from "../../components/common/Table/deleteIcon";
 import {useDispatch, useSelector} from "react-redux";
-import {getAccounts, removeAccount} from "../../store/accounts";
+import {getAccountLoadingStatus, getAccounts, getTotalAccountsPages, removeAccount} from "../../store/accounts";
 import {Link} from "react-router-dom";
 import displayDate from "../../utils/displayDate";
 import Button from "../../components/common/Button";
 import AccountModalWindow from "../../components/Plugins/ModalWindows/AccountModalWindow";
 import {createOperation} from "../../store/operationsHistory";
+import Loader from "../../components/common/Loader";
+import useGetAccounts from "../../hooks/useGetAccounts";
+import Pagination from "../../components/common/pagination";
 
 const AccountsPage = () => {
     const dispatch = useDispatch()
     const userAccounts = useSelector(getAccounts())
+    const loadingStatus = useSelector(getAccountLoadingStatus())
+    const accountsPages = useSelector(getTotalAccountsPages())
+
+    const limit = 6
+    const [currentPage, setCurrentPage] = useState(1)
+    useGetAccounts(currentPage, limit)
+
     const [showModal, setShowModal] = useState(false)
+
+    const disabledNext = accountsPages === currentPage
+    const disabledPrevious = currentPage === 1
+
+    const handlePageNext = () => {
+        setCurrentPage(prevState => prevState + 1)
+    }
+
+    const handlePagePrevious = (pageIndex) => {
+        setCurrentPage(prevState => prevState - 1)
+    }
+
     const handleClick = () => {
         setShowModal(prevState => !prevState)
     }
@@ -45,12 +67,12 @@ const AccountsPage = () => {
         },
         delete: {
             name: 'Удалить',
-            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id)}/>
+            component: (data) => <DeleteIcon onDelete={() => handleDelete(data._id, currentPage)}/>
         }
     }
 
-    const handleDelete = (id) => {
-        dispatch(removeAccount(id))
+    const handleDelete = (id, currentPage) => {
+        dispatch(removeAccount(id, currentPage))
 
         const account = userAccounts.filter((acc) => acc._id === id)[0]
         const operation = {
@@ -61,6 +83,8 @@ const AccountsPage = () => {
         }
         dispatch(createOperation(operation))
     }
+
+    if (userAccounts.length === 0 && currentPage > 1) setCurrentPage(prevState => prevState - 1)
 
     if (userAccounts.length === 0) {
         return (
@@ -80,13 +104,29 @@ const AccountsPage = () => {
     }
 
     return (
-        <div className='flex-1 max-w-screen-xl m-auto w-full'>
-            <div
-                className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'
-            >
-                Мои счета
+        <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full'>
+            <div className='relative'>
+                <div
+                    className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'
+                >
+                    Мои счета
+                </div>
+                <Table columns={columns} data={userAccounts}/>
+                {loadingStatus &&
+                    <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
+                        <Loader/>
+                    </div>
+                }
             </div>
-            <Table columns={columns} data={userAccounts}/>
+            <div>
+                <Pagination
+                    totalPages={accountsPages}
+                    onPageNext={handlePageNext}
+                    onPagePrevious={handlePagePrevious}
+                    disabledNext={disabledNext}
+                    disabledPrevious={disabledPrevious}
+                />
+            </div>
         </div>
     )
 }

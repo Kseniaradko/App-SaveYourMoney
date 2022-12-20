@@ -25,7 +25,7 @@ const UserPage = () => {
                 <div
                     className="bg-white mb-6 shadow-2xl rounded-lg">
                     <div className="px-6 flex flex-row justify-around">
-                        <div className="flex flex-col w-full justify-center">
+                        <div className="flex flex-col w-full justify-center max-w-[400px]">
                             {loadingStatus ? <Loader/> : (
                                 !edit ? (
                                     <div className='flex flex-col justify-between h-full mb-6'>
@@ -61,37 +61,12 @@ const UserPage = () => {
                             )}
 
                         </div>
-                        <div className="border-l border-blueGray-200 text-center text-blueGray-700">
-                            <div className="flex flex-col justify-center mt-5 mb-5">
-                                <div className="flex flex-row px-4">
-                                    <div className='flex flex-col justify-center pr-2'>
-                                        <label className='text-lg pb-2'>Типы доходов</label>
-                                        <ul className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">An
-                                                item
-                                            </li>
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full">A second item</li>
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full">A third item</li>
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full">A fourth item</li>
-                                            <li className="px-6 py-2 w-full rounded-b-lg">And a fifth one</li>
-                                        </ul>
-                                    </div>
-                                    <div className='flex flex-col justify-center'>
-                                        <label className='text-lg pb-2'>Типы расходов</label>
-                                        <ul className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">An
-                                                item
-                                            </li>
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full">A second item</li>
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full">A third item</li>
-                                            <li className="px-6 py-2 border-b border-gray-200 w-full">A fourth item</li>
-                                            <li className="px-6 py-2 w-full rounded-b-lg">And a fifth one</li>
-                                        </ul>
-                                    </div>
+                        <div className="border-l border-blueGray-200 text-center text-blueGray-700 min-w-[700px]">
+                            <div className="flex flex-col justify-center mt-5 mb-5 ml-5">
+                                <div
+                                    className="flex justify-center min-h-[200px] pl-5 text-center items-center text-lg text-blueGray-600">
+                                    Здесь будет возможность добавлять заметки или цели в следующем релизе
                                 </div>
-                                <button className="mt-2 font-normal text-pink-500">
-                                    Добавить тип для дохода или расхода
-                                </button>
                             </div>
                         </div>
                     </div>

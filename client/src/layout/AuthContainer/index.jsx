@@ -7,12 +7,6 @@ import Footer from "../../components/Footer";
 import NonAuthNavBar from "./NonAuthNavBar";
 import {useDispatch, useSelector} from "react-redux";
 import {getIsLoggedIn, loadUsersList} from "../../store/users";
-import {loadAccountsList} from "../../store/accounts";
-import {loadIncomesList} from "../../store/incomes";
-import {loadExpensesList} from "../../store/expenses";
-import {loadOperationsList} from "../../store/operationsHistory";
-import {loadIncomesTypeList} from "../../store/incomesType";
-import {loadExpensesTypeList} from "../../store/expensesType";
 import localStorageService from "../../services/localStorage.service";
 
 const AuthContainer = withRouter(({children}) => {
@@ -25,17 +19,6 @@ const AuthContainer = withRouter(({children}) => {
             dispatch(loadUsersList())
         }
     }, [dispatch, isLoggedIn])
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            dispatch(loadAccountsList())
-            dispatch(loadIncomesList())
-            dispatch(loadExpensesList())
-            dispatch(loadOperationsList())
-            dispatch(loadIncomesTypeList())
-            dispatch(loadExpensesTypeList())
-        }
-    }, [isLoggedIn])
 
     if (isLoggedIn) return children
     return (

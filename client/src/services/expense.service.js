@@ -3,8 +3,12 @@ import httpService from "./http.service";
 const expenseEndPoint = '/expense/'
 
 const expenseService = {
-    get: async () => {
-        const {data} = await httpService.get(expenseEndPoint)
+    get: async (offset, limit) => {
+        let queryParams = ''
+        if (limit) {
+            queryParams = `?offset=${offset}&limit=${limit}`
+        }
+        const {data} = await httpService.get(expenseEndPoint + queryParams)
         return data
     },
     create: async (payload) => {

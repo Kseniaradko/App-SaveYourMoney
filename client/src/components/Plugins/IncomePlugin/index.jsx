@@ -2,12 +2,13 @@ import React from "react";
 import OperationsInfo from "../OperationsInfo";
 import incomeIcon from './incomeIcon.svg'
 import {useSelector} from "react-redux";
-import {getIncomesForPlugin} from "../../../store/incomes";
+import {getIncomeLoadingStatus, getIncomesForPlugin} from "../../../store/incomes";
 import Loader from "../../common/Loader";
 import {getIncomesTypes} from "../../../store/incomesType";
 
 const IncomePlugin = () => {
     const userIncomesForPlugin = useSelector(getIncomesForPlugin())
+    const loadingStatus = useSelector(getIncomeLoadingStatus())
     const types = useSelector(getIncomesTypes())
 
     const info = userIncomesForPlugin?.map((income) => {
@@ -22,7 +23,7 @@ const IncomePlugin = () => {
 
     if (!userIncomesForPlugin) return <Loader/>
     return (
-        <OperationsInfo label='Доходы' data={info} img={incomeIcon}/>
+        <OperationsInfo label='Доходы' data={info} img={incomeIcon} loadingStatus={loadingStatus}/>
     )
 }
 

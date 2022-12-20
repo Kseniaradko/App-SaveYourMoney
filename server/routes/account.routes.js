@@ -7,8 +7,25 @@ const router = express.Router({mergeParams: true})
 
 router.get('/', auth, async (req, res) => {
     try {
+        if (!req.query) {
+            const list = await Account.find({userId: req.user.id})
+            const count = await Account.find({userId: req.user.id}).countDocuments()
+            const totalPages = Math.ceil(count / 6)
+
+            return res.status(200).send({list, totalPages})
+        }
+
+        const {offset, limit} = req.query
         const list = await Account.find({userId: req.user.id})
-        res.status(200).send(list)
+            .sort({_id: -1})
+            .limit(limit)
+            .skip(offset)
+            .exec()
+
+        const count = await Account.find({userId: req.user.id}).countDocuments()
+        const totalPages = Math.ceil(count / limit)
+
+        res.status(200).send({list, totalPages})
     } catch (error) {
         res.status(500).json({
             message: 'На сервере произошла ошибка. Попробуйте позже.'

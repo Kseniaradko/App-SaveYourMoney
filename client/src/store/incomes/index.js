@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
+    totalPages: null,
     error: null,
     isLoading: false
 }
@@ -22,18 +23,23 @@ const incomesSlice = createSlice({
         },
         incomesReceived: (state, action) => {
             state.isLoading = false
-            state.entities = action.payload
+            state.entities = action.payload.list
+            state.totalPages = action.payload.totalPages
         },
         incomeCreated: (state, action) => {
-            state.entities = [...state.entities, action.payload]
+            state.isLoading = false
+            state.entities = [action.payload, ...state.entities]
         },
         incomeCreatedFailed: (state, action) => {
+            state.isLoading = false
             state.error = action.payload
         },
         incomeDeleted: (state, action) => {
+            state.isLoading = false
             state.entities = state.entities.filter((income) => income._id !== action.payload)
         },
         incomeDeleteFailed: (state, action) => {
+            state.isLoading = false
             state.error = action.payload
         },
         incomeUpdated: (state, action) => {
@@ -66,10 +72,10 @@ const {
     incomeUpdateFailed
 } = actions
 
-export const loadIncomesList = () => async (dispatch) => {
+export const loadIncomesList = (offset, limit) => async (dispatch) => {
     dispatch(incomesRequested())
     try {
-        const {content} = await incomeService.get()
+        const {content} = await incomeService.get(offset, limit)
         dispatch(incomesReceived(content))
     } catch (error) {
         dispatch(incomesRequestedFailed(error.message))
@@ -77,6 +83,7 @@ export const loadIncomesList = () => async (dispatch) => {
 }
 
 export const createIncome = (income) => async (dispatch) => {
+    dispatch(incomesRequested())
     try {
         const {content} = await incomeService.create(income)
         dispatch(incomeCreated(content))
@@ -89,7 +96,8 @@ export const createIncome = (income) => async (dispatch) => {
     }
 }
 
-export const removeIncome = (incomeId) => async (dispatch) => {
+export const removeIncome = (incomeId, currentPage) => async (dispatch) => {
+    dispatch(incomesRequested())
     try {
         await incomeService.removeIncome(incomeId)
         dispatch(incomeDeleted(incomeId))
@@ -97,12 +105,15 @@ export const removeIncome = (incomeId) => async (dispatch) => {
         toast.error('Доход был удален!', {
             position: toast.POSITION.TOP_RIGHT
         })
+
+        dispatch(loadIncomesList((currentPage - 1) * 6, 6))
     } catch (error) {
         dispatch(incomeDeleteFailed(error.message))
     }
 }
 
 export const updateIncome = (incomeId, data) => async (dispatch) => {
+    dispatch(incomesRequested())
     try {
         const {content} = await incomeService.updateIncome(incomeId, data)
         dispatch(incomeUpdated(content))
@@ -117,21 +128,29 @@ export const updateIncome = (incomeId, data) => async (dispatch) => {
 
 export const getCurrentUserIncomes = () => (state) => {
     const entities = state.incomes.entities ? [...state.incomes.entities] : null
-    if (entities) return entities.reverse()
+    if (entities) return entities
 }
 
 export const getIncomesForPlugin = () => (state) => {
     const entities = state.incomes.entities ? [...state.incomes.entities] : null
     if (entities) {
         if (entities.length > 3) {
-            return entities.splice((entities.length - 3), 3).reverse()
+            return entities.splice(0, 3)
         }
-        return entities.reverse()
+        return entities
     }
 }
 
 export const getIncomeById = (id) => (state) => {
     return state.incomes.entities?.find((income) => income._id === id)
+}
+
+export const getTotalIncomePages = () => (state) => {
+    return state.incomes.totalPages
+}
+
+export const getIncomeLoadingStatus = () => (state) => {
+    return state.incomes.isLoading
 }
 
 export default incomesReducer

@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {
-    getIncomeTypesWithoutDefault,
+    getIncomeTypeLoadingStatus,
+    getIncomeTypesWithoutDefault, getTotalIncomeTypesPages,
     removeIncomeType,
     updateIncomeType
 } from '../../store/incomesType'
 import {
-    getExpensesTypesWithoutDefault,
+    getExpensesTypesWithoutDefault, getExpenseTypeLoadingStatus, getTotalExpenseTypesPages,
     removeExpenseType,
     updateExpenseType
 } from '../../store/expensesType'
@@ -17,6 +18,8 @@ import {FormikProvider, useFormik} from "formik";
 import TextField from "../../components/common/form/textField";
 import Button from "../../components/common/Button";
 import Loader from "../../components/common/Loader";
+import Pagination from "../../components/common/pagination";
+import useGetTypesForPage from "../../hooks/useGetTypesForPage";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Данное поле обязательно для заполнения')
@@ -26,7 +29,42 @@ const Types = () => {
     const dispatch = useDispatch()
     const incomeTypes = useSelector(getIncomeTypesWithoutDefault())
     const expenseTypes = useSelector(getExpensesTypesWithoutDefault())
+
+    const iLoadingStatus = useSelector(getIncomeTypeLoadingStatus())
+    const eLoadingStatus = useSelector(getExpenseTypeLoadingStatus())
+
+    const incomeTypesPages = useSelector(getTotalIncomeTypesPages())
+    const expenseTypesPages = useSelector(getTotalExpenseTypesPages())
+
+    const limit = 10
+
+    const [incomeCurrentPage, setICurrentPage] = useState(1)
+    const [expenseCurrentPage, setECurrentPage] = useState(1)
     const [selectedItem, setSelectedItem] = useState(null)
+
+    useGetTypesForPage(incomeCurrentPage, expenseCurrentPage, limit)
+
+    const disabledINext = incomeTypesPages === incomeCurrentPage
+    const disabledIPrevious = incomeCurrentPage === 1
+
+    const disabledENext = expenseTypesPages === expenseCurrentPage
+    const disabledEPrevious = expenseCurrentPage === 1
+
+    const handleIncomePageNext = () => {
+        setICurrentPage(prevState => prevState + 1)
+    }
+
+    const handleIncomePagePrevious = () => {
+        setICurrentPage(prevState => prevState - 1)
+    }
+
+    const handleExpensePageNext = () => {
+        setECurrentPage(prevState => prevState + 1)
+    }
+
+    const handleExpensePagePrevious = () => {
+        setECurrentPage(prevState => prevState - 1)
+    }
 
     const handleClick = (data, type) => {
         setSelectedItem({...data, class: type})
@@ -35,12 +73,9 @@ const Types = () => {
         formik.setFieldValue('_id', data._id)
     }
 
-    const handleDelete = (id, type) => {
-        if (type === 'INCOME') {
-            dispatch(removeIncomeType(id))
-        } else {
-            dispatch(removeExpenseType(id))
-        }
+    const handleDelete = (id, type, currentPage) => {
+        const method = type === 'INCOME' ? removeIncomeType : removeExpenseType
+        dispatch(method(id, currentPage))
     }
 
     const initialValues = {
@@ -66,7 +101,10 @@ const Types = () => {
     })
 
     if (!incomeTypes || !expenseTypes) return <Loader/>
- 
+    if (incomeTypes.length === 0 && incomeCurrentPage > 1) setICurrentPage(prevState => prevState - 1)
+    if (expenseTypes.length === 0 && expenseCurrentPage > 1) setECurrentPage(prevState => prevState - 1)
+
+
     if (incomeTypes.length === 0 && expenseTypes.length === 0) {
         return (
             <div className='text-center text-xl italic font-light text-slate-500'>
@@ -76,12 +114,16 @@ const Types = () => {
     }
 
     return (
-        <div className='flex-1 max-w-screen-xl m-auto w-full mt-4'>
-            <div className='flex flex-row justify-between gap-4'>
-                <div>
+        <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full mt-4'>
+            <div className='flex flex-row justify-between gap-4 h-full'>
+                <div className='flex flex-col justify-between h-full'>
                     <div className="flex justify-center">
-                        <ul className="bg-white rounded-lg w-96 text-gray-900">
-
+                        <ul className="bg-white rounded-lg w-96 text-gray-900 relative">
+                            {iLoadingStatus &&
+                                <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
+                                    <Loader/>
+                                </div>
+                            }
                             <li
                                 className='text-center text-slate-600 font-semibold py-5 uppercase italic border-b border-gray-200'
                                 key='incomeTitle'
@@ -105,13 +147,22 @@ const Types = () => {
                                                 src={close}
                                                 className='w-6 cursor-pointer'
                                                 alt='delete'
-                                                onClick={() => handleDelete(income._id, 'INCOME')}
+                                                onClick={() => handleDelete(income._id, 'INCOME', incomeCurrentPage)}
                                             />
                                         </div>
                                     </li>
                                 )
                             )}
                         </ul>
+                    </div>
+                    <div>
+                        <Pagination
+                            totalPages={incomeTypesPages}
+                            onPageNext={handleIncomePageNext}
+                            onPagePrevious={handleIncomePagePrevious}
+                            disabledNext={disabledINext}
+                            disabledPrevious={disabledIPrevious}
+                        />
                     </div>
                 </div>
                 {selectedItem && (
@@ -154,9 +205,12 @@ const Types = () => {
                         </div>
                     </div>
                 )}
-                <div>
+                <div className='flex flex-col justify-between h-full'>
                     <div className="flex justify-center">
-                        <ul className="bg-white rounded-lg w-96 text-gray-900">
+                        <ul className="bg-white rounded-lg w-96 text-gray-900 relative">
+                            {eLoadingStatus &&
+                                <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'><Loader/>
+                                </div>}
                             <li
                                 className='text-center text-slate-600 font-semibold py-5 uppercase italic border-b border-gray-200'
                                 key='expenseTitle'
@@ -180,12 +234,21 @@ const Types = () => {
                                             src={close}
                                             className='w-6 cursor-pointer'
                                             alt='delete'
-                                            onClick={() => handleDelete(expense._id, 'EXPENSE')}
+                                            onClick={() => handleDelete(expense._id, 'EXPENSE', expenseCurrentPage)}
                                         />
                                     </div>
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                    <div>
+                        <Pagination
+                            totalPages={expenseTypesPages}
+                            onPageNext={handleExpensePageNext}
+                            onPagePrevious={handleExpensePagePrevious}
+                            disabledNext={disabledENext}
+                            disabledPrevious={disabledEPrevious}
+                        />
                     </div>
                 </div>
             </div>
