@@ -167,7 +167,7 @@ const Types = () => {
                 </div>
                 {selectedItem && (
                     <div
-                        className='flex flex-col rounded-lg min-w-[350px] ring-1 ring-slate-900/5 shadow-xl p-6'
+                        className='flex flex-col rounded-lg min-w-[350px] max-h-[300px] ring-1 ring-slate-900/5 shadow-xl p-6'
                     >
                         <label
                             className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'

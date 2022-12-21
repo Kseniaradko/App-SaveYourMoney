@@ -127,7 +127,8 @@ const OperationsHistoryPage = () => {
         <div className='max-w-screen-xl m-auto w-full h-full'>
             <div className='flex flex-col h-full'>
                 <div>
-                    <div className='text-center text-slate-600 font-semibold pt-5 uppercase italic'>
+                    <div
+                        className='text-center text-slate-500 text-2xl underline underline-offset-8 pt-4'>
                         История операций
                     </div>
                     <FormikProvider value={formik}>

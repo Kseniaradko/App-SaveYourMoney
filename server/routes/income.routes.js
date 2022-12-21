@@ -9,19 +9,31 @@ router.get('/', auth, async (req, res) => {
         if (!req.query) {
             const list = await Income.find({userId: req.user.id})
             const count = await Income.find({userId: req.user.id}).countDocuments()
-            const totalPages = Math.ceil(count / 6)
+            const totalPages = Math.ceil(count / 5)
 
             return res.status(200).send({list, totalPages})
         }
 
-        const {offset, limit} = req.query
-        const list = await Income.find({userId: req.user.id})
+
+        const {offset, limit, category, accountId, sum} = req.query
+        const toFind = {userId: req.user.id}
+        if (category) {
+            toFind.category = category
+        }
+        if (accountId) {
+            toFind.accountId = accountId
+        }
+        if (sum) {
+            toFind.sum = sum
+        }
+
+        const list = await Income.find(toFind)
             .sort({_id: -1})
             .limit(limit)
             .skip(offset)
             .exec()
 
-        const count = await Income.find({userId: req.user.id}).countDocuments()
+        const count = await Income.find(toFind).countDocuments()
         const totalPages = Math.ceil(count / limit)
 
         res.status(200).send({list, totalPages})

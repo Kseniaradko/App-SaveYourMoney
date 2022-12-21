@@ -14,10 +14,11 @@ import IncomeModalWindow from "../../components/Plugins/ModalWindows/IncomeModal
 import {createOperation} from "../../store/operationsHistory";
 import {getIncomesTypes} from "../../store/incomesType";
 import Pagination from "../../components/common/pagination";
-import useGetIncomes from "../../hooks/useGetIncomes";
 import useGetTypes from "../../hooks/useGetTypes";
 import SelectField from "../../components/common/form/selectField";
 import {FormikProvider, useFormik} from "formik";
+import TextField from "../../components/common/form/textField";
+import useGetIncomesForPage from "../../hooks/useGetIncomesForPage";
 
 const initialValues = {
     category: '',
@@ -33,14 +34,15 @@ const IncomesPage = () => {
     const incomesPages = useSelector(getTotalIncomePages())
     const loadingStatus = useSelector(getIncomeLoadingStatus())
 
-    const limit = 6
+    const limit = 5
     const [currentPage, setCurrentPage] = useState(1)
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [selectedAccount, setSelectedAccount] = useState(null)
+    const [category, setSelectedCategory] = useState(null)
+    const [accountId, setSelectedAccount] = useState(null)
+    const [sum, setSelectedSum] = useState(null)
 
     const [showModal, setShowModal] = useState(false)
 
-    useGetIncomes(currentPage, limit)
+    useGetIncomesForPage(currentPage, limit, {category, accountId, sum})
     useGetTypes()
 
     const disabledNext = incomesPages === currentPage
@@ -59,9 +61,12 @@ const IncomesPage = () => {
     }
 
     const handleDeleteFilters = () => {
-
+        setSelectedSum(null)
+        setSelectedAccount(null)
+        setSelectedCategory(null)
         formik.setFieldValue('category', '')
         formik.setFieldValue('accountId', '')
+        formik.setFieldValue('sum', '')
         setCurrentPage(1)
     }
 
@@ -128,7 +133,15 @@ const IncomesPage = () => {
     }
 
     const handleSubmit = (formValue) => {
-
+        if (formValue.category) {
+            setSelectedCategory(formValue.category)
+        }
+        if (formValue.accountId) {
+            setSelectedAccount(formValue.accountId)
+        }
+        if (formValue.sum) {
+            setSelectedSum(formValue.sum)
+        }
         setCurrentPage(1)
     }
 
@@ -141,28 +154,10 @@ const IncomesPage = () => {
     if (!userIncomes || !userAccounts || !userTypes) return <Loader/>
     if (userIncomes.length === 0 && currentPage > 1) setCurrentPage(prevState => prevState - 1)
 
-    if (userIncomes.length === 0) {
-        return (
-            <div
-                className='flex-col justify-between text-center text-xl italic font-light text-slate-500'
-            >
-                {showModal && <IncomeModalWindow onCLick={handleClick}/>}
-                Доходы отсутствуют. Начните добавлять их!
-                <div className='flex justify-center' onClick={handleClick}>
-                    <Button
-                        face='add'
-                    >
-                        Добавить
-                    </Button>
-                </div>
-            </div>
-        )
-    }
-
     return (
         <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full'>
             <div className='relative'>
-                <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
+                <div className='text-center text-slate-500 text-2xl underline underline-offset-8 pt-4'>
                     Мои доходы
                 </div>
                 <FormikProvider value={formik}>
@@ -173,7 +168,7 @@ const IncomesPage = () => {
                                     label='Категория:'
                                     name='category'
                                     defaultOption='Choose...'
-
+                                    options={userTypes}
                                     value={formik.values.category}
                                 />
                             </div>
@@ -182,8 +177,16 @@ const IncomesPage = () => {
                                     label='Счет:'
                                     name='accountId'
                                     defaultOption='Choose...'
-
+                                    options={userAccounts}
                                     value={formik.values.accountId}
+                                />
+                            </div>
+                            <div className='max-w-[150px]'>
+                                <TextField
+                                    label='Сумма:'
+                                    name='sum'
+                                    value={formik.values.sum}
+                                    placeholder='3000'
                                 />
                             </div>
                             <div className='min-h-[60px] flex items-center'>
@@ -205,21 +208,36 @@ const IncomesPage = () => {
                         </div>
                     </form>
                 </FormikProvider>
-                <Table columns={columns} data={userIncomes}/>
-                {loadingStatus &&
-                    <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
-                        <Loader/>
+                {userIncomes.length === 0 && (
+                    <div
+                        className='flex justify-center items-center text-xl italic font-light text-slate-500 min-h-[300px]'>
+                        Доходы отсутствуют. Начните добавлять их!
                     </div>
-                }
-            </div>
-            <div>
-                <Pagination
-                    totalPages={incomesPages}
-                    onPageNext={handlePageNext}
-                    onPagePrevious={handlePagePrevious}
-                    disabledNext={disabledNext}
-                    disabledPrevious={disabledPrevious}
-                />
+                )}
+                {userIncomes.length > 0 && (
+                    <div className='flex flex-col justify-between'>
+                        <div className='relative'>
+                            <Table
+                                columns={columns}
+                                data={userIncomes}
+                            />
+                            {loadingStatus &&
+                                <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
+                                    <Loader/>
+                                </div>
+                            }
+                        </div>
+                        <div className='mt-9'>
+                            <Pagination
+                                totalPages={incomesPages}
+                                onPageNext={handlePageNext}
+                                onPagePrevious={handlePagePrevious}
+                                disabledNext={disabledNext}
+                                disabledPrevious={disabledPrevious}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
