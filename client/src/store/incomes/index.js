@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import incomeService from "../../services/income.service";
-import {loadAccountsList} from "../accounts";
+import {loadAccounts, loadAccountsList} from "../accounts";
 import {toast} from "react-toastify";
 
 const initialState = {
@@ -43,7 +43,7 @@ const incomesSlice = createSlice({
         incomeDeleted: (state, action) => {
             state.isLoading = false
             state.entities = state.entities.filter((income) => income._id !== action.payload)
-            state.pageEntity = state.entities.filter((income) => income._id !== action.payload)
+            state.pageEntity = state.pageEntity.filter((income) => income._id !== action.payload)
         },
         incomeDeleteFailed: (state, action) => {
             state.isLoading = false
@@ -89,7 +89,6 @@ const {
 export const loadIncomesList = (offset, limit, filter) => async (dispatch) => {
     dispatch(incomesRequested())
     try {
-        console.log('store', filter)
         const {content} = await incomeService.get(offset, limit, filter)
         dispatch(incomesRec(content))
     } catch (error) {
@@ -113,10 +112,11 @@ export const createIncome = (income) => async (dispatch) => {
     try {
         const {content} = await incomeService.create(income)
         dispatch(incomeCreated(content))
-        dispatch(loadAccountsList())
+
         toast.success('Доход был добавлен!', {
             position: toast.POSITION.TOP_RIGHT
         })
+        dispatch(loadAccounts())
     } catch (error) {
         dispatch(incomeCreatedFailed(error.message))
     }

@@ -15,7 +15,7 @@ router.get('/', auth, async (req, res) => {
         }
 
 
-        const {offset, limit, category, accountId, sum} = req.query
+        const {offset, limit, category, accountId, sum, date} = req.query
         const toFind = {userId: req.user.id}
         if (category) {
             toFind.category = category
@@ -25,6 +25,17 @@ router.get('/', auth, async (req, res) => {
         }
         if (sum) {
             toFind.sum = sum
+        }
+        if (date) {
+            const firstly = date.split('T')[0]
+            const toConcat = 'T23:59:59.000Z'
+            const result = firstly + toConcat
+
+            const createdAt = {
+                $gte: date,
+                $lt: result
+            }
+            toFind.createdAt = createdAt
         }
 
         const list = await Income.find(toFind)

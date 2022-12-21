@@ -8,7 +8,7 @@ const useGetOperations = (currentPage, limit, filter) => {
 
     useEffect(() => {
         dispatch(loadOperationsList(offset, limit, filter))
-    }, [currentPage, dispatch, filter.type, filter.action, limit, offset])
+    }, [currentPage, dispatch, filter.type, filter.action, filter.date, limit, offset])
 }
 
 export default useGetOperations

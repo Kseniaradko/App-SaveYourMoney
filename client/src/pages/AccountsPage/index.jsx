@@ -10,8 +10,8 @@ import Button from "../../components/common/Button";
 import AccountModalWindow from "../../components/Plugins/ModalWindows/AccountModalWindow";
 import {createOperation} from "../../store/operationsHistory";
 import Loader from "../../components/common/Loader";
-import useGetAccounts from "../../hooks/useGetAccounts";
 import Pagination from "../../components/common/pagination";
+import useGetAccountsForPage from "../../hooks/useGetAccountsForPage";
 
 const AccountsPage = () => {
     const dispatch = useDispatch()
@@ -19,9 +19,9 @@ const AccountsPage = () => {
     const loadingStatus = useSelector(getAccountLoadingStatus())
     const accountsPages = useSelector(getTotalAccountsPages())
 
-    const limit = 6
+    const limit = 5
     const [currentPage, setCurrentPage] = useState(1)
-    useGetAccounts(currentPage, limit)
+    useGetAccountsForPage(currentPage, limit)
 
     const [showModal, setShowModal] = useState(false)
 

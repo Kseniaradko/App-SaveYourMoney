@@ -20,8 +20,10 @@ const incomeService = {
             if (filter.accountId) {
                 queryParams += `&accountId=${filter.accountId}`
             }
+            if (filter.date) {
+                queryParams += `&date=${filter.date}`
+            }
         }
-        console.log('service', queryParams)
 
         const {data} = await httpService.get(incomeEndPoint + queryParams)
         return data

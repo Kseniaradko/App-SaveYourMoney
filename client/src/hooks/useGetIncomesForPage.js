@@ -6,11 +6,9 @@ const useGetIncomes = (currentPage, limit, filter) => {
     const dispatch = useDispatch()
     const offset = (currentPage - 1) * limit
 
-    console.log('hook', filter)
-
     useEffect(() => {
         dispatch(loadIncomesList(offset, limit, filter))
-    }, [currentPage, dispatch, limit, offset, filter.category, filter.sum, filter.accountId])
+    }, [currentPage, dispatch, limit, offset, filter.date, filter.category, filter.sum, filter.accountId])
 }
 
 export default useGetIncomes

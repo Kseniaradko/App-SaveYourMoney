@@ -1,15 +1,12 @@
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
-import {loadAccountsList} from "../store/accounts";
+import {loadAccounts} from "../store/accounts";
 
-const useGetAccounts = (currentPage, limit) => {
+const useGetAccounts = () => {
     const dispatch = useDispatch()
-    const offset = (currentPage - 1) * limit
-
     useEffect(() => {
-        if (!currentPage && !limit) dispatch(loadAccountsList())
-        dispatch(loadAccountsList(offset, limit))
-    }, [currentPage])
+        dispatch(loadAccounts())
+    }, [dispatch])
 }
 
 export default useGetAccounts

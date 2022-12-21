@@ -14,6 +14,7 @@ import useGetOperations from "../../hooks/useGetOperations";
 import {FormikProvider, useFormik} from "formik";
 import SelectField from "../../components/common/form/selectField";
 import Button from "../../components/common/Button";
+import Datepicker from "tailwind-datepicker-react";
 
 const types = [
     {
@@ -45,11 +46,20 @@ const actions = [
     },
 ]
 
+const options = {
+    autoHide: true,
+    todayBtn: true,
+    clearBtn: true,
+    maxDate: new Date("2030-01-01"),
+    minDate: new Date("1950-01-01")
+}
+
 const OperationsHistoryPage = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [type, setType] = useState(null)
     const [date, setDate] = useState(null)
     const [action, setAction] = useState(null)
+    const [show, setShow] = useState(false)
     const userOperations = useSelector(getUserOperations())
     const loadingStatus = useSelector(getOperationsLoadingStatus())
 
@@ -75,6 +85,17 @@ const OperationsHistoryPage = () => {
         formik.setFieldValue('type', '')
         formik.setFieldValue('action', '')
         setCurrentPage(1)
+    }
+
+    const handleChange = (selectedDate) => {
+        const year = selectedDate.getFullYear()
+        const month = selectedDate.getMonth() + 1
+        const day = selectedDate.getDate()
+        const date = year + '-' + month + '-' + day + 'T' + '00:00:00.000Z'
+        formik.setValues({date: date})
+    }
+    const handleClose = (state) => {
+        setShow(state)
     }
 
     const columns = {
@@ -112,6 +133,9 @@ const OperationsHistoryPage = () => {
         }
         if (formValue.action) {
             setAction(formValue.action)
+        }
+        if (formValue.date) {
+            setDate(formValue.date)
         }
         setCurrentPage(1)
     }
@@ -152,16 +176,27 @@ const OperationsHistoryPage = () => {
                                         value={formik.values.action}
                                     />
                                 </div>
-                                <div className='min-h-[60px] flex items-center'>
+                                <div className='max-w-[250px] mt-1'>
+                                    <div className='mb-2'>
+                                        <label
+                                            className='text-sm font-medium text-gray-900 dark:text-white'>Дата:</label>
+                                    </div>
+                                    <Datepicker
+                                        options={options}
+                                        onChange={handleChange}
+                                        show={show}
+                                        setShow={handleClose}/>
+                                </div>
+                                <div className='flex items-end mb-3'>
                                     <Button
-                                        face='primary'
+                                        face='filter'
                                     >
                                         Применить
                                     </Button>
                                 </div>
-                                <div className='min-h-[60px] flex items-center'>
+                                <div className='flex items-end mb-3'>
                                     <Button
-                                        face='secondary'
+                                        face='deleteFilter'
                                         type='button'
                                         onClick={handleDeleteFilters}
                                     >

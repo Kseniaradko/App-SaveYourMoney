@@ -10,6 +10,8 @@ import {createOperation} from "../../../store/operationsHistory"
 import closeIcon from "./closeIcon.svg"
 import Button from "../../common/Button";
 import {createIncomeType, getIncomesTypes} from "../../../store/incomesType";
+import useGetTypes from "../../../hooks/useGetTypes";
+import useGetAccountsForPage from "../../../hooks/useGetAccountsForPage";
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -31,6 +33,8 @@ const initialValues = {
 }
 
 const IncomeModalWindow = ({onCLick}) => {
+    useGetTypes()
+    useGetAccountsForPage(1, 0)
     const dispatch = useDispatch()
     const accounts = useSelector(getAccounts())
     const types = useSelector(getIncomesTypes())

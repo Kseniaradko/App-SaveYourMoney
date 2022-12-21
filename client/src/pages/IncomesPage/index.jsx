@@ -10,7 +10,6 @@ import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "../../components/common/Button";
-import IncomeModalWindow from "../../components/Plugins/ModalWindows/IncomeModalWindow";
 import {createOperation} from "../../store/operationsHistory";
 import {getIncomesTypes} from "../../store/incomesType";
 import Pagination from "../../components/common/pagination";
@@ -19,11 +18,21 @@ import SelectField from "../../components/common/form/selectField";
 import {FormikProvider, useFormik} from "formik";
 import TextField from "../../components/common/form/textField";
 import useGetIncomesForPage from "../../hooks/useGetIncomesForPage";
+import Datepicker from "tailwind-datepicker-react";
+import useGetAccountsForPage from "../../hooks/useGetAccountsForPage";
 
 const initialValues = {
     category: '',
     accountId: '',
     sum: ''
+}
+
+const options = {
+    autoHide: true,
+    todayBtn: true,
+    clearBtn: true,
+    maxDate: new Date("2030-01-01"),
+    minDate: new Date("1950-01-01"),
 }
 
 const IncomesPage = () => {
@@ -39,18 +48,15 @@ const IncomesPage = () => {
     const [category, setSelectedCategory] = useState(null)
     const [accountId, setSelectedAccount] = useState(null)
     const [sum, setSelectedSum] = useState(null)
+    const [show, setShow] = useState(false)
+    const [date, setDate] = useState(null)
 
-    const [showModal, setShowModal] = useState(false)
-
-    useGetIncomesForPage(currentPage, limit, {category, accountId, sum})
+    useGetIncomesForPage(currentPage, limit, {category, accountId, sum, date})
     useGetTypes()
+    useGetAccountsForPage(1, 0)
 
     const disabledNext = incomesPages === currentPage
     const disabledPrevious = currentPage === 1
-
-    const handleClick = () => {
-        setShowModal(prevState => !prevState)
-    }
 
     const handlePageNext = () => {
         setCurrentPage(prevState => prevState + 1)
@@ -64,10 +70,22 @@ const IncomesPage = () => {
         setSelectedSum(null)
         setSelectedAccount(null)
         setSelectedCategory(null)
+        setDate(null)
         formik.setFieldValue('category', '')
         formik.setFieldValue('accountId', '')
         formik.setFieldValue('sum', '')
         setCurrentPage(1)
+    }
+
+    const handleChange = (selectedDate) => {
+        const year = selectedDate.getFullYear()
+        const month = selectedDate.getMonth() + 1
+        const day = selectedDate.getDate()
+        const date = year + '-' + month + '-' + day + 'T' + '00:00:00.000Z'
+        formik.setValues({date: date})
+    }
+    const handleClose = (state) => {
+        setShow(state)
     }
 
     const columns = {
@@ -142,6 +160,9 @@ const IncomesPage = () => {
         if (formValue.sum) {
             setSelectedSum(formValue.sum)
         }
+        if (formValue.date) {
+            setDate(formValue.date)
+        }
         setCurrentPage(1)
     }
 
@@ -189,16 +210,26 @@ const IncomesPage = () => {
                                     placeholder='3000'
                                 />
                             </div>
-                            <div className='min-h-[60px] flex items-center'>
+                            <div className='max-w-[250px] mt-1'>
+                                <div className='mb-2'>
+                                    <label className='text-sm font-medium text-gray-900 dark:text-white'>Дата:</label>
+                                </div>
+                                <Datepicker
+                                    options={options}
+                                    onChange={handleChange}
+                                    show={show}
+                                    setShow={handleClose}/>
+                            </div>
+                            <div className='flex items-end mb-3'>
                                 <Button
-                                    face='primary'
+                                    face='filter'
                                 >
                                     Применить
                                 </Button>
                             </div>
-                            <div className='min-h-[60px] flex items-center'>
+                            <div className='flex items-end mb-3'>
                                 <Button
-                                    face='secondary'
+                                    face='deleteFilter'
                                     type='button'
                                     onClick={handleDeleteFilters}
                                 >
@@ -227,7 +258,7 @@ const IncomesPage = () => {
                                 </div>
                             }
                         </div>
-                        <div className='mt-9'>
+                        <div className='mt-4'>
                             <Pagination
                                 totalPages={incomesPages}
                                 onPageNext={handlePageNext}

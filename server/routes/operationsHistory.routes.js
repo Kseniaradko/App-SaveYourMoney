@@ -14,7 +14,15 @@ router.get('/', auth, async (req, res) => {
             toFind.action = action
         }
         if (date) {
-            toFind.date = date
+            const firstly = date.split('T')[0]
+            const toConcat = 'T23:59:59.000Z'
+            const result = firstly + toConcat
+
+            const createdAt = {
+                $gte: date,
+                $lt: result
+            }
+            toFind.createdAt = createdAt
         }
 
         const list = await OperationsHistory.find(toFind)
