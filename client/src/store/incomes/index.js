@@ -1,10 +1,11 @@
 import {createSlice} from "@reduxjs/toolkit";
 import incomeService from "../../services/income.service";
-import {loadAccountsList} from "../accounts";
+import {loadAccounts, loadAccountsList} from "../accounts";
 import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
+    pageEntity: null,
     totalPages: null,
     error: null,
     isLoading: false
@@ -26,6 +27,11 @@ const incomesSlice = createSlice({
             state.entities = action.payload.list
             state.totalPages = action.payload.totalPages
         },
+        incomesRec: (state, action) => {
+            state.isLoading = false
+            state.pageEntity = action.payload.list
+            state.totalPages = action.payload.totalPages
+        },
         incomeCreated: (state, action) => {
             state.isLoading = false
             state.entities = [action.payload, ...state.entities]
@@ -37,6 +43,7 @@ const incomesSlice = createSlice({
         incomeDeleted: (state, action) => {
             state.isLoading = false
             state.entities = state.entities.filter((income) => income._id !== action.payload)
+            state.pageEntity = state.pageEntity.filter((income) => income._id !== action.payload)
         },
         incomeDeleteFailed: (state, action) => {
             state.isLoading = false
@@ -45,6 +52,12 @@ const incomesSlice = createSlice({
         incomeUpdated: (state, action) => {
             state.isLoading = false
             state.entities = state.entities.map((income) => {
+                if (income._id === action.payload._id) {
+                    return action.payload
+                }
+                return income
+            })
+            state.pageEntity = state.pageEntity.map((income) => {
                 if (income._id === action.payload._id) {
                     return action.payload
                 }
@@ -69,28 +82,41 @@ const {
     incomeDeleted,
     incomeDeleteFailed,
     incomeUpdated,
-    incomeUpdateFailed
+    incomeUpdateFailed,
+    incomesRec
 } = actions
 
-export const loadIncomesList = (offset, limit) => async (dispatch) => {
+export const loadIncomesList = (offset, limit, filter) => async (dispatch) => {
     dispatch(incomesRequested())
     try {
-        const {content} = await incomeService.get(offset, limit)
+        const {content} = await incomeService.get(offset, limit, filter)
+        dispatch(incomesRec(content))
+    } catch (error) {
+        dispatch(incomesRequestedFailed(error.message))
+    }
+}
+
+export const loadIncomes = () => async (dispatch) => {
+    dispatch(incomesRequested())
+    try {
+        const {content} = await incomeService.get()
         dispatch(incomesReceived(content))
     } catch (error) {
         dispatch(incomesRequestedFailed(error.message))
     }
 }
 
+
 export const createIncome = (income) => async (dispatch) => {
     dispatch(incomesRequested())
     try {
         const {content} = await incomeService.create(income)
         dispatch(incomeCreated(content))
-        dispatch(loadAccountsList())
+
         toast.success('Доход был добавлен!', {
             position: toast.POSITION.TOP_RIGHT
         })
+        dispatch(loadAccounts())
     } catch (error) {
         dispatch(incomeCreatedFailed(error.message))
     }
@@ -127,7 +153,7 @@ export const updateIncome = (incomeId, data) => async (dispatch) => {
 }
 
 export const getCurrentUserIncomes = () => (state) => {
-    const entities = state.incomes.entities ? [...state.incomes.entities] : null
+    const entities = state.incomes.pageEntity ? [...state.incomes.pageEntity] : null
     if (entities) return entities
 }
 
@@ -142,7 +168,7 @@ export const getIncomesForPlugin = () => (state) => {
 }
 
 export const getIncomeById = (id) => (state) => {
-    return state.incomes.entities?.find((income) => income._id === id)
+    return state.incomes.pageEntity?.find((income) => income._id === id)
 }
 
 export const getTotalIncomePages = () => (state) => {

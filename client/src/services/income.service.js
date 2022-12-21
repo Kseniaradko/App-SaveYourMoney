@@ -3,11 +3,28 @@ import httpService from "./http.service";
 const incomeEndPoint = '/income/'
 
 const incomeService = {
-    get: async (offset, limit) => {
+    get: async (offset, limit, filter) => {
         let queryParams = ''
         if (limit) {
             queryParams = `?offset=${offset}&limit=${limit}`
         }
+        if (filter) {
+            if (filter.category) {
+                queryParams += `&category=${filter.category}`
+            }
+
+            if (filter.sum) {
+                queryParams += `&sum=${filter.sum}`
+            }
+
+            if (filter.accountId) {
+                queryParams += `&accountId=${filter.accountId}`
+            }
+            if (filter.date) {
+                queryParams += `&date=${filter.date}`
+            }
+        }
+
         const {data} = await httpService.get(incomeEndPoint + queryParams)
         return data
     },

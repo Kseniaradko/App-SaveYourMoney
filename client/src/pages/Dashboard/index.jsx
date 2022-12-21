@@ -12,6 +12,7 @@ import useGetExpenses from "../../hooks/useGetExpenses";
 import useGetAccounts from "../../hooks/useGetAccounts";
 
 const Dashboard = () => {
+
     useGetTypes()
     useGetIncomes()
     useGetExpenses()

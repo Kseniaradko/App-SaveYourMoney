@@ -4,6 +4,7 @@ import {toast} from "react-toastify";
 
 const initialState = {
     entities: null,
+    pageEntity: null,
     totalPages: null,
     error: null,
     isLoading: false
@@ -18,8 +19,12 @@ const accountsSlice = createSlice({
         },
         accountsReceived: (state, action) => {
             state.isLoading = false
-            state.entities = action.payload
             state.entities = action.payload.list
+            state.totalPages = action.payload.totalPages
+        },
+        accountsRec: (state, action) => {
+            state.isLoading = false
+            state.pageEntity = action.payload.list
             state.totalPages = action.payload.totalPages
         },
         accountsRequestedFailed: (state, action) => {
@@ -37,6 +42,7 @@ const accountsSlice = createSlice({
         accountDeleted: (state, action) => {
             state.isLoading = false
             state.entities = state.entities.filter((acc) => acc._id !== action.payload)
+            state.pageEntity = state.pageEntity.filter((acc) => acc._id !== action.payload)
         },
         accountDeleteFailed: (state, action) => {
             state.error = action.payload
@@ -44,6 +50,12 @@ const accountsSlice = createSlice({
         accountUpdated: (state, action) => {
             state.isLoading = false
             state.entities = state.entities.map((account) => {
+                if (account._id === action.payload._id) {
+                    return action.payload
+                }
+                return account
+            })
+            state.pageEntity = state.pageEntity.map((account) => {
                 if (account._id === action.payload._id) {
                     return action.payload
                 }
@@ -68,13 +80,24 @@ const {
     accountDeleted,
     accountDeleteFailed,
     accountUpdated,
-    accountUpdateFailed
+    accountUpdateFailed,
+    accountsRec
 } = actions
 
 export const loadAccountsList = (offset, limit) => async (dispatch) => {
     dispatch(accountsRequested())
     try {
         const {content} = await accountService.get(offset, limit)
+        dispatch(accountsRec(content))
+    } catch (error) {
+        dispatch(accountsRequestedFailed(error.message))
+    }
+}
+
+export const loadAccounts = () => async (dispatch) => {
+    dispatch(accountsRequested())
+    try {
+        const {content} = await accountService.get()
         dispatch(accountsReceived(content))
     } catch (error) {
         dispatch(accountsRequestedFailed(error.message))
@@ -123,7 +146,7 @@ export const updateAccount = (accountId, data) => async (dispatch) => {
 }
 
 export const getCurrentAccount = (accountId) => (state) => {
-    return state.accounts.entities?.find((acc) => acc._id === accountId)
+    return state.accounts.pageEntity?.find((acc) => acc._id === accountId)
 }
 
 export const getAccountsForPlugin = () => (state) => {
@@ -137,7 +160,7 @@ export const getAccountsForPlugin = () => (state) => {
 }
 
 export const getAccounts = () => (state) => {
-    const entities = state.accounts.entities ? [...state.accounts.entities] : []
+    const entities = state.accounts.pageEntity ? [...state.accounts.pageEntity] : []
     const newArray = []
     if (entities) {
         for (const account of entities) {

@@ -10,7 +10,7 @@ router.get('/', auth, async (req, res) => {
         if (!req.query) {
             const list = await Account.find({userId: req.user.id})
             const count = await Account.find({userId: req.user.id}).countDocuments()
-            const totalPages = Math.ceil(count / 6)
+            const totalPages = Math.ceil(count / 5)
 
             return res.status(200).send({list, totalPages})
         }

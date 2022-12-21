@@ -25,9 +25,11 @@ const operationsHistorySlice = createSlice({
             state.totalPages = action.payload.totalPages
         },
         operationCreated: (state, action) => {
+            state.isLoading = false
             state.entities = [...state.entities, action.payload]
         },
         operationCreatedFailed: (state, action) => {
+            state.isLoading = false
             state.error = action.payload
         }
     }
@@ -42,10 +44,10 @@ const {
     operationCreatedFailed
 } = actions
 
-export const loadOperationsList = (data) => async (dispatch) => {
+export const loadOperationsList = (offset, limit, filter) => async (dispatch) => {
     dispatch(operationsRequested())
     try {
-        const {content} = await operationsHistoryService.get(data)
+        const {content} = await operationsHistoryService.get(offset, limit, filter)
         dispatch(operationsReceived(content))
         return content
     } catch (error) {
@@ -69,6 +71,10 @@ export const getUserOperations = () => (state) => {
 
 export const getTotalOperationsPages = () => (state) => {
     return state.operationsHistory.totalPages
+}
+
+export const getOperationsLoadingStatus = () => (state) => {
+    return state.operationsHistory.isLoading
 }
 
 export default operationsHistoryReducer

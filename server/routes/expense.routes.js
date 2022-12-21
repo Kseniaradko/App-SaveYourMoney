@@ -9,17 +9,40 @@ router.get('/', auth, async (req, res) => {
         if (!req.query) {
             const list = await Expense.find({userId: req.user.id})
             const count = await Expense.find({userId: req.user.id}).countDocuments()
-            const totalPages = Math.ceil(count / 6)
+            const totalPages = Math.ceil(count / 5)
             return res.status(200).send({list, totalPages})
         }
 
-        const {offset, limit} = req.query
-        const list = await Expense.find({userId: req.user.id})
+        const {offset, limit, category, accountId, sum, date} = req.query
+        const toFind = {userId: req.user.id}
+        if (category) {
+            toFind.category = category
+        }
+        if (accountId) {
+            toFind.accountId = accountId
+        }
+        if (sum) {
+            toFind.sum = sum
+        }
+        if (date) {
+            const firstly = date.split('T')[0]
+            const toConcat = 'T23:59:59.000Z'
+            const result = firstly + toConcat
+
+            const createdAt = {
+                $gte: date,
+                $lt: result
+            }
+            toFind.createdAt = createdAt
+        }
+
+
+        const list = await Expense.find(toFind)
             .sort({_id: -1})
             .limit(limit)
             .skip(offset)
             .exec()
-        const count = await Expense.find({userId: req.user.id}).countDocuments()
+        const count = await Expense.find(toFind).countDocuments()
         const totalPages = Math.ceil(count / 7)
         res.status(200).send({list, totalPages})
     } catch (error) {
