@@ -16,10 +16,17 @@ import {getIncomesTypes} from "../../store/incomesType";
 import Pagination from "../../components/common/pagination";
 import useGetIncomes from "../../hooks/useGetIncomes";
 import useGetTypes from "../../hooks/useGetTypes";
+import SelectField from "../../components/common/form/selectField";
+import {FormikProvider, useFormik} from "formik";
+
+const initialValues = {
+    category: '',
+    accountId: '',
+    sum: ''
+}
 
 const IncomesPage = () => {
     const dispatch = useDispatch()
-
     const userIncomes = useSelector(getCurrentUserIncomes())
     const userAccounts = useSelector(getAccounts())
     const userTypes = useSelector(getIncomesTypes())
@@ -28,23 +35,34 @@ const IncomesPage = () => {
 
     const limit = 6
     const [currentPage, setCurrentPage] = useState(1)
+    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [selectedAccount, setSelectedAccount] = useState(null)
+
     const [showModal, setShowModal] = useState(false)
+
     useGetIncomes(currentPage, limit)
     useGetTypes()
+
+    const disabledNext = incomesPages === currentPage
+    const disabledPrevious = currentPage === 1
 
     const handleClick = () => {
         setShowModal(prevState => !prevState)
     }
 
-    const disabledNext = incomesPages === currentPage
-    const disabledPrevious = currentPage === 1
-
     const handlePageNext = () => {
         setCurrentPage(prevState => prevState + 1)
     }
 
-    const handlePagePrevious = (pageIndex) => {
+    const handlePagePrevious = () => {
         setCurrentPage(prevState => prevState - 1)
+    }
+
+    const handleDeleteFilters = () => {
+
+        formik.setFieldValue('category', '')
+        formik.setFieldValue('accountId', '')
+        setCurrentPage(1)
     }
 
     const columns = {
@@ -109,6 +127,17 @@ const IncomesPage = () => {
         dispatch(createOperation(operation))
     }
 
+    const handleSubmit = (formValue) => {
+
+        setCurrentPage(1)
+    }
+
+    const formik = useFormik({
+        initialValues,
+        onSubmit: handleSubmit
+    })
+
+
     if (!userIncomes || !userAccounts || !userTypes) return <Loader/>
     if (userIncomes.length === 0 && currentPage > 1) setCurrentPage(prevState => prevState - 1)
 
@@ -136,6 +165,46 @@ const IncomesPage = () => {
                 <div className='text-center text-slate-500 text-2xl underline underline-offset-8 py-4'>
                     Мои доходы
                 </div>
+                <FormikProvider value={formik}>
+                    <form onSubmit={formik.handleSubmit}>
+                        <div className='flex flex-row gap-2'>
+                            <div className='min-w-[150px] max-w-[200px]'>
+                                <SelectField
+                                    label='Категория:'
+                                    name='category'
+                                    defaultOption='Choose...'
+
+                                    value={formik.values.category}
+                                />
+                            </div>
+                            <div className='min-w-[150px] max-w-[200px]'>
+                                <SelectField
+                                    label='Счет:'
+                                    name='accountId'
+                                    defaultOption='Choose...'
+
+                                    value={formik.values.accountId}
+                                />
+                            </div>
+                            <div className='min-h-[60px] flex items-center'>
+                                <Button
+                                    face='primary'
+                                >
+                                    Применить
+                                </Button>
+                            </div>
+                            <div className='min-h-[60px] flex items-center'>
+                                <Button
+                                    face='secondary'
+                                    type='button'
+                                    onClick={handleDeleteFilters}
+                                >
+                                    Отменить
+                                </Button>
+                            </div>
+                        </div>
+                    </form>
+                </FormikProvider>
                 <Table columns={columns} data={userIncomes}/>
                 {loadingStatus &&
                     <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>

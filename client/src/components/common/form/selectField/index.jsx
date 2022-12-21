@@ -13,6 +13,13 @@ const SelectField = (props) => {
         )
     }
 
+    const onChange = (e) => {
+        field.onChange(e)
+        if (props.onChange) {
+            props.onChange(e)
+        }
+    }
+
     return (
         <div className='relative'>
             <label className='block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white'>{props.label}</label>
@@ -20,6 +27,7 @@ const SelectField = (props) => {
                 as='select'
                 className={getInputClasses()}
                 {...field}
+                onChange={onChange}
                 value={props.value}
             >
                 <option value='' disabled>
