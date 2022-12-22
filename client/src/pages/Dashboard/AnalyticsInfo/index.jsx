@@ -1,7 +1,7 @@
 import React from "react";
 import chartIcon from './chartsIcon.svg'
 import {Link} from 'react-router-dom'
-import Charts from "../../../components/common/charts";
+import TwoItemsChart from "../../../components/common/charts/twoItemsChart";
 
 const AnalyticsInfo = () => {
     return (
@@ -15,7 +15,7 @@ const AnalyticsInfo = () => {
                 className=" relative border-dotted border-4 border-sky-300 rounded-md px-6 py-0 bg-slate-50 shadow-xl min-h-[280px]"
             >
                 <div className='mt-2'>
-                    <Charts/>
+                    <TwoItemsChart/>
                 </div>
             </div>
         </div>

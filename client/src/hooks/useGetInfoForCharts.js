@@ -1,30 +1,15 @@
-import {useState, useEffect} from 'react'
+import {useEffect} from 'react'
 
-import chartsService from "../services/charts.service";
+import {useDispatch} from "react-redux";
+import {loadChartsList} from "../store/charts";
 
 const useGetInfoForCharts = () => {
-    const [res, setRes] = useState(null)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        chartsService.get().then((data) => {
-            const result = []
-            const content = data.content
+        dispatch(loadChartsList())
+    }, [dispatch])
 
-            Object.keys(content).forEach((item) => {
-                const key = {
-                    name: item,
-                    income: content[item].incomes,
-                    expense: content[item].expenses
-                }
-                result.push(key)
-            })
-
-            setRes(result)
-        })
-
-    }, [])
-
-    return res
 }
 
 export default useGetInfoForCharts
