@@ -1,6 +1,6 @@
 import React from "react";
 
-const DeleteIcon = ({onDelete, loadingStatus}) => {
+const DeleteIcon = ({onDelete}) => {
 
     return (
         <div onClick={onDelete}>
