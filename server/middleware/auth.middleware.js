@@ -1,7 +1,7 @@
 const tokenService = require('../services/token.service')
 
 module.exports = (req, res, next) => {
-    if (req.method == "OPTIONS") {
+    if (req.method === "OPTIONS") {
         return next()
     }
 
@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
         }
 
         const data = tokenService.validateAccess(token)
-        if (!data) {
+        if (!data || !data.id) {
             return res.status(401).json({message: 'Unauthorized'})
         }
 

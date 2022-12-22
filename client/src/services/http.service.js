@@ -10,7 +10,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
     async function (config) {
-        const expiresDate = localStorageService.getTokenExpiresDate()
+        const expiresDate = +localStorageService.getTokenExpiresDate()
         const refreshToken = localStorageService.getRefreshToken();
         const isExpired = refreshToken && expiresDate < Date.now();
 
