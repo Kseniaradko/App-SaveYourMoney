@@ -7,6 +7,7 @@ import operationsHistoryReducer from "../operationsHistory";
 import incomesTypeReducer from "../incomesType";
 import expensesTypeReducer from "../expensesType";
 import chartsReducer from "../charts";
+import notesReducer from "../notes";
 
 
 const rootReducer = combineReducers({
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     operationsHistory: operationsHistoryReducer,
     incomesType: incomesTypeReducer,
     expensesType: expensesTypeReducer,
-    charts: chartsReducer
+    charts: chartsReducer,
+    notes: notesReducer
 })
 
 export function createStore() {

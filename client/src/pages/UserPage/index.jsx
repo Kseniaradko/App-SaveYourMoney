@@ -5,18 +5,32 @@ import Loader from "../../components/common/Loader";
 import displayDate from "../../utils/displayDate";
 import {getAmountOfAccounts} from "../../store/accounts";
 import EditUserAccount from "./editUserAccount";
+import useGetNotes from "../../hooks/useGetNotes";
+import AllNotes from "./allNotes";
+import {getUserNotes} from "../../store/notes";
+import useGetAccounts from "../../hooks/useGetAccounts";
+import AddNote from "./addNote";
 
 const UserPage = () => {
-    const [edit, setEdit] = useState(false)
-    const handleClick = () => {
-        setEdit(prevState => !prevState)
-    }
-
+    useGetNotes()
+    useGetAccounts()
     const user = useSelector(getCurrentUserData())
     const loadingStatus = useSelector(getUserLoadingStatus())
     const amountOfAccounts = useSelector(getAmountOfAccounts())
+    const notes = useSelector(getUserNotes())
 
-    if (!user || !amountOfAccounts) return <Loader/>
+    const [edit, setEdit] = useState(false)
+    const [newNote, setNewNote] = useState(false)
+
+    const handleEditClick = () => {
+        setEdit(prevState => !prevState)
+    }
+
+    const handleAddClick = () => {
+        setNewNote(prevState => !prevState)
+    }
+
+    if (!user || !amountOfAccounts || !notes) return <Loader/>
     const dateOfRegistration = displayDate(user.createdAt)
 
     return (
@@ -49,31 +63,43 @@ const UserPage = () => {
                                             </div>
                                         </div>
                                         <div className='text-center'>
-                                            <button onClick={handleClick}
+                                            <button onClick={handleEditClick}
                                                     className="font-semibold text-slate-400 mt-4 hover:text-sky-500">
                                                 Редактировать информацию о себе
                                             </button>
                                         </div>
                                     </div>
                                 ) : (
-                                    edit && <EditUserAccount onClick={handleClick}/>
+                                    edit && <EditUserAccount onClick={handleEditClick}/>
                                 )
                             )}
-
                         </div>
-                        <div className="border-l border-blueGray-200 text-center text-blueGray-700 min-w-[700px]">
-                            <div className="flex flex-col justify-center mt-5 mb-5 ml-5">
-                                <div
-                                    className="flex justify-center min-h-[200px] pl-5 text-center items-center text-lg text-blueGray-600">
-                                    Здесь будет возможность добавлять заметки или цели в следующем релизе
-                                </div>
-                                <div className='text-center'>
-                                    <button
-                                        className="font-semibold text-slate-400 mt-4 hover:text-sky-500"
-                                    >
-                                        Добавить заметку
-                                    </button>
-                                </div>
+                        <div
+                            className="border-l border-blueGray-200 text-center text-blueGray-700 min-w-[700px]">
+                            <div
+                                className="flex justify-between text-lg text-blueGray-600 w-full h-full mt-5 ml-5 mb-5">
+                                {notes.length === 0 && !newNote && (
+                                    <div
+                                        className='flex flex-col justify-around w-full h-full text-center items-center'>
+                                        <div>Добавляйте заметки, чтобы ничего не забыть!</div>
+                                        <div className='text-center'>
+                                            <button
+                                                className="font-semibold text-slate-400 hover:text-sky-500 text-base"
+                                                onClick={handleAddClick}
+                                            >
+                                                Добавить заметку
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                                }
+                                {notes.length > 0 && !newNote && (
+                                    <div
+                                        className='flex flex-col justify-between h-full w-full'>
+                                        <AllNotes notes={notes} onClick={handleAddClick}/>
+                                    </div>
+                                )}
+                                {newNote && <AddNote onClick={handleAddClick}/>}
                             </div>
                         </div>
                     </div>
