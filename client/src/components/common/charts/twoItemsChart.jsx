@@ -10,10 +10,14 @@ import {
 } from "recharts";
 import useGetInfoForCharts from "../../../hooks/useGetInfoForCharts";
 import Loader from "../Loader";
+import {useSelector} from "react-redux";
+import {getChartsData} from "../../../store/charts";
 
 
-const Charts = () => {
-    const data = useGetInfoForCharts()
+const TwoItemsChart = () => {
+    useGetInfoForCharts()
+    const data = useSelector(getChartsData())
+    console.log('chart', data)
     if (!data) return <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'><Loader/></div>
     if (data.length === 0) return (
         <div
@@ -51,4 +55,4 @@ const Charts = () => {
     );
 }
 
-export default Charts
+export default TwoItemsChart

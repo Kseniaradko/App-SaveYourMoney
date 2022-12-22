@@ -67,6 +67,13 @@ const UserPage = () => {
                                     className="flex justify-center min-h-[200px] pl-5 text-center items-center text-lg text-blueGray-600">
                                     Здесь будет возможность добавлять заметки или цели в следующем релизе
                                 </div>
+                                <div className='text-center'>
+                                    <button
+                                        className="font-semibold text-slate-400 mt-4 hover:text-sky-500"
+                                    >
+                                        Добавить заметку
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

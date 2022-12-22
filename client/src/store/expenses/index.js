@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import expenseService from "../../services/expense.service";
 import {loadAccounts, loadAccountsList} from "../accounts";
 import {toast} from "react-toastify";
+import {loadChartsList} from "../charts";
 
 const initialState = {
     entities: null,
@@ -114,6 +115,7 @@ export const createExpense = (expense) => async (dispatch) => {
         toast.success('Расход был добавлен!', {
             position: toast.POSITION.TOP_RIGHT
         })
+        dispatch(loadChartsList())
     } catch (error) {
         dispatch(expenseCreatedFailed(error.message))
     }

@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import incomeService from "../../services/income.service";
 import {loadAccounts, loadAccountsList} from "../accounts";
 import {toast} from "react-toastify";
+import {loadChartsList} from "../charts";
 
 const initialState = {
     entities: null,
@@ -117,6 +118,7 @@ export const createIncome = (income) => async (dispatch) => {
             position: toast.POSITION.TOP_RIGHT
         })
         dispatch(loadAccounts())
+        dispatch(loadChartsList())
     } catch (error) {
         dispatch(incomeCreatedFailed(error.message))
     }
