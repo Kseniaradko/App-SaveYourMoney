@@ -44,7 +44,10 @@ const AccountsPage = () => {
         _id: {
             name: '№',
             path: '_id',
-            component: (data) => userAccounts.indexOf(data) + 1
+            component: (data) => {
+                if (currentPage === 1) return userAccounts.indexOf(data) + 1
+                return (limit * currentPage) - (limit - 1) - userAccounts.indexOf(data)
+            }
         },
         accountName: {
             name: 'Счет',

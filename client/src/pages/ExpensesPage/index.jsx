@@ -99,7 +99,10 @@ const ExpensesPage = () => {
         _id: {
             name: '№',
             path: '_id',
-            component: (data) => userExpenses.indexOf(data) + 1
+            component: (data) => {
+                if (currentPage === 1) return userExpenses.indexOf(data) + 1
+                return (limit * currentPage) - ((limit - 1) - userExpenses.indexOf(data))
+            }
         },
         category: {
             name: 'Категория',
