@@ -1,6 +1,6 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadNotesList} from "../store/notes";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadNotesList} from '../store/notes'
 
 
 const useGetNotes = () => {

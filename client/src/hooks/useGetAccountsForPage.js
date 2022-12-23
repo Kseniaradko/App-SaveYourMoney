@@ -1,6 +1,6 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadAccountsList} from "../store/accounts";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadAccountsList} from '../store/accounts'
 
 const useGetAccountsForPage = (currentPage, limit) => {
     const dispatch = useDispatch()

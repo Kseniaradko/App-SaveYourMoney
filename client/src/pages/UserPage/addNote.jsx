@@ -1,10 +1,10 @@
 import React from 'react'
-import * as Yup from "yup";
-import {useDispatch} from "react-redux";
-import {createNote} from "../../store/notes";
-import {FormikProvider, useFormik} from "formik";
-import TextAreaField from "../../components/common/form/textAreaField";
-import Button from "../../components/common/Button";
+import * as Yup from 'yup'
+import {useDispatch} from 'react-redux'
+import {createNote} from '../../store/notes'
+import {FormikProvider, useFormik} from 'formik'
+import TextAreaField from '../../components/common/form/textAreaField'
+import Button from '../../components/common/Button'
 
 const validationSchema = Yup.object().shape({
     text: Yup.string()

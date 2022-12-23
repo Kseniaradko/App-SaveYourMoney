@@ -1,13 +1,13 @@
-import React from "react";
-import TextField from "../../components/common/form/textField";
-import {Link} from "react-router-dom";
-import Button from "../../components/common/Button";
-import * as Yup from "yup";
-import {useFormik, FormikProvider} from "formik";
-import RadioField from "../../components/common/form/radioField";
-import {useDispatch, useSelector} from "react-redux";
-import {getAuthErrors, getIsLoggedIn, signUp} from "../../store/users";
-import Loader from "../../components/common/Loader";
+import React from 'react'
+import TextField from '../../components/common/form/textField'
+import {Link} from 'react-router-dom'
+import Button from '../../components/common/Button'
+import * as Yup from 'yup'
+import {useFormik, FormikProvider} from 'formik'
+import RadioField from '../../components/common/form/radioField'
+import {useDispatch, useSelector} from 'react-redux'
+import {getAuthErrors, getIsLoggedIn, signUp} from '../../store/users'
+import Loader from '../../components/common/Loader'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
         .required('Данное поле обязательно для заполнения'),
     password: Yup.string()
         .matches(
-            /[A-Z]+/g, "Пароль должен содержать хотя бы одну заглавную букву")
+            /[A-Z]+/g, 'Пароль должен содержать хотя бы одну заглавную букву')
         .matches(
             /\d+/g, 'Пароль должен содержать хотя бы одно число')
         .min(5, 'Пароль должен содержать минимум 5 символов')
@@ -36,7 +36,7 @@ const initialValues = {
 const SignupPage = () => {
     const dispatch = useDispatch()
     const isLoggedIn = useSelector(getIsLoggedIn())
-    const signUpError = useSelector(getAuthErrors());
+    const signUpError = useSelector(getAuthErrors())
     const handleSubmit = (formValue) => {
         dispatch(signUp(formValue))
     }
@@ -63,9 +63,9 @@ const SignupPage = () => {
                         />
                         <RadioField
                             options={[
-                                {name: "Male", value: "male"},
-                                {name: "Female", value: "female"},
-                                {name: "Other", value: "other"}
+                                {name: 'Male', value: 'male'},
+                                {name: 'Female', value: 'female'},
+                                {name: 'Other', value: 'other'}
                             ]}
                             name='sex'
                             label='Выберите ваш пол:'
@@ -95,7 +95,7 @@ const SignupPage = () => {
                     </form>
                 </FormikProvider>
                 <p className='py-2'>
-                    Уже есть аккаунт?{" "}
+                    Уже есть аккаунт?{' '}
                     <Link to='/login' className='hover:underline'>Войти</Link>
                 </p>
             </div>

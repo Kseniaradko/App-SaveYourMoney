@@ -13,13 +13,13 @@ import {
 } from '../../store/expensesType'
 import close from './close.svg'
 import edit from './edit.svg'
-import * as Yup from "yup";
-import {FormikProvider, useFormik} from "formik";
-import TextField from "../../components/common/form/textField";
-import Button from "../../components/common/Button";
-import Loader from "../../components/common/Loader";
-import Pagination from "../../components/common/pagination";
-import useGetTypesForPage from "../../hooks/useGetTypesForPage";
+import * as Yup from 'yup'
+import {FormikProvider, useFormik} from 'formik'
+import TextField from '../../components/common/form/textField'
+import Button from '../../components/common/Button'
+import Loader from '../../components/common/Loader'
+import Pagination from '../../components/common/pagination'
+import useGetTypesForPage from '../../hooks/useGetTypesForPage'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Данное поле обязательно для заполнения')
@@ -117,8 +117,8 @@ const Types = () => {
         <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full mt-4'>
             <div className='flex flex-row justify-between gap-4 h-full'>
                 <div className='flex flex-col justify-between h-full'>
-                    <div className="flex justify-center">
-                        <ul className="bg-white rounded-lg w-96 text-gray-900 relative">
+                    <div className='flex justify-center'>
+                        <ul className='bg-white rounded-lg w-96 text-gray-900 relative'>
                             {iLoadingStatus &&
                                 <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
                                     <Loader/>
@@ -132,7 +132,7 @@ const Types = () => {
                             </li>
                             {incomeTypes.map((income) => (
                                     <li
-                                        className="flex flex-row justify-between px-6 py-2 border-b border-gray-200 w-full"
+                                        className='flex flex-row justify-between px-6 py-2 border-b border-gray-200 w-full'
                                         key={income._id}
                                     >
                                         <div>{income.name}</div>
@@ -206,8 +206,8 @@ const Types = () => {
                     </div>
                 )}
                 <div className='flex flex-col justify-between h-full'>
-                    <div className="flex justify-center">
-                        <ul className="bg-white rounded-lg w-96 text-gray-900 relative">
+                    <div className='flex justify-center'>
+                        <ul className='bg-white rounded-lg w-96 text-gray-900 relative'>
                             {eLoadingStatus &&
                                 <div className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'><Loader/>
                                 </div>}
@@ -219,7 +219,7 @@ const Types = () => {
                             </li>
                             {expenseTypes.map((expense) => (
                                 <li
-                                    className="flex flex-row justify-between px-6 py-2 border-b border-gray-200 w-full"
+                                    className='flex flex-row justify-between px-6 py-2 border-b border-gray-200 w-full'
                                     key={expense._id}
                                 >
                                     <div>{expense.name}</div>

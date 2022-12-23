@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import plusIcon from './plusIcon.svg'
-import IncomeModalWindow from "../ModalWindows/IncomeModalWindow";
-import ExpensesModalWindow from "../ModalWindows/ExpensesModalWindow";
-import AccountModalWindow from "../ModalWindows/AccountModalWindow";
-import {Link} from "react-router-dom";
-import Loader from "../../common/Loader";
+import IncomeModalWindow from '../ModalWindows/IncomeModalWindow'
+import ExpensesModalWindow from '../ModalWindows/ExpensesModalWindow'
+import AccountModalWindow from '../ModalWindows/AccountModalWindow'
+import {Link} from 'react-router-dom'
+import Loader from '../../common/Loader'
 
 const OperationsInfo = ({label, data, img, loadingStatus}) => {
     const [showModal, setShowModal] = useState(false)
@@ -27,12 +27,12 @@ const OperationsInfo = ({label, data, img, loadingStatus}) => {
             {showModal && label === 'Доходы' && <IncomeModalWindow onCLick={handleClick}/>}
             {showModal && label === 'Расходы' && <ExpensesModalWindow onCLick={handleClick}/>}
             {showModal && label === 'Счета' && <AccountModalWindow onCLick={handleClick}/>}
-            <div className="text-lg font-semibold pb-3 flex justify-center gap-1">
-                {label === "Доходы" &&
+            <div className='text-lg font-semibold pb-3 flex justify-center gap-1'>
+                {label === 'Доходы' &&
                     <Link to='/incomesPage' className='hover:underline underline-offset-4'>{label}</Link>}
-                {label === "Расходы" &&
+                {label === 'Расходы' &&
                     <Link to='/expensesPage' className='hover:underline underline-offset-4'>{label}</Link>}
-                {label === "Счета" &&
+                {label === 'Счета' &&
                     <Link to='/accountsPage' className='hover:underline underline-offset-4'>{label}</Link>}
                 {img && <img className='w-5' src={img} alt='Loading'/>}
             </div>

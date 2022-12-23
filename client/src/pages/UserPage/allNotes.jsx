@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
-import DeleteIcon from "../../components/common/Table/deleteIcon";
-import {useDispatch, useSelector} from "react-redux";
-import {getNotesLoadingStatus, removeNote, updateNote} from "../../store/notes";
-import EditIcon from "../../components/common/Table/editIcon";
-import {FormikProvider, useFormik} from "formik";
-import TextAreaField from "../../components/common/form/textAreaField";
-import Button from "../../components/common/Button";
-import * as Yup from "yup";
-import Loader from "../../components/common/Loader";
+import DeleteIcon from '../../components/common/Table/deleteIcon'
+import {useDispatch, useSelector} from 'react-redux'
+import {getNotesLoadingStatus, removeNote, updateNote} from '../../store/notes'
+import EditIcon from '../../components/common/Table/editIcon'
+import {FormikProvider, useFormik} from 'formik'
+import TextAreaField from '../../components/common/form/textAreaField'
+import Button from '../../components/common/Button'
+import * as Yup from 'yup'
+import Loader from '../../components/common/Loader'
 
 const validationSchema = Yup.object().shape({
     text: Yup.string()
@@ -69,7 +69,7 @@ const AllNotes = ({notes, onClick}) => {
                     </div>
                     <div className='text-center'>
                         <button
-                            className="font-semibold text-base text-slate-400 mt-5 hover:text-sky-500"
+                            className='font-semibold text-base text-slate-400 mt-5 hover:text-sky-500'
                             onClick={onClick}
                         >
                             Добавить заметку

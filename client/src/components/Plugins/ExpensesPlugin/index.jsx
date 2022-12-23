@@ -1,10 +1,10 @@
-import React from "react";
-import OperationsInfo from "../OperationsInfo";
+import React from 'react'
+import OperationsInfo from '../OperationsInfo'
 import expensesIcon from './expensesIcon.svg'
-import {useSelector} from "react-redux";
-import {getExpenseLoadingStatus, getExpensesForPlugin} from "../../../store/expenses";
-import Loader from "../../common/Loader";
-import {getExpensesTypes} from "../../../store/expensesType";
+import {useSelector} from 'react-redux'
+import {getExpenseLoadingStatus, getExpensesForPlugin} from '../../../store/expenses'
+import Loader from '../../common/Loader'
+import {getExpensesTypes} from '../../../store/expensesType'
 
 const ExpensesPlugin = () => {
     const userExpensesForPlugin = useSelector(getExpensesForPlugin())

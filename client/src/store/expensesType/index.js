@@ -1,6 +1,6 @@
-import {createSlice} from "@reduxjs/toolkit";
-import expensesTypeService from "../../services/expensesType.service";
-import {toast} from "react-toastify";
+import {createSlice} from '@reduxjs/toolkit'
+import expensesTypeService from '../../services/expensesType.service'
+import {toast} from 'react-toastify'
 
 const initialState = {
     entities: null,

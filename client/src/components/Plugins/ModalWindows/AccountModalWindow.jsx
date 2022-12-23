@@ -1,12 +1,12 @@
-import React from "react";
-import TextField from "../../common/form/textField";
-import {FormikProvider, useFormik} from "formik";
-import * as Yup from "yup";
+import React from 'react'
+import TextField from '../../common/form/textField'
+import {FormikProvider, useFormik} from 'formik'
+import * as Yup from 'yup'
 import {useDispatch} from 'react-redux'
-import {createAccount} from "../../../store/accounts";
-import {createOperation} from "../../../store/operationsHistory";
-import Button from "../../common/Button";
-import closeIcon from "./closeIcon.svg";
+import {createAccount} from '../../../store/accounts'
+import {createOperation} from '../../../store/operationsHistory'
+import Button from '../../common/Button'
+import closeIcon from './closeIcon.svg'
 
 const validationSchema = Yup.object().shape({
     accountName: Yup.string()
@@ -46,14 +46,14 @@ const AccountModalWindow = ({onCLick}) => {
     return (
         <>
             <div
-                className="justify-center items-center flex overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                className='justify-center items-center flex overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'
             >
-                <div className="relative w-auto my-6 mx-auto min-w-[355px] min-h-[410px]">
+                <div className='relative w-auto my-6 mx-auto min-w-[355px] min-h-[410px]'>
                     <div
-                        className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                        className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
                         <div
-                            className="flex items-start justify-center p-5 border-b border-solid border-slate-200 rounded-t">
-                            <h3 className="text-3xl font-semibold">
+                            className='flex items-start justify-center p-5 border-b border-solid border-slate-200 rounded-t'>
+                            <h3 className='text-3xl font-semibold'>
                                 Добавить счет
                             </h3>
                             <img
@@ -63,7 +63,7 @@ const AccountModalWindow = ({onCLick}) => {
                                 alt='plus'
                             />
                         </div>
-                        <div className="relative px-6 py-1 flex-auto">
+                        <div className='relative px-6 py-1 flex-auto'>
                             <FormikProvider value={formik}>
                                 <form onSubmit={formik.handleSubmit}>
                                     <TextField
@@ -81,7 +81,7 @@ const AccountModalWindow = ({onCLick}) => {
                                     <div className='flex justify-end mb-3'>
                                         <Button
                                             face='primary'
-                                            type="submit"
+                                            type='submit'
                                             disabled={!formik.isValid}
                                         >
                                             Сохранить
@@ -93,7 +93,7 @@ const AccountModalWindow = ({onCLick}) => {
                     </div>
                 </div>
             </div>
-            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            <div className='opacity-25 fixed inset-0 z-40 bg-black'></div>
         </>
     )
 }

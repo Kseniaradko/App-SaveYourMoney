@@ -1,11 +1,11 @@
 import React from 'react'
-import {useField} from "formik";
+import {useField} from 'formik'
 
 const TextAreaField = (props) => {
     const [field, meta] = useField(props)
     const showedError = meta.error && meta.touched
     const errorStyle =
-        "absolute -bottom-5 right-0 text-xs text-red-500 font-normal"
+        'absolute -bottom-5 right-0 text-xs text-red-500 font-normal'
 
     const getInputClasses = () => {
         return (

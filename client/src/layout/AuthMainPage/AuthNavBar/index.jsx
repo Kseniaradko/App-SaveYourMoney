@@ -1,6 +1,6 @@
-import React from "react";
-import {Link} from "react-router-dom";
-import AuthNavProfile from "../AuthNavProfile";
+import React from 'react'
+import {Link} from 'react-router-dom'
+import AuthNavProfile from '../AuthNavProfile'
 
 const AuthNavBar = () => {
 
@@ -9,20 +9,20 @@ const AuthNavBar = () => {
             <div className='flex items-center justify-between max-w-screen-xl mx-auto'>
                 <div>
                     <Link
-                        to="/dashboard"
-                        className="hover:text-sky-500 py-2 text-slate-500 pr-6"
+                        to='/dashboard'
+                        className='hover:text-sky-500 py-2 text-slate-500 pr-6'
                     >
                         Главная
                     </Link>
                     <Link
                         to='/types'
-                        className="hover:text-sky-500 py-2 text-slate-500 pr-6"
+                        className='hover:text-sky-500 py-2 text-slate-500 pr-6'
                     >
                         Категории
                     </Link>
                     <Link
-                        to="/history"
-                        className="hover:text-sky-500 py-2 text-slate-500"
+                        to='/history'
+                        className='hover:text-sky-500 py-2 text-slate-500'
                     >
                         История операций
                     </Link>

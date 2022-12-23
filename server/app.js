@@ -5,6 +5,7 @@ const chalk = require('chalk')
 const initDatabase = require('./startUp/initDatabase')
 const routes = require('./routes')
 const cors = require('cors')
+const path = require('path')
 
 const app = express()
 app.use(express.json())
@@ -14,11 +15,9 @@ app.use('/api', routes)
 
 const PORT = config.get('port') ?? 3000
 
-// if (process.env.NODE_ENV === 'production') {
-//     console.log('Production')
-// } else {
-//     console.log('Development')
-// }
+if (process.env.NODE_ENV === 'production') {
+    app.use('/', express.static())
+}
 
 async function start() {
     try {

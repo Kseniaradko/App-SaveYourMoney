@@ -1,10 +1,10 @@
-import {createSlice} from "@reduxjs/toolkit";
-import history from "../../utils/history";
-import authService from "../../services/auth.service";
-import localStorageService from "../../services/localStorage.service";
-import {generateAuthError} from "../../utils/generateAuthError";
-import userService from "../../services/user.service";
-import {toast} from "react-toastify";
+import {createSlice} from '@reduxjs/toolkit'
+import history from '../../utils/history'
+import authService from '../../services/auth.service'
+import localStorageService from '../../services/localStorage.service'
+import {generateAuthError} from '../../utils/generateAuthError'
+import userService from '../../services/user.service'
+import {toast} from 'react-toastify'
 
 const initialState = {
     entities: null,
@@ -111,12 +111,12 @@ export const signUp = (payload) => async (dispatch) => {
         dispatch(authRequestSuccess({userId: data.userId}))
         history.push('/dashboard')
     } catch (error) {
-        const {code, message} = error.response.data.error;
+        const {code, message} = error.response.data.error
         if (code === 400) {
-            const errorMessage = generateAuthError(message);
-            dispatch(authRequestFailed(errorMessage));
+            const errorMessage = generateAuthError(message)
+            dispatch(authRequestFailed(errorMessage))
         } else {
-            dispatch(authRequestFailed(error.message));
+            dispatch(authRequestFailed(error.message))
         }
     }
 }

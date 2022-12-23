@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import {useSelector} from "react-redux";
-import {getChartsData, getChartsLoadingStatus} from "../../store/charts";
-import OneItemChart from "../../components/common/charts/oneItemChart";
-import useGetInfoForCharts from "../../hooks/useGetInfoForCharts";
-import Loader from "../../components/common/Loader";
+import React, {useState} from 'react'
+import {useSelector} from 'react-redux'
+import {getChartsData, getChartsLoadingStatus} from '../../store/charts'
+import OneItemChart from '../../components/common/charts/oneItemChart'
+import useGetInfoForCharts from '../../hooks/useGetInfoForCharts'
+import Loader from '../../components/common/Loader'
 
 const ChartsPage = () => {
     useGetInfoForCharts()
@@ -37,7 +37,7 @@ const ChartsPage = () => {
                 Аналитика
             </div>
             <div>
-                <div className="flex space-x-3 border-b max-w-[155px]">
+                <div className='flex space-x-3 border-b max-w-[155px]'>
                     {tabsData.map((tab, idx) => {
                         return (
                             <button
@@ -54,7 +54,7 @@ const ChartsPage = () => {
                         )
                     })}
                 </div>
-                <div className="py-4 flex justify-center">
+                <div className='py-4 flex justify-center'>
                     {tabsData[activeTabIndex].content}
                 </div>
             </div>
@@ -64,11 +64,3 @@ const ChartsPage = () => {
 }
 
 export default ChartsPage
-
-
-// <div className=''>
-//     <OneItemChart data={data} dataKey={keys[1]}/>
-// </div>
-// <div>
-//     <OneItemChart data={data} dataKey={keys[2]}/>
-// </div>

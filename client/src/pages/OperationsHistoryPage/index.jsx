@@ -1,20 +1,20 @@
-import React, {useState} from "react";
-import Table from "../../components/common/Table";
-import {getOperationsLoadingStatus, getTotalOperationsPages, getUserOperations} from "../../store/operationsHistory";
-import {useSelector} from "react-redux";
-import displayDate from "../../utils/displayDate";
+import React, {useState} from 'react'
+import Table from '../../components/common/Table'
+import {getOperationsLoadingStatus, getTotalOperationsPages, getUserOperations} from '../../store/operationsHistory'
+import {useSelector} from 'react-redux'
+import displayDate from '../../utils/displayDate'
 import {
     displayAction,
     displayDetailsForOperations,
     displayType
-} from "../../utils/displayDataForOperations";
-import Loader from "../../components/common/Loader";
-import Pagination from "../../components/common/pagination";
-import useGetOperations from "../../hooks/useGetOperations";
-import {FormikProvider, useFormik} from "formik";
-import SelectField from "../../components/common/form/selectField";
-import Button from "../../components/common/Button";
-import Datepicker from "tailwind-datepicker-react";
+} from '../../utils/displayDataForOperations'
+import Loader from '../../components/common/Loader'
+import Pagination from '../../components/common/pagination'
+import useGetOperations from '../../hooks/useGetOperations'
+import {FormikProvider, useFormik} from 'formik'
+import SelectField from '../../components/common/form/selectField'
+import Button from '../../components/common/Button'
+import Datepicker from 'tailwind-datepicker-react'
 
 const types = [
     {
@@ -50,8 +50,8 @@ const options = {
     autoHide: true,
     todayBtn: true,
     clearBtn: true,
-    maxDate: new Date("2030-01-01"),
-    minDate: new Date("1950-01-01")
+    maxDate: new Date('2030-01-01'),
+    minDate: new Date('1950-01-01')
 }
 
 const OperationsHistoryPage = () => {

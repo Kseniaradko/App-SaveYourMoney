@@ -1,6 +1,6 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadOperationsList} from "../store/operationsHistory";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadOperationsList} from '../store/operationsHistory'
 
 const useGetOperations = (currentPage, limit, filter) => {
     const offset = (currentPage - 1) * limit

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {useField} from "formik";
+import React, {useState} from 'react'
+import {useField} from 'formik'
 import eyeIcon from './eyeIcon.svg'
 import eyeSlashIcon from './eyeSlashIcon.svg'
 
@@ -18,7 +18,7 @@ const TextField = (props) => {
     }
 
     const toggleShowPassword = () => {
-        setShowPassword((prevState) => !prevState);
+        setShowPassword((prevState) => !prevState)
     }
 
     return (

@@ -1,17 +1,17 @@
-import React, {useState} from "react"
-import TextField from "../../common/form/textField"
-import {FormikProvider, useFormik} from "formik"
-import * as Yup from "yup"
-import {useDispatch, useSelector} from "react-redux"
-import {getAccounts} from "../../../store/accounts"
-import SelectField from "../../common/form/selectField"
-import {createIncome} from "../../../store/incomes"
-import {createOperation} from "../../../store/operationsHistory"
-import closeIcon from "./closeIcon.svg"
-import Button from "../../common/Button";
-import {createIncomeType, getIncomesTypes} from "../../../store/incomesType";
-import useGetTypes from "../../../hooks/useGetTypes";
-import useGetAccountsForPage from "../../../hooks/useGetAccountsForPage";
+import React, {useState} from 'react'
+import TextField from '../../common/form/textField'
+import {FormikProvider, useFormik} from 'formik'
+import * as Yup from 'yup'
+import {useDispatch, useSelector} from 'react-redux'
+import {getAccounts} from '../../../store/accounts'
+import SelectField from '../../common/form/selectField'
+import {createIncome} from '../../../store/incomes'
+import {createOperation} from '../../../store/operationsHistory'
+import closeIcon from './closeIcon.svg'
+import Button from '../../common/Button'
+import {createIncomeType, getIncomesTypes} from '../../../store/incomesType'
+import useGetTypes from '../../../hooks/useGetTypes'
+import useGetAccountsForPage from '../../../hooks/useGetAccountsForPage'
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -82,14 +82,14 @@ const IncomeModalWindow = ({onCLick}) => {
     return (
         <>
             <div
-                className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'
             >
-                <div className="relative w-auto my-6 mx-auto min-w-[355px] min-h-[410px]">
+                <div className='relative w-auto my-6 mx-auto min-w-[355px] min-h-[410px]'>
                     <div
-                        className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                        className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
                         <div
-                            className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                            <h3 className="text-3xl font-semibold">
+                            className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
+                            <h3 className='text-3xl font-semibold'>
                                 Добавить доход
                             </h3>
                             <img
@@ -99,7 +99,7 @@ const IncomeModalWindow = ({onCLick}) => {
                                 alt='plus'
                             />
                         </div>
-                        <div className="relative px-6 py-3 flex-auto">
+                        <div className='relative px-6 py-3 flex-auto'>
                             <FormikProvider value={formik}>
                                 <form onSubmit={formik.handleSubmit}>
                                     <SelectField
@@ -154,7 +154,7 @@ const IncomeModalWindow = ({onCLick}) => {
                                     <div className='flex justify-end mb-3'>
                                         <Button
                                             face='primary'
-                                            type="submit"
+                                            type='submit'
                                             disabled={!formik.isValid}
                                         >
                                             Сохранить
@@ -166,7 +166,7 @@ const IncomeModalWindow = ({onCLick}) => {
                     </div>
                 </div>
             </div>
-            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            <div className='opacity-25 fixed inset-0 z-40 bg-black'></div>
         </>
     )
 }

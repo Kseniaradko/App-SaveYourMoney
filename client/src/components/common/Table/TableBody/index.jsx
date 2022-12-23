@@ -1,3 +1,5 @@
+import React from 'react'
+
 const TableBody = ({data, columns}) => {
     return (
         <tbody className='bg-white dark:bg-slate-800'>

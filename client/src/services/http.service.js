@@ -1,8 +1,8 @@
 import axios from 'axios'
 import configFile from '../config.json'
-import localStorageService from "./localStorage.service";
-import authService from "./auth.service";
-import {toast} from "react-toastify";
+import localStorageService from './localStorage.service'
+import authService from './auth.service'
+import {toast} from 'react-toastify'
 
 const http = axios.create({
     baseURL: configFile.apiEndPoint
@@ -51,9 +51,9 @@ http.interceptors.response.use(
         if (
             !expectedErrors
         ) {
-            toast.error("Something was wrong. Try it later!");
+            toast.error('Something was wrong. Try it later!')
         }
-        return Promise.reject(error);
+        return Promise.reject(error)
     }
 )
 
@@ -65,4 +65,4 @@ const httpService = {
     patch: http.patch
 };
 
-export default httpService;
+export default httpService

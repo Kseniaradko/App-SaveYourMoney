@@ -1,6 +1,6 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadExpensesList} from "../store/expenses";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadExpensesList} from '../store/expenses'
 
 const useGetExpensesForPage = (currentPage, limit, filter) => {
     const dispatch = useDispatch()

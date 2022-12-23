@@ -1,6 +1,6 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadIncomesList} from "../store/incomes";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadIncomesList} from '../store/incomes'
 
 const useGetIncomes = (currentPage, limit, filter) => {
     const dispatch = useDispatch()

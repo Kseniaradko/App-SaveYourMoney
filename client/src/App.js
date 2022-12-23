@@ -1,7 +1,7 @@
-import React from "react";
-import AuthContainer from "./layout/AuthContainer";
-import AuthMainPage from "./layout/AuthMainPage";
-import {ToastContainer} from "react-toastify";
+import React from 'react'
+import AuthContainer from './layout/AuthContainer'
+import AuthMainPage from './layout/AuthMainPage'
+import {ToastContainer} from 'react-toastify'
 
 function App() {
     return (
@@ -13,7 +13,7 @@ function App() {
             </div>
             <ToastContainer/>
         </>
-    );
+    )
 }
 
-export default App;
+export default App

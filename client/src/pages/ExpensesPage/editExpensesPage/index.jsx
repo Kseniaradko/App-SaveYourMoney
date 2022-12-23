@@ -1,18 +1,18 @@
-import React from "react";
-import {useParams} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {useFormik, FormikProvider} from "formik";
-import * as Yup from "yup";
-import TextField from "../../../components/common/form/textField";
-import {getAccounts} from "../../../store/accounts";
-import Loader from "../../../components/common/Loader";
-import {getExpenseById, updateExpense} from "../../../store/expenses";
-import history from "../../../utils/history";
-import SelectField from "../../../components/common/form/selectField";
-import {createOperation} from "../../../store/operationsHistory";
-import {getExpensesTypes} from "../../../store/expensesType";
-import Button from "../../../components/common/Button";
-import useGetTypes from "../../../hooks/useGetTypes";
+import React from 'react'
+import {useParams} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {useFormik, FormikProvider} from 'formik'
+import * as Yup from 'yup'
+import TextField from '../../../components/common/form/textField'
+import {getAccounts} from '../../../store/accounts'
+import Loader from '../../../components/common/Loader'
+import {getExpenseById, updateExpense} from '../../../store/expenses'
+import history from '../../../utils/history'
+import SelectField from '../../../components/common/form/selectField'
+import {createOperation} from '../../../store/operationsHistory'
+import {getExpensesTypes} from '../../../store/expensesType'
+import Button from '../../../components/common/Button'
+import useGetTypes from '../../../hooks/useGetTypes'
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -100,7 +100,7 @@ const EditExpensesPage = () => {
                     <div className='flex gap-2 mt-4'>
                         <Button
                             face='secondary'
-                            type="button"
+                            type='button'
                             onClick={() => history.goBack()}
                         >
                             Назад

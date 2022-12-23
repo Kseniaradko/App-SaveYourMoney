@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
     LineChart,
     Line,
@@ -7,11 +7,8 @@ import {
     CartesianGrid,
     Tooltip,
     Legend
-} from "recharts";
-import useGetInfoForCharts from "../../../hooks/useGetInfoForCharts";
-import Loader from "../Loader";
-import {useSelector} from "react-redux";
-import {getChartsData} from "../../../store/charts";
+} from 'recharts'
+import Loader from '../Loader'
 
 
 const OneItemChart = ({data, dataKey, label}) => {

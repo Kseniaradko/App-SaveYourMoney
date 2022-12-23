@@ -1,7 +1,7 @@
-import React from "react";
-import TableHeader from "./TableHeader";
-import TableBody from "./TableBody";
-import Loader from "../Loader";
+import React from 'react'
+import TableHeader from './TableHeader'
+import TableBody from './TableBody'
+import Loader from '../Loader'
 
 
 const Table = ({columns, children, data, onDelete}) => {

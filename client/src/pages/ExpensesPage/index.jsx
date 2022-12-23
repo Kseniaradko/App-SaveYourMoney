@@ -1,31 +1,29 @@
-import React, {useState} from "react";
-import Table from "../../components/common/Table";
-import EditIcon from "../../components/common/Table/editIcon";
-import DeleteIcon from "../../components/common/Table/deleteIcon";
-import {useDispatch, useSelector} from "react-redux";
+import React, {useState} from 'react'
+import Table from '../../components/common/Table'
+import EditIcon from '../../components/common/Table/editIcon'
+import DeleteIcon from '../../components/common/Table/deleteIcon'
+import {useDispatch, useSelector} from 'react-redux'
 import {
     getCurrentUserExpenses,
     getExpenseLoadingStatus,
     getTotalExpensePages,
     removeExpense
-} from "../../store/expenses";
-import {Link} from "react-router-dom";
-import {getAccounts} from "../../store/accounts";
-import Loader from "../../components/common/Loader";
-import displayDate from "../../utils/displayDate";
-import ExpensesModalWindow from "../../components/Plugins/ModalWindows/ExpensesModalWindow";
-import Button from "../../components/common/Button";
-import {createOperation} from "../../store/operationsHistory";
-import {getExpensesTypes} from "../../store/expensesType";
-import Pagination from "../../components/common/pagination";
-import useGetTypes from "../../hooks/useGetTypes";
-import useGetExpensesForPage from "../../hooks/useGetExpensesForPage";
-import {FormikProvider, useFormik} from "formik";
-import SelectField from "../../components/common/form/selectField";
-import TextField from "../../components/common/form/textField";
-import Datepicker from "tailwind-datepicker-react";
-import useGetAccounts from "../../hooks/useGetAccounts";
-import useGetAccountsForPage from "../../hooks/useGetAccountsForPage";
+} from '../../store/expenses'
+import {Link} from 'react-router-dom'
+import {getAccounts} from '../../store/accounts'
+import Loader from '../../components/common/Loader'
+import displayDate from '../../utils/displayDate'
+import Button from '../../components/common/Button'
+import {createOperation} from '../../store/operationsHistory'
+import {getExpensesTypes} from '../../store/expensesType'
+import Pagination from '../../components/common/pagination'
+import useGetTypes from '../../hooks/useGetTypes'
+import useGetExpensesForPage from '../../hooks/useGetExpensesForPage'
+import {FormikProvider, useFormik} from 'formik'
+import SelectField from '../../components/common/form/selectField'
+import TextField from '../../components/common/form/textField'
+import Datepicker from 'tailwind-datepicker-react'
+import useGetAccountsForPage from '../../hooks/useGetAccountsForPage'
 
 const initialValues = {
     category: '',
@@ -37,8 +35,8 @@ const options = {
     autoHide: true,
     todayBtn: true,
     clearBtn: true,
-    maxDate: new Date("2030-01-01"),
-    minDate: new Date("1950-01-01")
+    maxDate: new Date('2030-01-01'),
+    minDate: new Date('1950-01-01')
 }
 
 const ExpensesPage = () => {

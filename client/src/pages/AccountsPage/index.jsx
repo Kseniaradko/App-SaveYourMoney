@@ -1,17 +1,17 @@
-import React, {useState} from "react";
-import Table from "../../components/common/Table";
-import EditIcon from "../../components/common/Table/editIcon";
-import DeleteIcon from "../../components/common/Table/deleteIcon";
-import {useDispatch, useSelector} from "react-redux";
-import {getAccountLoadingStatus, getAccounts, getTotalAccountsPages, removeAccount} from "../../store/accounts";
-import {Link} from "react-router-dom";
-import displayDate from "../../utils/displayDate";
-import Button from "../../components/common/Button";
-import AccountModalWindow from "../../components/Plugins/ModalWindows/AccountModalWindow";
-import {createOperation} from "../../store/operationsHistory";
-import Loader from "../../components/common/Loader";
-import Pagination from "../../components/common/pagination";
-import useGetAccountsForPage from "../../hooks/useGetAccountsForPage";
+import React, {useState} from 'react'
+import Table from '../../components/common/Table'
+import EditIcon from '../../components/common/Table/editIcon'
+import DeleteIcon from '../../components/common/Table/deleteIcon'
+import {useDispatch, useSelector} from 'react-redux'
+import {getAccountLoadingStatus, getAccounts, getTotalAccountsPages, removeAccount} from '../../store/accounts'
+import {Link} from 'react-router-dom'
+import displayDate from '../../utils/displayDate'
+import Button from '../../components/common/Button'
+import AccountModalWindow from '../../components/Plugins/ModalWindows/AccountModalWindow'
+import {createOperation} from '../../store/operationsHistory'
+import Loader from '../../components/common/Loader'
+import Pagination from '../../components/common/pagination'
+import useGetAccountsForPage from '../../hooks/useGetAccountsForPage'
 
 const AccountsPage = () => {
     const dispatch = useDispatch()
@@ -105,6 +105,8 @@ const AccountsPage = () => {
             </div>
         )
     }
+
+    if (!userAccounts) return <Loader/>
 
     return (
         <div className='flex flex-col justify-between h-full max-w-screen-xl m-auto w-full'>

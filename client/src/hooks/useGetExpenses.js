@@ -1,6 +1,6 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadExpenses} from "../store/expenses";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadExpenses} from '../store/expenses'
 
 const useGetExpenses = () => {
     const dispatch = useDispatch()

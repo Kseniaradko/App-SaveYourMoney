@@ -1,14 +1,14 @@
-import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router-dom";
-import * as Yup from "yup";
-import history from "../../../utils/history";
-import {FormikProvider, useFormik} from "formik";
-import TextField from "../../../components/common/form/textField";
-import {getCurrentAccount, updateAccount} from "../../../store/accounts";
-import Loader from "../../../components/common/Loader";
-import {createOperation} from "../../../store/operationsHistory";
-import Button from "../../../components/common/Button";
+import React from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import {useParams} from 'react-router-dom'
+import * as Yup from 'yup'
+import history from '../../../utils/history'
+import {FormikProvider, useFormik} from 'formik'
+import TextField from '../../../components/common/form/textField'
+import {getCurrentAccount, updateAccount} from '../../../store/accounts'
+import Loader from '../../../components/common/Loader'
+import {createOperation} from '../../../store/operationsHistory'
+import Button from '../../../components/common/Button'
 
 const validationSchema = Yup.object().shape({
     accountName: Yup.string().required('Данное поле обязательно для заполнения'),
@@ -77,7 +77,7 @@ const EditAccountPage = () => {
                         <div className='flex mt-4 gap-2'>
                             <Button
                                 face='secondary'
-                                type="button"
+                                type='button'
                                 onClick={() => history.goBack()}
                             >
                                 Назад

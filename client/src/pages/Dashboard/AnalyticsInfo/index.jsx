@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react'
 import chartIcon from './chartsIcon.svg'
 import {Link} from 'react-router-dom'
-import TwoItemsChart from "../../../components/common/charts/twoItemsChart";
+import TwoItemsChart from '../../../components/common/charts/twoItemsChart'
 
 const AnalyticsInfo = () => {
     return (
@@ -12,7 +12,7 @@ const AnalyticsInfo = () => {
                 <img className='w-5' src={chartIcon} alt='chartIcon'/>
             </div>
             <div
-                className=" relative border-dotted border-4 border-sky-300 rounded-md px-6 py-0 bg-slate-50 shadow-xl min-h-[280px]"
+                className=' relative border-dotted border-4 border-sky-300 rounded-md px-6 py-0 bg-slate-50 shadow-xl min-h-[280px]'
             >
                 <div className='mt-2'>
                     <TwoItemsChart/>

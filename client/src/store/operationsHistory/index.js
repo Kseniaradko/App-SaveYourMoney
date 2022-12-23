@@ -1,5 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import operationsHistoryService from "../../services/operationsHistory.service";
+import {createSlice} from '@reduxjs/toolkit'
+import operationsHistoryService from '../../services/operationsHistory.service'
 
 const initialState = {
     entities: null,

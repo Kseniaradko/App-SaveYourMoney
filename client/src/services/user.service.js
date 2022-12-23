@@ -8,8 +8,8 @@ const userService = {
         return data
     },
     update: async (payload) => {
-        const {data} = await httpService.patch(userEndPoint, payload);
-        return data;
+        const {data} = await httpService.patch(userEndPoint, payload)
+        return data
     }
 }
 

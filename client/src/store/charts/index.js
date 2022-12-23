@@ -1,5 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import chartsService from "../../services/charts.service";
+import {createSlice} from '@reduxjs/toolkit'
+import chartsService from '../../services/charts.service'
 
 const initialState = {
     entities: null,

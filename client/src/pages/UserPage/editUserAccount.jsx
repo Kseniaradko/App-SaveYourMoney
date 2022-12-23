@@ -1,11 +1,11 @@
-import React from "react";
-import {FormikProvider, useFormik} from "formik";
-import TextField from "../../components/common/form/textField";
-import RadioField from "../../components/common/form/radioField";
-import Button from "../../components/common/Button";
-import {useDispatch, useSelector} from "react-redux";
-import {getCurrentUserData, updateUser} from "../../store/users";
-import * as Yup from "yup";
+import React from 'react'
+import {FormikProvider, useFormik} from 'formik'
+import TextField from '../../components/common/form/textField'
+import RadioField from '../../components/common/form/radioField'
+import Button from '../../components/common/Button'
+import {useDispatch, useSelector} from 'react-redux'
+import {getCurrentUserData, updateUser} from '../../store/users'
+import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -55,9 +55,9 @@ const EditUserAccount = ({onClick}) => {
                     />
                     <RadioField
                         options={[
-                            {name: "Male", value: "male"},
-                            {name: "Female", value: "female"},
-                            {name: "Other", value: "other"}
+                            {name: 'Male', value: 'male'},
+                            {name: 'Female', value: 'female'},
+                            {name: 'Other', value: 'other'}
                         ]}
                         name='sex'
                         label='Выберите ваш пол:'

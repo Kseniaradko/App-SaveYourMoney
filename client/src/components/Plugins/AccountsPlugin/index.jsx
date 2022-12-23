@@ -1,9 +1,9 @@
-import React from "react";
-import OperationsInfo from "../OperationsInfo";
-import accountsLogo from "./accountsIcon.svg"
-import {useSelector} from "react-redux";
-import {getAccountLoadingStatus, getAccountsForPlugin} from "../../../store/accounts";
-import Loader from "../../common/Loader";
+import React from 'react'
+import OperationsInfo from '../OperationsInfo'
+import accountsLogo from './accountsIcon.svg'
+import {useSelector} from 'react-redux'
+import {getAccountLoadingStatus, getAccountsForPlugin} from '../../../store/accounts'
+import Loader from '../../common/Loader'
 
 const AccountsPlugin = () => {
     const userAccountsForPlugin = useSelector(getAccountsForPlugin())

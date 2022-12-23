@@ -1,8 +1,8 @@
-import {createSlice} from "@reduxjs/toolkit";
-import incomeService from "../../services/income.service";
-import {loadAccounts, loadAccountsList} from "../accounts";
-import {toast} from "react-toastify";
-import {loadChartsList} from "../charts";
+import {createSlice} from '@reduxjs/toolkit'
+import incomeService from '../../services/income.service'
+import {loadAccounts, loadAccountsList} from '../accounts'
+import {toast} from 'react-toastify'
+import {loadChartsList} from '../charts'
 
 const initialState = {
     entities: null,

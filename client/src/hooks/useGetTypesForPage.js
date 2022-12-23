@@ -1,7 +1,7 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {loadIncomesTypeList} from "../store/incomesType";
-import {loadExpensesTypeList} from "../store/expensesType";
+import {useDispatch} from 'react-redux'
+import {useEffect} from 'react'
+import {loadIncomesTypeList} from '../store/incomesType'
+import {loadExpensesTypeList} from '../store/expensesType'
 
 const useGetTypesForPage = (incomePage, expensePage, limit) => {
     const dispatch = useDispatch()

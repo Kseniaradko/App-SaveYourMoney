@@ -1,7 +1,6 @@
 import {useEffect} from 'react'
-
-import {useDispatch} from "react-redux";
-import {loadChartsList} from "../store/charts";
+import {useDispatch} from 'react-redux'
+import {loadChartsList} from '../store/charts'
 
 const useGetInfoForCharts = () => {
     const dispatch = useDispatch()

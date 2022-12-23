@@ -1,6 +1,6 @@
-import {createSlice} from "@reduxjs/toolkit";
-import noteService from "../../services/note.service";
-import {toast} from "react-toastify";
+import {createSlice} from '@reduxjs/toolkit'
+import noteService from '../../services/note.service'
+import {toast} from 'react-toastify'
 
 const initialState = {
     entities: null,

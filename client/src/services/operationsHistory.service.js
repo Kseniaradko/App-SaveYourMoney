@@ -1,11 +1,11 @@
-import httpService from "./http.service";
+import httpService from './http.service'
 
 const operationsHistoryEndPoint = '/history/'
 
 const operationsHistoryService = {
     get: async (offset, limit, filter) => {
         let query = `?offset=${offset}&limit=${limit}`
-        
+
         if (filter.type) {
             query += `&type=${filter.type}`
         }
