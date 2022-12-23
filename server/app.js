@@ -16,7 +16,10 @@ app.use('/api', routes)
 const PORT = config.get('port') ?? 3000
 
 if (process.env.NODE_ENV === 'production') {
-    app.use('/', express.static())
+    app.use(express.static(path.resolve(__dirname, 'client', 'build')))
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
 }
 
 async function start() {
