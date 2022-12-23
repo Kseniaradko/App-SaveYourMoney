@@ -1,5 +1,5 @@
 {
-  "port": 8081,
+  "port": 8080,
   "mongoUri": "mongodb+srv://Ksenia:123456789012@cluster0.pptlku4.mongodb.net/SaveYourMoney?retryWrites=true&w=majority",
   "accessSecret": "this is my app for your money",
   "refreshSecret": "this is a key for refreshing tokens"
