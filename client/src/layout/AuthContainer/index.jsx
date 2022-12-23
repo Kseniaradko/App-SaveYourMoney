@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import LoginPage from "../../pages/LoginPage";
-import {Redirect, Route, Switch, withRouter} from "react-router-dom";
+import {Route, Switch, withRouter} from "react-router-dom";
 import MainPage from "../../pages/MainPage";
 import SignupPage from "../../pages/SignupPage";
 import Footer from "../../components/Footer";
@@ -12,15 +12,15 @@ import localStorageService from "../../services/localStorage.service";
 const AuthContainer = withRouter(({children}) => {
     const isLoggedIn = useSelector(getIsLoggedIn())
     const dispatch = useDispatch()
+    const token = localStorageService.getAccessToken()
 
     useEffect(() => {
-        const token = localStorageService.getAccessToken()
-        if (isLoggedIn && token) {
+        if (token) {
             dispatch(loadUsersList())
         }
-    }, [dispatch, isLoggedIn])
+    }, [dispatch, token])
 
-    if (isLoggedIn) return children
+    if (isLoggedIn && token) return children
     return (
         <>
             <NonAuthNavBar/>
@@ -28,7 +28,6 @@ const AuthContainer = withRouter(({children}) => {
                 <Route path="/" exact component={MainPage}/>
                 <Route path="/login" exact component={LoginPage}/>
                 <Route path='/signup' exact component={SignupPage}/>
-                <Redirect to='/login'/>
             </Switch>
             <Footer/>
         </>

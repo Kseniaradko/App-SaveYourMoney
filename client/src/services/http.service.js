@@ -15,8 +15,15 @@ http.interceptors.request.use(
         const isExpired = refreshToken && expiresDate < Date.now();
 
         if (isExpired) {
-            const data = await authService.refresh()
-            localStorageService.setTokens(data)
+            try {
+                const data = await authService.refresh()
+                localStorageService.setTokens(data)
+            } catch (e) {
+                if (e.response.status === 401) {
+                    localStorageService.removeAuthData()
+                    window.location = '/login'
+                }
+            }
         }
         const accessToken = localStorageService.getAccessToken()
         if (accessToken) {
@@ -27,18 +34,19 @@ http.interceptors.request.use(
         }
         return config
     }, function (error) {
+        console.log(error)
         return Promise.reject(error)
     }
 )
 
 http.interceptors.response.use(
     (res) => {
-        res.data = {content: res.data};
-        return res;
+        res.data = {content: res.data}
+        return res
     }, function (error) {
         const expectedErrors = error.response &&
             error.response.status >= 400 &&
-            error.response.status < 500;
+            error.response.status < 500
 
         if (
             !expectedErrors

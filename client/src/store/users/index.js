@@ -6,14 +6,7 @@ import {generateAuthError} from "../../utils/generateAuthError";
 import userService from "../../services/user.service";
 import {toast} from "react-toastify";
 
-const initialState = localStorageService.getAccessToken() ? {
-    entities: null,
-    isLoading: true,
-    error: null,
-    auth: {userId: localStorageService.getUserId()},
-    isLoggedIn: true,
-    dataLoaded: false
-} : {
+const initialState = {
     entities: null,
     isLoading: false,
     error: null,
@@ -33,6 +26,8 @@ const usersSlice = createSlice({
             state.entities = action.payload
             state.isLoading = false
             state.dataLoaded = true
+            state.isLoggedIn = true
+            state.auth = {userId: action.payload._id}
         },
         usersRequestFailed: (state, action) => {
             state.isLoading = false
@@ -84,6 +79,7 @@ export const loadUsersList = () => async (dispatch) => {
         const {content} = await userService.get()
         dispatch(usersReceived(content))
     } catch (error) {
+        history.push('/login')
         dispatch(usersRequestFailed(error.message))
     }
 }
@@ -102,7 +98,7 @@ export const logIn = (payload) => async (dispatch) => {
             const errorMessage = generateAuthError(message)
             dispatch(authRequestFailed(errorMessage))
         } else {
-            dispatch(authRequestFailed(error.message))
+            dispatch(authRequestFailed('Авторизуйтесь'))
         }
     }
 }

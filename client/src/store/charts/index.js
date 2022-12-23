@@ -22,12 +22,7 @@ const chartsSlice = createSlice({
         chartsReceived: (state, action) => {
             state.isLoading = false
             state.entities = action.payload
-        },
-        chartsRec: (state, action) => {
-            state.isLoading = false
-            state.pageEntity = action.payload.list
-            state.totalPages = action.payload.totalPages
-        },
+        }
     }
 })
 
@@ -36,8 +31,7 @@ const {reducer: chartsReducer, actions} = chartsSlice
 const {
     chartsRequested,
     chartsRequestedFailed,
-    chartsReceived,
-    chartsRec
+    chartsReceived
 } = actions
 
 export const loadChartsList = () => async (dispatch) => {
@@ -54,7 +48,6 @@ export const loadChartsList = () => async (dispatch) => {
             }
             result.push(key)
         })
-        console.log(result)
         dispatch(chartsReceived(result))
     } catch (error) {
         dispatch(chartsRequestedFailed())
