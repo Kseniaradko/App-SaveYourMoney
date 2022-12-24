@@ -5,7 +5,7 @@ import authService from './auth.service'
 import { toast } from 'react-toastify'
 
 const http = axios.create({
-  baseURL: configFile.apiEndPoint
+  baseURL: process.env.NODE_ENV === 'production' ? configFile.apiEndPoint : configFile.devApiEndPoint
 })
 
 http.interceptors.request.use(
