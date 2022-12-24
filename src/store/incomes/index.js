@@ -134,7 +134,7 @@ export const removeIncome = (incomeId, currentPage) => async (dispatch) => {
             position: toast.POSITION.TOP_RIGHT
         })
 
-        dispatch(loadIncomesList((currentPage - 1) * 6, 6))
+        dispatch(loadIncomesList((currentPage - 1) * 5, 5))
     } catch (error) {
         dispatch(incomeDeleteFailed(error.message))
     }
