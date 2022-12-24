@@ -26,11 +26,11 @@ router.patch('/', auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
     try {
-        const list = await User.findById(req.user.id);
+        const list = await User.findById(req.user.id || req.user._id);
         res.status(200).send(list);
     } catch (error) {
         res.status(500).json({
-            message: "На сервере произошла ошибкаю Попробуйте позже."
+            message: "На сервере произошла ошибка. Попробуйте позже."
         });
     }
 })

@@ -79,8 +79,9 @@ export const loadUsersList = () => async (dispatch) => {
         const {content} = await userService.get()
         dispatch(usersReceived(content))
     } catch (error) {
-        history.push('/login')
         dispatch(usersRequestFailed(error.message))
+        localStorageService.removeAuthData()
+        history.push('/login')
     }
 }
 
