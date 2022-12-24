@@ -131,7 +131,7 @@ export const removeExpense = (expenseId, currentPage) => async (dispatch) => {
             position: toast.POSITION.TOP_RIGHT
         })
 
-        dispatch(loadExpensesList((currentPage - 1) * 6, 6))
+        dispatch(loadExpensesList((currentPage - 1) * 5, 5))
     } catch (error) {
         dispatch(expenseDeleteFailed(error.message))
     }
