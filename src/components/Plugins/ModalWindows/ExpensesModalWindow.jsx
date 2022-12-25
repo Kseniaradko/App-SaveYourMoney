@@ -57,16 +57,18 @@ const ExpensesModalWindow = ({onCLick}) => {
         dispatch(createExpense(result))
 
         const typeName = types.filter((type) => type._id === formValue.category)[0].name
-        const accountLabel = accounts.filter((acc) => acc._id === formValue.accountId)[0].name
-        const operation = {
-            type: 'EXPENSE',
-            action: 'ADD',
-            category: typeName,
-            sum: formValue.sum,
-            accountName: accountLabel
+        const account = accounts.filter((acc) => acc._id === formValue.accountId)[0]
+        const accountLabel = account.name
+        if (account.sum >= formValue.sum) {
+            const operation = {
+                type: 'EXPENSE',
+                action: 'ADD',
+                category: typeName,
+                sum: formValue.sum,
+                accountName: accountLabel
+            }
+            dispatch(createOperation(operation))
         }
-        dispatch(createOperation(operation))
-
         onCLick()
     }
     const formik = useFormik({

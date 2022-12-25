@@ -86,7 +86,7 @@ const ExpensesPage = () => {
         const year = selectedDate.getFullYear()
         const month = selectedDate.getMonth() + 1
         const day = selectedDate.getDate()
-        const date = year + '-' + month + '-' + day + 'T' + '00:00:00.000Z'
+        const date = year + '-' + month + '-' + day + 'T00:00:00.000Z'
         formik.setValues({date: date})
     }
     const handleClose = (state) => {
