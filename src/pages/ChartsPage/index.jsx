@@ -9,12 +9,12 @@ const ChartsPage = () => {
     useGetInfoForCharts()
     const data = useSelector(getChartsData())
     const loadingStatus = useSelector(getChartsLoadingStatus())
-    console.log('chart', data)
+
     let keys = []
     if (data) {
         keys = Object.keys(data[0])
     }
-    console.log('key', keys)
+
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const tabsData = [
         {

@@ -94,7 +94,6 @@ export const createNote = (note) => async (dispatch) => {
 
 export const updateNote = (noteId, note) => async (dispatch) => {
     dispatch(notesRequested())
-    console.log('store', note)
     try {
         const {content} = await noteService.update(noteId, note)
         dispatch(noteUpdated(content))

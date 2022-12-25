@@ -46,7 +46,6 @@ router.get('/', auth, async (req, res) => {
 
         const count = await Income.find(toFind).countDocuments()
         const totalPages = Math.ceil(count / limit)
-
         res.status(200).send({list, totalPages})
     } catch (error) {
         res.status(500).json({

@@ -25,7 +25,6 @@ const AllNotes = ({notes, onClick}) => {
     }
 
     const handleDelete = (noteId) => {
-        console.log(noteId)
         dispatch(removeNote(noteId))
     }
     const initialValues = {
@@ -33,7 +32,6 @@ const AllNotes = ({notes, onClick}) => {
         _id: ''
     }
     const handleSubmit = (formValue) => {
-        console.log(formValue)
         dispatch(updateNote(formValue._id, {text: formValue.text}))
         setEditNote(false)
     }

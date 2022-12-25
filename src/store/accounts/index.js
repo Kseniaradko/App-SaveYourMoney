@@ -126,7 +126,7 @@ export const removeAccount = (accountId, currentPage) => async (dispatch) => {
             position: toast.POSITION.TOP_RIGHT
         })
 
-        dispatch(loadAccountsList((currentPage - 1) * 6, 6))
+        dispatch(loadAccountsList((currentPage - 1) * 5, 5))
     } catch (error) {
         dispatch(accountDeleteFailed(error.message))
     }

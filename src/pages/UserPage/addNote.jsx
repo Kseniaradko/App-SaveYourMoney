@@ -24,7 +24,6 @@ const AddNote = ({onClick}) => {
     }
 
     const handleSubmit = (formValue) => {
-        console.log(formValue)
         dispatch(createNote(formValue))
         onClick()
     }

@@ -118,6 +118,9 @@ export const createExpense = (expense) => async (dispatch) => {
         dispatch(loadChartsList())
     } catch (error) {
         dispatch(expenseCreatedFailed(error.message))
+        toast.error(error.response.data.message, {
+            position: toast.POSITION.TOP_RIGHT
+        })
     }
 }
 

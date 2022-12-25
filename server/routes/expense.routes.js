@@ -54,20 +54,26 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
     try {
-        const newExpense = await Expense.create({
-            ...req.body,
-            userId: req.user.id
-        })
-
         const result = await Account.find({_id: req.body.accountId})
         const account = result[0]
-        const newSum = Number(account.sum) - Number(req.body.sum)
+        
+        if (account.sum >= req.body.sum) {
+            const newExpense = await Expense.create({
+                ...req.body,
+                userId: req.user.id
+            })
+            const newSum = Number(account.sum) - Number(req.body.sum)
 
-        await Account.findByIdAndUpdate(req.body.accountId, {
-            sum: newSum
-        }, {new: true})
+            await Account.findByIdAndUpdate(req.body.accountId, {
+                sum: newSum
+            }, {new: true})
 
-        res.status(201).send(newExpense)
+            return res.status(201).send(newExpense)
+        }
+
+        return res.status(400).json({
+            message: 'Сумма расхода больше, чем сумма на счету. Невозможно совершить операцию!'
+        })
     } catch (error) {
         res.status(500).json({
             message: 'На сервере произошла ошибка. Попробуйте позже.'
